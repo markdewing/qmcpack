@@ -481,6 +481,8 @@ void ParticleSet::update(int iflag)
     DistTables[i]->evaluate(*this);
   if (SK)
     SK->UpdateAllPart(*this);
+
+  Ready4Measure=true;
 }
 
 void ParticleSet::update(const ParticlePos_t& pos)
@@ -490,6 +492,8 @@ void ParticleSet::update(const ParticlePos_t& pos)
     DistTables[i]->evaluate(*this);
   if (SK && !SK->DoUpdate)
     SK->UpdateAllPart(*this);
+
+  Ready4Measure=true;
 }
 
 /** move a particle iat
@@ -606,6 +610,7 @@ bool ParticleSet::makeMove(const Walker_t& awalker
 bool ParticleSet::makeMove(const Walker_t& awalker
                            , const ParticlePos_t& deltaR, const std::vector<RealType>& dt)
 {
+  Ready4Measure=false;
   activePtcl=-1;
   if (UseBoundBox)
   {
@@ -644,6 +649,7 @@ bool ParticleSet::makeMoveWithDrift(const Walker_t& awalker
                                     , const ParticlePos_t& drift , const ParticlePos_t& deltaR
                                     , RealType dt)
 {
+  Ready4Measure=false;
   activePtcl=-1;
   if (UseBoundBox)
   {
@@ -675,6 +681,7 @@ bool ParticleSet::makeMoveWithDrift(const Walker_t& awalker
                                     , const ParticlePos_t& drift , const ParticlePos_t& deltaR
                                     , const std::vector<RealType>& dt)
 {
+  Ready4Measure=false;
   activePtcl=-1;
   if (UseBoundBox)
   {
@@ -762,6 +769,7 @@ void ParticleSet::donePbyP()
 {
   for (int i=0,nt=DistTables.size(); i< nt; i++)
     DistTables[i]->donePbyP();
+  Ready4Measure=true;
 }
 
 void ParticleSet::makeVirtualMoves(const SingleParticlePos_t& newpos)
