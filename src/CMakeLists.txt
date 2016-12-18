@@ -139,6 +139,9 @@ SET(UTILITIES
   Message/MPIObjectBase.cpp 
   Optimize/VariableSet.cpp
   io/hdf_archive.cpp
+  spline2/einspline_allocator.c
+  spline2/bspline_allocator.cpp
+  spline2/MultiBspline.cpp
   )
 
 IF(QMC_ADIOS)
@@ -243,6 +246,11 @@ IF(HAVE_LIBHDF5 OR HAVE_ADIOS)
 
 ENDIF(HAVE_LIBHDF5 OR HAVE_ADIOS)
 
+  #Need to add this if nothing else but miniapps is compiled
+  if(QMC_BUILD_LEVEL GREATER 4)
+    set(PARTICLE  ${PARTICLE} QMCWaveFunctions/OrbitalBase.cpp)
+  endif()
+
 
 #IF(QMC_BUILD_STATIC)
 #  ADD_LIBRARY(qmcbase STATIC ${PARTICLE}  ${PARTICLEIO})
@@ -252,39 +260,30 @@ ENDIF(HAVE_LIBHDF5 OR HAVE_ADIOS)
 
 #SUBDIRS(einspline)
 
-#############################
-# Creating ADIOS
-#############################
+  if(QMC_BUILD_LEVEL GREATER 4)
 
+    MESSAGE(STATUS "Minimal build: only miniapps")
+    SUBDIRS(miniapps)
 
-SET(ADIOS ADIOS/ADIOS_config.cpp)
-#if(HAVE_ADIOS)
-SET(ADIOS ${ADIOS}
-  Particle/AdiosWalkerInput.cpp
-  ADIOS/ADIOS_profile.cpp
-  ADIOS/ADIOS_verify.cpp
-  ADIOS/ADIOSTrace.cpp
-  )
-#endif(HAVE_ADIOS)
+  else() #{{{
 
-ADD_LIBRARY(adios_config ${ADIOS})
+  #############################
+  # Creating ADIOS
+  #############################
 
-If(QMC_BUILD_LEVEL GREATER 4)
-
-  SET(X 
-    spline2/einspline_allocator.c
-    spline2/bspline_allocator.cpp
-    spline2/MultiBspline.cpp
+  SET(ADIOS ADIOS/ADIOS_config.cpp)
+  IF(HAVE_ADIOS)
+    SET(ADIOS ${ADIOS}
+    Particle/AdiosWalkerInput.cpp
+    ADIOS/ADIOS_profile.cpp
+    ADIOS/ADIOS_verify.cpp
+    ADIOS/ADIOSTrace.cpp
     )
+  ENDIF(HAVE_ADIOS)
 
   SET(WFSTEMP QMCWaveFunctions/OrbitalBase.cpp) 
   ADD_LIBRARY(qmcbase ${PARTICLE}  ${PARTICLEIO} ${WFSTEMP} ${X})
 
-  SUBDIRS(spline2 miniapps)
-
-ELSE()
-
-  ADD_LIBRARY(qmcbase ${PARTICLE}  ${PARTICLEIO}) 
   SUBDIRS(QMCWaveFunctions)
   SUBDIRS(QMCHamiltonians)
   SUBDIRS(QMCDrivers)
@@ -310,7 +309,7 @@ ELSE()
     SUBDIRS(SQD)
   ENDIF(BUILD_SQD)
 
-  if (BUILD_UNIT_TESTS)
+  if (BUILD_UNIT_TESTS) #{
     SET(HAS_TARGET_COMPILE_DEFINITIONS 1)
     IF (CMAKE_VERSION VERSION_LESS "2.8.11")
       MESSAGE("CMake version 2.8.10 - some unit tests will not be built")
@@ -333,7 +332,6 @@ ELSE()
       SUBDIRS(ParticleBase/tests)
       SUBDIRS(QMCDrivers/tests)
     ENDIF()
-  endif()
+  endif() #}
 
-ENDIF()
-
+endif() #}}}
