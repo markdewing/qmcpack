@@ -114,6 +114,8 @@ struct OrbitalBase: public QMCTraits
   bool derivsDone;
   /** true, if recompute needs precomputed distance tables */
   bool RecomputeNeedsDistanceTable;
+  /** true, if compute for the ratio instead of buffering */
+  bool Need2Compute4PbyP;
   /** define the level of storage in derivative buffer **/
   int DerivStorageType;
 
@@ -213,6 +215,11 @@ struct OrbitalBase: public QMCTraits
   evaluate(ParticleSet& P,
            ParticleSet::ParticleGradient_t& G,
            ParticleSet::ParticleLaplacian_t& L) = 0;
+
+  /** done PbyP update, prepare for the measurements */
+  virtual void updateAfterSweep(ParticleSet& P,
+           ParticleSet::ParticleGradient_t& G,
+           ParticleSet::ParticleLaplacian_t& L);
 
   /** evaluate the value of the orbital
    * @param P active ParticleSet
