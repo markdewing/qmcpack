@@ -65,6 +65,8 @@ public:
   bool NeedsDistanceTable;
   ///flag to calculate ionic derivatives
   bool ionDerivs;
+  ///if true, can use GL type, default=false
+  bool CanUseGLCombo;
   ///total number of orbitals
   IndexType TotalOrbitalSize;
   ///number of Single-particle orbitals
@@ -89,18 +91,10 @@ public:
    */
   std::string objectName;
 
-  /** constructor
-   */
-  SPOSetBase()
-    :Identity(false),TotalOrbitalSize(0),OrbitalSetSize(0),BasisSetSize(0),
-    NeedsDistanceTable(false),
-    ActivePtcl(-1),Optimizable(false),ionDerivs(false),builder_index(-1)
-  {
-    className="invalid";
-  }
+  /** constructor */
+  SPOSetBase();
 
-  /** destructor
-   */
+  /** destructor */
   virtual ~SPOSetBase() {}
 
   /** return the size of the orbital set
