@@ -19,6 +19,7 @@
 /////////////////////////////////////////////////////////////////////////////
 
 #include "multi_bspline_create.h"
+#include "tracked_alloc.h"
 #ifndef _XOPEN_SOURCE
 #define _XOPEN_SOURCE 600
 #endif
@@ -29,7 +30,7 @@
 #include <stdio.h>
 #include <inttypes.h>
 
-int posix_memalign(void **memptr, size_t alignment, size_t size);
+//int posix_memalign(void **memptr, size_t alignment, size_t size);
 
 ////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////
@@ -120,11 +121,14 @@ create_multi_UBspline_1d_s (Ugrid x_grid, BCtype_s xBC, int num_splines)
   spline->x_stride = N;
   x_grid.delta_inv = 1.0/x_grid.delta;
   spline->x_grid   = x_grid;
+#if 0
 #ifndef HAVE_POSIX_MEMALIGN
   spline->coefs = malloc (sizeof(float)*Nx*N);
 #else
   posix_memalign ((void**)&spline->coefs, 64, (sizeof(float)*Nx*N));
 #endif
+#endif
+  spline->coefs = maybe_align_alloc(sizeof(float)*Nx*N, 64, "einspline::create_multi_UBspline_1d_s");
 #ifdef HAVE_SSE
   init_sse_data();    
 #endif
@@ -195,12 +199,15 @@ create_multi_UBspline_2d_s (Ugrid x_grid, Ugrid y_grid,
   spline->x_stride = Ny*N;
   spline->y_stride = N;
 
+#if 0
 #ifndef HAVE_POSIX_MEMALIGN
   spline->coefs = malloc ((size_t)sizeof(float)*Nx*Ny*N);
 #else
   posix_memalign ((void**)&spline->coefs, 64, 
 		  sizeof(float)*Nx*Ny*N);
 #endif
+#endif
+  spline->coefs = maybe_align_alloc(sizeof(float)*Nx*N, 64, "einspline::create_multi_UBspline_2d_s");
 #ifdef HAVE_SSE
   init_sse_data();
 #endif
@@ -304,12 +311,15 @@ create_multi_UBspline_3d_s (Ugrid x_grid, Ugrid y_grid, Ugrid z_grid,
   spline->y_stride      = Nz*N;
   spline->z_stride      = N;
 
+#if 0
 #ifndef HAVE_POSIX_MEMALIGN
   spline->coefs      = malloc (sizeof(float)*Nx*Ny*Nz*N);
 #else
   posix_memalign ((void**)&spline->coefs, 64, 
 		  ((size_t)sizeof(float)*Nx*Ny*Nz*N));
 #endif
+#endif
+  spline->coefs = maybe_align_alloc(sizeof(float)*Nx*Ny*Nz*N, 64, "einspline::create_multi_UBspline_3d_s");
   spline->coefs_size=(size_t)Nx*(size_t)Ny*(size_t)Nz*(size_t)N;
 #ifdef HAVE_SSE
   init_sse_data();
@@ -496,11 +506,14 @@ create_multi_UBspline_1d_c (Ugrid x_grid, BCtype_c xBC, int num_splines)
   x_grid.delta_inv = 1.0/x_grid.delta;
   spline->x_grid   = x_grid;
   spline->x_stride = num_splines;
+#if 0
 #ifndef HAVE_POSIX_MEMALIGN
   spline->coefs = malloc (2*sizeof(float)*N*num_splines);
 #else
   posix_memalign ((void**)&spline->coefs, 64, 2*sizeof(float)*N*num_splines);
 #endif
+#endif
+  spline->coefs = maybe_align_alloc(2*sizeof(float)*N*num_splines, 64, "einspline::create_multi_UBspline_1d_c");
 #ifdef HAVE_SSE
   init_sse_data();    
 #endif
@@ -580,6 +593,7 @@ create_multi_UBspline_2d_c (Ugrid x_grid, Ugrid y_grid,
   spline->x_stride = Ny*N;
   spline->y_stride = N;
 
+#if 0
 #ifndef HAVE_POSIX_MEMALIGN
   spline->coefs = malloc (2*sizeof(float)*Nx*Ny*N);
   spline->lapl2 = malloc (4*sizeof(float)*N);
@@ -589,6 +603,9 @@ create_multi_UBspline_2d_c (Ugrid x_grid, Ugrid y_grid,
   posix_memalign ((void**)&spline->lapl2, 64,
 		  4*sizeof(float)*N);
 #endif
+#endif
+  spline->coefs = maybe_align_alloc(2*sizeof(float)*Nx*Ny*N, 64, "einspline::create_multi_UBspline_2d_c");
+  spline->lapl2 = maybe_align_alloc(4*sizeof(float)*N, 64, "einspline::create_multi_UBspline_2d_c");
 #ifdef HAVE_SSE
   init_sse_data();
 #endif
@@ -711,6 +728,7 @@ create_multi_UBspline_3d_c (Ugrid x_grid, Ugrid y_grid, Ugrid z_grid,
   spline->y_stride = Nz*N;
   spline->z_stride = N;
 
+#if 0
 #ifndef HAVE_POSIX_MEMALIGN
   spline->coefs = malloc ((size_t)2*sizeof(float)*Nx*Ny*Nz*N);
   spline->lapl3 = malloc (6*sizeof(float)*N);
@@ -718,6 +736,9 @@ create_multi_UBspline_3d_c (Ugrid x_grid, Ugrid y_grid, Ugrid z_grid,
   posix_memalign ((void**)&spline->coefs, 64, (size_t)2*sizeof(float)*Nx*Ny*Nz*N);
   posix_memalign ((void**)&spline->lapl3, 64, 6*sizeof(float)*N);  
 #endif
+#endif
+  spline->coefs = maybe_align_alloc(2*sizeof(float)*Nx*Ny*Nz*N, 64, "einspline::create_multi_UBspline_3d_c");
+  spline->lapl3 = maybe_align_alloc(6*sizeof(float)*N, 64, "einspline::create_multi_UBspline_3d_c");
   spline->coefs_size=(size_t)Nx*(size_t)Ny*(size_t)Nz*(size_t)N;
 #ifdef HAVE_SSE
   init_sse_data();
@@ -974,12 +995,15 @@ create_multi_UBspline_1d_d (Ugrid x_grid, BCtype_d xBC, int num_splines)
 #endif
   spline->x_stride = N;
 
+#if 0
 #ifndef HAVE_POSIX_MEMALIGN
   spline->coefs = malloc (sizeof(double)*Nx*N);
 
 #else
   posix_memalign ((void**)&spline->coefs, 64, sizeof(double)*Nx*N);
 #endif
+#endif
+  spline->coefs = maybe_align_alloc(sizeof(double)*Nx*N, 64, "einspline::create_multi_UBspline_1d_d");
 #ifdef HAVE_SSE2
   init_sse_data();
 #endif
@@ -1056,11 +1080,14 @@ create_multi_UBspline_2d_d (Ugrid x_grid, Ugrid y_grid,
   spline->x_stride = Ny*N;
   spline->y_stride = N;
 
+#if 0
 #ifndef HAVE_POSIX_MEMALIGN
   spline->coefs = malloc (sizeof(double)*Nx*Ny*N);
 #else
   posix_memalign ((void**)&spline->coefs, 64, (sizeof(double)*Nx*Ny*N));
 #endif
+#endif
+  spline->coefs = maybe_align_alloc(sizeof(double)*Nx*Ny*N, 64, "einspline::create_multi_UBspline_2d_d");
 #ifdef HAVE_SSE2
   init_sse_data();
 #endif
@@ -1118,11 +1145,14 @@ create_multi_UBspline_3d_d (Ugrid x_grid, Ugrid y_grid, Ugrid z_grid,
 {
   // Create new spline
   multi_UBspline_3d_d* restrict spline;
+#if 0
 #ifdef HAVE_POSIX_MEMALIGN
   posix_memalign ((void**)&spline, 64, (size_t)sizeof(multi_UBspline_3d_d));
 #else
   spline = malloc (sizeof(multi_UBspline_3d_d));
 #endif
+#endif
+  spline = maybe_align_alloc(sizeof(multi_UBspline_3d_d), 64, "einspline::create_multi_UBspline_3d_d");
   if (!spline) {
     fprintf (stderr, "Out of memory allocating spline in create_multi_UBspline_3d_d.\n");
     abort();
@@ -1180,11 +1210,14 @@ create_multi_UBspline_3d_d (Ugrid x_grid, Ugrid y_grid, Ugrid z_grid,
   spline->y_stride = Nz*N;
   spline->z_stride = N;
   
+#if 0
 #ifdef HAVE_POSIX_MEMALIGN
   posix_memalign ((void**)&spline->coefs, 64, ((size_t)sizeof(double)*Nx*Ny*Nz*N));
 #else
   spline->coefs      = malloc ((size_t)sizeof(double)*Nx*Ny*Nz*N);
 #endif
+#endif
+  spline->coefs = maybe_align_alloc((size_t)sizeof(double)*Nx*Ny*Nz*N, 64, "einspline::create_multi_UBspline_3d_d");
 
   spline->coefs_size=(size_t)Nx*(size_t)Ny*(size_t)Nz*(size_t)N;
 
@@ -1303,11 +1336,14 @@ create_multi_UBspline_1d_z (Ugrid x_grid, BCtype_z xBC, int num_splines)
   spline->x_grid   = x_grid;
   spline->x_stride = num_splines;
 
+#if 0
 #ifndef HAVE_POSIX_MEMALIGN
   spline->coefs = malloc (2*sizeof(double)*Nx*num_splines);
 #else
   posix_memalign ((void**)&spline->coefs, 64, 2*sizeof(double)*Nx*num_splines);
 #endif
+#endif
+  spline->coefs = maybe_align_alloc(2*sizeof(double)*Nx*num_splines, 64, "einspline::create_multi_UBspline_1d_z");
 #ifdef HAVE_SSE2
   init_sse_data();   
 #endif
@@ -1419,6 +1455,7 @@ create_multi_UBspline_2d_z (Ugrid x_grid, Ugrid y_grid,
   spline->x_stride = Ny*num_splines;
   spline->y_stride = num_splines;
 
+#if 0
 #ifndef HAVE_POSIX_MEMALIGN
   spline->coefs = malloc (2*sizeof(double)*Nx*Ny*num_splines);
   spline->lapl2 = malloc (4*sizeof(double)*num_splines);
@@ -1426,6 +1463,9 @@ create_multi_UBspline_2d_z (Ugrid x_grid, Ugrid y_grid,
   posix_memalign ((void**)&spline->coefs, 64, 2*sizeof(double)*Nx*Ny*num_splines);
   posix_memalign ((void**)&spline->lapl2, 64, 4*sizeof(double)*num_splines);
 #endif
+#endif
+  spline->coefs = maybe_align_alloc(2*sizeof(double)*Nx*Ny*num_splines, 64, "einspline::create_multi_UBspline_2d_z");
+  spline->lapl2 = maybe_align_alloc(4*sizeof(double)*num_splines, 64, "einspline::create_multi_UBspline_2d_z");
 #ifdef HAVE_SSE2
   init_sse_data();
 #endif
@@ -1561,6 +1601,7 @@ create_multi_UBspline_3d_z (Ugrid x_grid, Ugrid y_grid, Ugrid z_grid,
   spline->y_stride = Nz*N;
   spline->z_stride = N;
 
+#if 0
 #ifndef HAVE_POSIX_MEMALIGN
   spline->coefs      = malloc ((size_t)2*sizeof(double)*Nx*Ny*Nz*N);
   spline->lapl3 = malloc (6*sizeof(double)*N);
@@ -1568,6 +1609,9 @@ create_multi_UBspline_3d_z (Ugrid x_grid, Ugrid y_grid, Ugrid z_grid,
   posix_memalign ((void**)&spline->coefs, 64, (size_t)2*sizeof(double)*Nx*Ny*Nz*N);
   posix_memalign ((void**)&spline->lapl3, 64, 6*sizeof(double)*N);
 #endif
+#endif
+  spline->coefs = maybe_align_alloc((size_t)2*sizeof(double)*Nx*Ny*Nz*N, 64, "einspline::create_multi_UBspline_3d_z");
+  spline->lapl3 = maybe_align_alloc(6*sizeof(double)*N, 64, "einspline::create_multi_UBspline_3d_z");
 
   spline->coefs_size=(size_t)Nx*(size_t)Ny*(size_t)Nz*(size_t)N;
 
@@ -1687,6 +1731,6 @@ set_multi_UBspline_3d_z (multi_UBspline_3d_z* spline, int num, complex_double *d
 void
 destroy_multi_UBspline (Bspline *spline)
 {
-  free (spline->coefs);
+  tracked_free (spline->coefs);
   free (spline);
 }

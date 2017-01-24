@@ -177,16 +177,19 @@ int main(int argc, char **argv)
     validInput=qmc->parse(inputs[0]);
   if(validInput)
     qmc->execute();
+
  
   Libxml2Document timingDoc;
   timingDoc.newDoc("resources");
   output_hardware_info(qmcComm, timingDoc, timingDoc.getRoot());
   TimerManager.output_timing(qmcComm, timingDoc, timingDoc.getRoot());
+  MemoryTracker.output_memory(timingDoc, timingDoc.getRoot());
   if(OHMMS::Controller->rank()==0)
   {
     timingDoc.dump(qmc->getTitle() + ".info.xml");
   }
   TimerManager.print(qmcComm);
+  MemoryTracker.report();
 
   if(qmc)
     delete qmc;

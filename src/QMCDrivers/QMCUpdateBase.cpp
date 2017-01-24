@@ -22,11 +22,13 @@
 #include "QMCDrivers/DriftOperators.h"
 #include "OhmmsData/AttributeSet.h"
 #include "Message/OpenMP.h"
+#include "Utilities/MemoryTracker.h"
 #if !defined(REMOVE_TRACEMANAGER)
 #include "Estimators/TraceManager.h"
 #else
 typedef int TraceManager;
 #endif
+//#include <sstream>
 
 namespace qmcplusplus
 {
@@ -212,8 +214,13 @@ void QMCUpdateBase::initWalkers(WalkerIter_t it, WalkerIter_t it_end)
 void QMCUpdateBase::initWalkersForPbyP(WalkerIter_t it, WalkerIter_t it_end)
 {
   UpdatePbyP=true;
+  //int walker_id = 0;
   for (; it != it_end; ++it)
   {
+    //std::ostringstream tmp;
+    //tmp << "Walker" << walker_id;
+    //walker_id++;
+    //MemoryTracker.startTag(tmp.str());
     Walker_t& awalker(**it);
     W.R=awalker.R;
     W.update();
@@ -226,6 +233,7 @@ void QMCUpdateBase::initWalkersForPbyP(WalkerIter_t it, WalkerIter_t it_end)
     awalker.G=W.G;
     awalker.L=W.L;
     randomize(awalker);
+    //MemoryTracker.endTag(tmp.str());
   }
 }
 

@@ -195,6 +195,7 @@ SET(BUILD_FCIQMC 0 CACHE BOOL "Build with FCIQMC")
 #SET(MPIP_PROFILE 0)
 #option(QMC_BUILD_STATIC "Link to static libraries" OFF)
 SET(ENABLE_TIMERS 0 CACHE BOOL "Enable internal timers")
+SET(ENABLE_MEMORY_TRACKING 0 CACHE BOOL "Enable tracking memory allocation")
 
 ######################################################################
 # Performance-related macros

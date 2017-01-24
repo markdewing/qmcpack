@@ -57,6 +57,7 @@ ParticleSet::ParticleSet()
   , ThreadID(0), SK(0), ParentTag(-1), ParentName("0")
   , quantum_domain(classical)
 {
+  Collectables.set_name("Collectables");
   initParticleSet();
   initPropertyList();
   add_p_timer(myTimers);

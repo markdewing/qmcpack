@@ -29,6 +29,7 @@
 #include "ParticleBase/RandomSeqGenerator.h"
 #include <fftw3.h>
 #include <Utilities/ProgressReportEngine.h>
+#include <Utilities/MemoryTracker.h>
 #include <QMCWaveFunctions/einspline_helper.hpp>
 #include "QMCWaveFunctions/EinsplineAdoptor.h"
 #include "QMCWaveFunctions/SplineC2XAdoptor.h"
@@ -317,6 +318,7 @@ EinsplineSetBuilder::createSPOSetFromXML(xmlNodePtr cur)
 
   MixedSplineReader->setCommon(XMLRoot);
   size_t delta_mem=qmc_common.memory_allocated;
+  MemoryTracker.startTag("createSPO");
   // temporary disable the following function call, Ye Luo
   // RotateBands_ESHDF(spinSet, dynamic_cast<EinsplineSetExtended<std::complex<double> >*>(OrbitalSet));
   HasCoreOrbs=bcastSortBands(spinSet,NumDistinctOrbitals,myComm->rank()==0);
@@ -325,6 +327,7 @@ EinsplineSetBuilder::createSPOSetFromXML(xmlNodePtr cur)
     APP_ABORT_TRACE(__FILE__,__LINE__,"Failed to create SPOSetBase*");
   delta_mem=qmc_common.memory_allocated-delta_mem;
   app_log() <<"  MEMORY allocated SplineAdoptorReader " << (delta_mem>>20) << " MB" << std::endl;
+  MemoryTracker.endTag("createSPO");
   OrbitalSet = bspline_zd;
 #ifdef QMC_CUDA
   EinsplineSet *new_OrbitalSet;

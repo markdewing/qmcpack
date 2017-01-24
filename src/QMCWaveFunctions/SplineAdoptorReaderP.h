@@ -24,6 +24,7 @@
 #define QMCPLUSPLUS_EINSPLINE_BASE_ADOPTOR_READERP_H
 #include <mpi/collectives.h>
 #include <mpi/point2point.h>
+#include "einspline/multi_bspline_create.h"
 namespace qmcplusplus
 {
 /** General SplineAdoptorReader to handle any unitcell
@@ -56,15 +57,17 @@ struct SplineAdoptorReader: public BsplineReaderBase
   {
     for(int i=0; i<spline_r.size(); ++i)
     {
-      free(spline_r[i]->coefs);
-      free(spline_r[i]);
+      //free(spline_r[i]->coefs);
+      //free(spline_r[i]);
+      destroy_Bspline(spline_r[i]);
     }
     for(int i=0; i<spline_i.size(); ++i)
     {
       if(spline_i[i]!=0)
       {
-        free(spline_i[i]->coefs);
-        free(spline_i[i]);
+        //free(spline_i[i]->coefs);
+        //free(spline_i[i]);
+        destroy_Bspline(spline_i[i]);
       }
     }
     spline_r.clear();

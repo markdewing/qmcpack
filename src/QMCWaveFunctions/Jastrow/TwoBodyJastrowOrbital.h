@@ -27,6 +27,7 @@
 #include "Particle/DistanceTableData.h"
 #include "Particle/DistanceTable.h"
 #include "LongRange/StructFact.h"
+#include "Utilities/MemoryTracker.h"
 #include <qmc_common.h>
 
 namespace qmcplusplus
@@ -606,6 +607,7 @@ public:
 
   inline RealType registerData(ParticleSet& P, PooledData<RealType>& buf)
   {
+    MemoryTracker.startTag("TwoBodyJastrow");
     // std::cerr <<"REGISTERING 2 BODY JASTROW"<< std::endl;
     evaluateLogAndStore(P,P.G,P.L);
     //LogValue=0.0;
@@ -644,6 +646,7 @@ public:
     buf.add(d2U.begin(), d2U.end());
     buf.add(FirstAddressOfdU,LastAddressOfdU);
     DEBUG_PSIBUFFER(" TwoBodyJastrow::registerData ",buf.current());
+    MemoryTracker.endTag("TwoBodyJastrow");
     return LogValue;
   }
 

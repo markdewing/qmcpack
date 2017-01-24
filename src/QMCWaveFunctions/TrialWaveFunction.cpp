@@ -760,10 +760,12 @@ TrialWaveFunction::RealType TrialWaveFunction::registerData(ParticleSet& P, Pool
 //append current gradients and laplacians to the buffer
   NumPtcls = P.getTotalNum();
   TotalDim = PosType::Size*NumPtcls;
+  MemoryTracker.startTag("wf_base");
   buf.add(PhaseValue);
   buf.add(LogValue);
   buf.add(&(P.G[0][0]), &(P.G[0][0])+TotalDim);
   buf.add(&(P.L[0]), &(P.L[P.getTotalNum()]));
+  MemoryTracker.endTag("wf_base");
   return LogValue;
 }
 

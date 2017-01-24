@@ -227,5 +227,8 @@
 /* Internal timers */
 #cmakedefine ENABLE_TIMERS @ENABLE_TIMERS@
 
+/* Internal tracking of memory allocations */
+#cmakedefine ENABLE_MEMORY_TRACKING @ENABLE_MEMORY_TRACKING@
+
 #endif // QMCPLUSPLUS_CONFIGURATION_H
 

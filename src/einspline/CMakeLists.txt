@@ -49,6 +49,7 @@ SET(SRCS ${SRCS}
   nubasis.c
   nugrid.c
   multi_bspline_copy.c
+  tracked_alloc.cpp
 )
 
 #do not compiler c functions

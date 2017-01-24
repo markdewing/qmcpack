@@ -23,6 +23,7 @@
 #include "QMCWaveFunctions/Jastrow/DiffOneBodyJastrowOrbital.h"
 #include "Particle/DistanceTableData.h"
 #include "Particle/DistanceTable.h"
+#include "Utilities/MemoryTracker.h"
 
 namespace qmcplusplus
 {
@@ -530,6 +531,7 @@ public:
   RealType registerData(ParticleSet& P, PooledData<RealType>& buf)
   {
     const DistanceTableData* d_table=P.DistTables[myTableIndex];
+    MemoryTracker.startTag("OneBodyJastrow");
     // std::cerr <<"REGISTERING 1 BODY JASTROW "<< std::endl;
     // std::cerr <<d_table->size(VisitorIndex)<< std::endl;
     //U.resize(d_table->size(VisitorIndex));
@@ -544,6 +546,7 @@ public:
     buf.add(d2U.begin(), d2U.end());
     buf.add(FirstAddressOfdU,LastAddressOfdU);
     DEBUG_PSIBUFFER(" OneBodyJastrow::registerData ",buf.current());
+    MemoryTracker.endTag("OneBodyJastrow");
     return LogValue;
   }
 

@@ -22,6 +22,7 @@
 #include <QMCWaveFunctions/SPOSetComboNoCopy.h>
 #include "OhmmsData/AttributeSet.h"
 #include "Message/CommOperators.h"
+#include <Utilities/MemoryTracker.h>
 #include "qmc_common.h"
 namespace qmcplusplus
 {
@@ -152,6 +153,7 @@ namespace qmcplusplus
 
   SPOSetBase* BsplineReaderBase::create_spline_set(int spin, xmlNodePtr cur, SPOSetInputInfo& input_info)
   {
+    MemoryTracker.startTag("splineset");
     if(spo2band.empty()) 
       spo2band.resize(mybuilder->states.size());
 
@@ -178,6 +180,7 @@ namespace qmcplusplus
     size_t mem_now=qmc_common.memory_allocated;
     SPOSetBase* newspo=create_spline_set(spin,vals);       
     qmc_common.print_memory_change("BsplineSetReader", mem_now);
+    MemoryTracker.endTag("splineset");
     return newspo;
   }
 

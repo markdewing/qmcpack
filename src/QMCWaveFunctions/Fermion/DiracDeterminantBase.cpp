@@ -111,6 +111,7 @@ void DiracDeterminantBase::resize(int nel, int morb)
 DiracDeterminantBase::RealType
 DiracDeterminantBase::registerData(ParticleSet& P, PooledData<RealType>& buf)
 {
+  MemoryTracker.startTag("DiracDeterminantBase");
   if(NP == 0)
     //first time, allocate once
   {
@@ -143,6 +144,7 @@ DiracDeterminantBase::registerData(ParticleSet& P, PooledData<RealType>& buf)
   buf.add(FirstAddressOfG,LastAddressOfG);
   buf.add(LogValue);
   buf.add(PhaseValue);
+  MemoryTracker.endTag("DiracDeterminantBase");
   return LogValue;
 }
 

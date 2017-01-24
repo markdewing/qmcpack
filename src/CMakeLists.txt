@@ -36,6 +36,7 @@ else()
     Utilities/OhmmsInform.cpp 
     Utilities/OhmmsInfo.cpp 
     Utilities/NewTimer.cpp
+    Utilities/MemoryTracker.cpp
     Utilities/ProgressReportEngine.cpp
     Utilities/unit_conversion.cpp
     OhmmsData/Libxml2Doc.cpp
@@ -235,6 +236,7 @@ else()
     SUBDIRS(Utilities/tests)
     SUBDIRS(einspline/tests)
     SUBDIRS(OhmmsData/tests)
+    SUBDIRS(OhmmsPETE/tests)
     SUBDIRS(Lattice/tests)
     SUBDIRS(Particle/tests)
     SUBDIRS(ParticleIO/tests)

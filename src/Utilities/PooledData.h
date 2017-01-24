@@ -27,8 +27,10 @@
 #include <complex>
 #include <limits>
 #include <iterator>
+#include <Utilities/MemoryTracker.h>
 
 using std::complex;
+
 
 template<class T>
 struct PooledData
@@ -41,14 +43,40 @@ struct PooledData
   /// only active when T!=double
   std::vector<double> myData_DP;
 
+  std::string name;
+
+
   ///default constructor
-  inline PooledData(): Current(0), Current_DP(0) { }
+  inline PooledData(): Current(0), Current_DP(0) {
+#ifdef ENABLE_MEMORY_TRACKING
+    name = "Buffer";
+    MemoryTracker.make_unique_name(name);
+#endif
+  }
+
 
   ///constructor with a size
   inline PooledData(size_type n, size_type n1=0): Current(0), Current_DP(0)
   {
+
     myData.resize(n,T());
     myData_DP.resize(n1,double());
+#ifdef ENABLE_MEMORY_TRACKING
+    //MemoryTracker.add(NULL, myData.size()*sizeof(T), "Buffer");
+    std::string name("Buffer");
+    MemoryTracker.make_unique_name(name);
+    MemoryTracker.add(NULL, myData.size()*sizeof(T), name);
+#endif
+  }
+
+  inline void set_name(const std::string &inname, bool make_unique=false)
+  {
+    name = inname;
+    if (make_unique)
+    {
+      MemoryTracker.make_unique_name(name);
+    }
+    
   }
 
   ///return the size of the data
@@ -106,6 +134,9 @@ struct PooledData
   {
     myData.clear();
     myData_DP.clear();
+#ifdef ENABLE_MEMORY_TRACKING
+    MemoryTracker.remove(NULL);
+#endif
     Current=0;
     Current_DP=0;
   }
@@ -118,7 +149,14 @@ struct PooledData
   ///resize
   inline void resize(size_type n, T val=T())
   {
+#ifdef ENABLE_MEMORY_TRACKING
+    size_t before = myData.size();
+#endif
     myData.resize(n,val);
+#ifdef ENABLE_MEMORY_TRACKING
+    //MemoryTracker.resize("Buffer", (myData.size() - before)*sizeof(T), myData.size()*sizeof(T));
+    MemoryTracker.resize(name, (myData.size() - before)*sizeof(T), myData.size()*sizeof(T));
+#endif
     Current=0;
   }
   ///return i-th value
@@ -138,12 +176,22 @@ struct PooledData
   {
     Current++;
     myData.push_back(static_cast<T>(x));
+#ifdef ENABLE_MEMORY_TRACKING
+    //MemoryTracker.resize("Buffer", myData.size()*sizeof(T));
+    //MemoryTracker.resize("Buffer", sizeof(T), myData.size()*sizeof(T));
+    MemoryTracker.resize(name, sizeof(T), myData.size()*sizeof(T));
+#endif
   }
 
   inline void add(T x)
   {
     Current++;
     myData.push_back(x);
+#ifdef ENABLE_MEMORY_TRACKING
+    //MemoryTracker.resize("Buffer", myData.size()*sizeof(T));
+    //MemoryTracker.resize("Buffer", sizeof(T), myData.size()*sizeof(T));
+    MemoryTracker.resize(name, sizeof(T), myData.size()*sizeof(T));
+#endif
   }
 
   inline void add(std::complex<T>& x)
@@ -151,19 +199,40 @@ struct PooledData
     Current+=2;
     myData.push_back(x.real());
     myData.push_back(x.imag());
+#ifdef ENABLE_MEMORY_TRACKING
+    //MemoryTracker.resize("Buffer", myData.size()*sizeof(T));
+    //MemoryTracker.resize("Buffer", 2*sizeof(T), myData.size()*sizeof(T));
+    MemoryTracker.resize(name, 2*sizeof(T), myData.size()*sizeof(T));
+#endif
   }
 
   template<class _InputIterator>
   inline void add(_InputIterator first, _InputIterator last)
   {
+#ifdef ENABLE_MEMORY_TRACKING
+    size_t before = myData.size();
+#endif
     Current += last-first;
     myData.insert(myData.end(),first,last);
+#ifdef ENABLE_MEMORY_TRACKING
+    //MemoryTracker.resize("Buffer", myData.size()*sizeof(T));
+    //MemoryTracker.resize("Buffer", (myData.size()-before)*sizeof(T), myData.size()*sizeof(T));
+    MemoryTracker.resize(name, (myData.size()-before)*sizeof(T), myData.size()*sizeof(T));
+#endif
   }
 
   inline void add(T* first, T* last)
   {
+#ifdef ENABLE_MEMORY_TRACKING
+    size_t before = myData.size();
+#endif
     Current += last-first;
     myData.insert(myData.end(),first,last);
+#ifdef ENABLE_MEMORY_TRACKING
+    //MemoryTracker.resize("Buffer", myData.size()*sizeof(T));
+    //MemoryTracker.resize("Buffer", (myData.size()-before)*sizeof(T), myData.size()*sizeof(T));
+    MemoryTracker.resize(name, (myData.size()-before)*sizeof(T), myData.size()*sizeof(T));
+#endif
   }
 
   template<class T1>
@@ -177,7 +246,14 @@ struct PooledData
   {
     size_type dn=2*(last-first);
     T* t=reinterpret_cast<T*>(first);
+#ifdef ENABLE_MEMORY_TRACKING
+    size_t before = myData.size();
+#endif
     myData.insert(myData.end(),t,t+dn);
+#ifdef ENABLE_MEMORY_TRACKING
+    //MemoryTracker.resize("Buffer", 2*(myData.size()-before)*sizeof(T), myData.size()*sizeof(T));
+    MemoryTracker.resize(name, 2*(myData.size()-before)*sizeof(T), myData.size()*sizeof(T));
+#endif
     Current += dn;
   }
 

@@ -181,6 +181,7 @@ struct Walker
      Rhok_GPU("Walker::Rhok_GPU")
 #endif
   {
+    DataSet.set_name("Walker_", true);
     ID=0;
     ParentID=0;
     Generation=0;
