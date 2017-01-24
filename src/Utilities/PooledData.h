@@ -132,11 +132,11 @@ struct PooledData
   ///clear the data and set Current=0
   inline void clear()
   {
+#ifdef ENABLE_MEMORY_TRACKING
+    MemoryTracker.remove(name, myData.size()*sizeof(T));
+#endif
     myData.clear();
     myData_DP.clear();
-#ifdef ENABLE_MEMORY_TRACKING
-    MemoryTracker.remove(NULL);
-#endif
     Current=0;
     Current_DP=0;
   }

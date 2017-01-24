@@ -97,6 +97,15 @@ int main(int argc, char **argv)
           }
         }
       }
+
+      if (c.find("-disable-memory-tracking") < c.size())
+      {
+        MemoryTracker.set_active(false);
+      }
+      if (c.find("-enable-memory-tracking") < c.size())
+      {
+        MemoryTracker.set_active(true);
+      }
     }
     else
     {

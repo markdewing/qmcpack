@@ -33,43 +33,46 @@ int alloc_clock = 1;
 void MemoryTrackerClass::add(void *p, size_t bytes, const std::string &name)
 {
 #ifdef ENABLE_MEMORY_TRACKING
-  #pragma omp critical
+  if (active) 
   {
-    pointer_map[p] = std::pair<std::string,size_t> (name,bytes);
-    std::map<std::string, tracked_mem_object>::iterator iter = mem_map.find(name);
-    if (iter == mem_map.end())
+    #pragma omp critical
     {
-      tracked_mem_object obj(bytes);
-      obj.first_create_time = alloc_clock;
-      mem_map[name] = obj;
-    }
-    else
-    {
-      tracked_mem_object &obj = iter->second;
-      obj.num_objects++;
-      obj.num_objects_created++;
-      obj.total_bytes += bytes;
-      obj.current_bytes += bytes;
-    }
+      pointer_map[p] = std::pair<std::string,size_t> (name,bytes);
+      std::map<std::string, tracked_mem_object>::iterator iter = mem_map.find(name);
+      if (iter == mem_map.end())
+      {
+        tracked_mem_object obj(bytes);
+        obj.first_create_time = alloc_clock;
+        mem_map[name] = obj;
+      }
+      else
+      {
+        tracked_mem_object &obj = iter->second;
+        obj.num_objects++;
+        obj.num_objects_created++;
+        obj.total_bytes += bytes;
+        obj.current_bytes += bytes;
+      }
 
-    std::string tagged_name;
-    get_tagged_name(name, tagged_name);
-    //printf("adding %lu %s  tagged %s\n",bytes,name.c_str(), tagged_name.c_str());
-    std::map<std::string, tracked_mem_object>::iterator tagged_iter = tagged_mem_map.find(tagged_name);
-    if (tagged_iter == tagged_mem_map.end())
-    {
-      tracked_mem_object obj(bytes);
-      obj.first_create_time = alloc_clock;
-      alloc_clock++;
-      tagged_mem_map[tagged_name] = obj;
-    }
-    else
-    {
-      tracked_mem_object &obj = tagged_iter->second;
-      obj.num_objects++;
-      obj.num_objects_created++;
-      obj.total_bytes += bytes;
-      obj.current_bytes += bytes;
+      std::string tagged_name;
+      get_tagged_name(name, tagged_name);
+      //printf("adding %lu %s  tagged %s\n",bytes,name.c_str(), tagged_name.c_str());
+      std::map<std::string, tracked_mem_object>::iterator tagged_iter = tagged_mem_map.find(tagged_name);
+      if (tagged_iter == tagged_mem_map.end())
+      {
+        tracked_mem_object obj(bytes);
+        obj.first_create_time = alloc_clock;
+        alloc_clock++;
+        tagged_mem_map[tagged_name] = obj;
+      }
+      else
+      {
+        tracked_mem_object &obj = tagged_iter->second;
+        obj.num_objects++;
+        obj.num_objects_created++;
+        obj.total_bytes += bytes;
+        obj.current_bytes += bytes;
+      }
     }
   }
 #endif
@@ -78,41 +81,44 @@ void MemoryTrackerClass::add(void *p, size_t bytes, const std::string &name)
 void MemoryTrackerClass::resize(const std::string &name, long int delta_bytes, size_t new_bytes)
 {
 #ifdef ENABLE_MEMORY_TRACKING
-  #pragma omp critical
+  if (active) 
   {
-    std::map<std::string, tracked_mem_object>::iterator iter = mem_map.find(name);
-    if (iter == mem_map.end())
+    #pragma omp critical
     {
-      tracked_mem_object obj(delta_bytes);
-      obj.first_create_time = alloc_clock;
-      mem_map[name] = obj;
-    }
-    else
-    {
-      tracked_mem_object &obj = iter->second;
-      obj.total_bytes += delta_bytes;
-      obj.current_bytes += delta_bytes;
-      if (obj.total_bytes != new_bytes) {
-        printf("  error in resize: new bytes = %ld  computed bytes = %ld\n",new_bytes,obj.total_bytes);
+      std::map<std::string, tracked_mem_object>::iterator iter = mem_map.find(name);
+      if (iter == mem_map.end())
+      {
+        tracked_mem_object obj(delta_bytes);
+        obj.first_create_time = alloc_clock;
+        mem_map[name] = obj;
       }
-    }
+      else
+      {
+        tracked_mem_object &obj = iter->second;
+        obj.total_bytes += delta_bytes;
+        obj.current_bytes += delta_bytes;
+        if (obj.current_bytes != new_bytes) {
+          printf("  error in resize: new bytes = %ld  computed bytes = %ld\n",new_bytes,obj.total_bytes);
+        }
+      }
 
-    std::string tagged_name;
-    get_tagged_name(name, tagged_name);
-    //printf("resizing (by %ld) %s  tagged %s new bytes%ld\n",delta_bytes, name.c_str(), tagged_name.c_str(),new_bytes);
-    std::map<std::string, tracked_mem_object>::iterator tagged_iter = tagged_mem_map.find(tagged_name);
-    if (tagged_iter == tagged_mem_map.end())
-    {
-      tracked_mem_object obj(delta_bytes);
-      obj.first_create_time = alloc_clock;
-      alloc_clock++;
-      tagged_mem_map[tagged_name] = obj;
-    }
-    else
-    {
-      tracked_mem_object &obj = tagged_iter->second;
-      obj.total_bytes += delta_bytes;
-      obj.current_bytes += delta_bytes;
+      std::string tagged_name;
+      get_tagged_name(name, tagged_name);
+      //printf("resizing (by %ld) %s  tagged %s new bytes%ld\n",delta_bytes, name.c_str(), tagged_name.c_str(),new_bytes);
+      std::map<std::string, tracked_mem_object>::iterator tagged_iter = tagged_mem_map.find(tagged_name);
+      if (tagged_iter == tagged_mem_map.end())
+      {
+        tracked_mem_object obj(delta_bytes);
+        obj.first_create_time = alloc_clock;
+        alloc_clock++;
+        tagged_mem_map[tagged_name] = obj;
+      }
+      else
+      {
+        tracked_mem_object &obj = tagged_iter->second;
+        obj.total_bytes += delta_bytes;
+        obj.current_bytes += delta_bytes;
+      }
     }
   }
 #endif
@@ -120,61 +126,79 @@ void MemoryTrackerClass::resize(const std::string &name, long int delta_bytes, s
 
 void MemoryTrackerClass::remove(void *p)
 {
+  remove(p, "", 0);
+}
+
+void MemoryTrackerClass::remove(const std::string &name, size_t bytes)
+{
+  remove(NULL, name, bytes);
+}
+
+void MemoryTrackerClass::remove(void *p, const std::string &name, size_t bytes)
+{
 #ifdef ENABLE_MEMORY_TRACKING
-  #pragma omp critical
+  if (active) 
   {
-    std::map<void*,std::pair<std::string,size_t> >::iterator piter;
-    piter = pointer_map.find(p);
-    if (piter == pointer_map.end())
+    #pragma omp critical
     {
-      fprintf (stderr, "Attempt to free a pointer not in the map.\n");
-      abort();
-    }
-    std::string name = piter->second.first;
-    size_t bytes = piter->second.second;
-    // fprintf (stderr, "Deallocating %s from GPU memory of size %ld at pointer %p.\n",
-    //         name.c_str(), bytes, p);
-    pointer_map.erase(piter);
-
-    std::map<std::string, tracked_mem_object>::iterator iter = mem_map.find(name);
-#if 0
-    if (iter == mem_map.end())
-    {
-      fprintf (stderr, "Error:  Memory object %s not found "
-               "in the memory map\n", name.c_str());
-      abort();
-    }
-#endif
-    if (iter != mem_map.end())
-    {
-      tracked_mem_object &obj = iter->second;
-      obj.last_delete_time = alloc_clock;
-      if (obj.num_objects == 1)
+      std::string alloc_name = name;
+      size_t alloc_bytes = bytes;
+      if (p != NULL)
       {
-        assert (bytes == obj.current_bytes);
+        std::map<void*,std::pair<std::string,size_t> >::iterator piter;
+        piter = pointer_map.find(p);
+        if (piter == pointer_map.end())
+        {
+          fprintf (stderr, "Attempt to free a pointer not in the map.\n");
+          abort();
+        }
+        alloc_name = piter->second.first;
+        alloc_bytes = piter->second.second;
+        // fprintf (stderr, "Deallocating %s from GPU memory of size %ld at pointer %p.\n",
+        //         name.c_str(), bytes, p);
+        pointer_map.erase(piter);
       }
-      obj.num_objects--;
-      obj.current_bytes -= bytes;
-    }
 
-#if 1
-    std::string tagged_name;
-    get_tagged_name(name, tagged_name);
-    //printf("Removing %s  tagged %s\n",name.c_str(), tagged_name.c_str());
-    std::map<std::string, tracked_mem_object>::iterator tagged_iter = tagged_mem_map.find(tagged_name);
-    if (tagged_iter != tagged_mem_map.end())
-    {
-      tracked_mem_object &obj = tagged_iter->second;
-      obj.last_delete_time = alloc_clock;
-      alloc_clock++;
-      if (obj.num_objects == 1)
+      std::map<std::string, tracked_mem_object>::iterator iter = mem_map.find(alloc_name);
+  #if 0
+      if (iter == mem_map.end())
       {
-        assert (bytes == obj.current_bytes);
+        fprintf (stderr, "Error:  Memory object %s not found "
+                 "in the memory map\n", name.c_str());
+        abort();
       }
-      obj.num_objects--;
-      obj.current_bytes -= bytes;
+  #endif
+      if (iter != mem_map.end())
+      {
+        tracked_mem_object &obj = iter->second;
+        obj.last_delete_time = alloc_clock;
+        if (obj.num_objects == 1)
+        {
+          assert (alloc_bytes == obj.current_bytes);
+        }
+        obj.num_objects--;
+        obj.current_bytes -= alloc_bytes;
+      }
+
+  #if 1
+      std::string tagged_name;
+      get_tagged_name(alloc_name, tagged_name);
+      //printf("Removing %s  tagged %s\n",name.c_str(), tagged_name.c_str());
+      std::map<std::string, tracked_mem_object>::iterator tagged_iter = tagged_mem_map.find(tagged_name);
+      if (tagged_iter != tagged_mem_map.end())
+      {
+        tracked_mem_object &obj = tagged_iter->second;
+        obj.last_delete_time = alloc_clock;
+        alloc_clock++;
+        if (obj.num_objects == 1)
+        {
+          assert (alloc_bytes == obj.current_bytes);
+        }
+        obj.num_objects--;
+        obj.current_bytes -= alloc_bytes;
+      }
+  #endif
     }
-#endif
   }
 #endif
 }
@@ -183,9 +207,12 @@ void
 MemoryTrackerClass::startTag(const std::string &tag)
 {
 #ifdef ENABLE_MEMORY_TRACKING
-  //#pragma omp critical
-  //thread_tags.insert(tag);
-  thread_tags.push_back(tag);
+  if (active)
+  {
+    //#pragma omp critical
+    //thread_tags.insert(tag);
+    thread_tags.push_back(tag);
+  }
 #endif
 }
 
@@ -193,13 +220,16 @@ void
 MemoryTrackerClass::endTag(const std::string &tag)
 {
 #ifdef ENABLE_MEMORY_TRACKING
-  //#pragma omp critical
-  //thread_tags.erase(tag);
-  if (thread_tags.back() != tag) {
-    printf("Error in MemoryTracker: Popping tag %s but should be %s\n",
-           thread_tags.back().c_str(), tag.c_str());
+  if (active)
+  {
+    //#pragma omp critical
+    //thread_tags.erase(tag);
+    if (thread_tags.back() != tag) {
+      printf("Error in MemoryTracker: Popping tag %s but should be %s\n",
+             thread_tags.back().c_str(), tag.c_str());
+    }
+    thread_tags.pop_back();
   }
-  thread_tags.pop_back();
 #endif
 }
 
@@ -480,7 +510,6 @@ MemoryTrackerClass::output_memory(Libxml2Document &doc, xmlNodePtr root)
     const std::string &stack_name  = names[i];
     int level = get_level(stack_name)+1;
     const std::string &name = get_leaf_name(stack_name);
-    printf("names %d level %d %s %s\n",i,level,stack_name.c_str(), name.c_str());
 
     xmlNodePtr mem_obj = doc.addChild(current_root, "object");
     tracked_mem_object &obj = filled_map[stack_name];

@@ -65,19 +65,26 @@ private:
   std::map<void*,std::pair<std::string,size_t> > pointer_map;
 
   std::map<std::string,tracked_mem_object> tagged_mem_map;
-  //std::set<std::string> tags;
+  bool active;
 
   void get_tagged_name(const std::string &name, std::string &tagged_name);
+  void remove(void *p, const std::string &name, size_t bytes);
 
 public:
+  MemoryTrackerClass():active(false) {}
   void add(void *p, size_t bytes, const std::string &name);
   void resize(const std::string &name, long int delta_bytes, size_t new_bytes);
 
   void startTag(const std::string &tag);
   void endTag(const std::string &tag);
 
+  void set_active(bool is_active)
+  {
+    active = is_active;
+  }
 
   void remove(void *p);
+  void remove(const std::string &name="", size_t bytes=0);
   void report();
   void output_memory(Libxml2Document &doc, xmlNodePtr root);
   
