@@ -24,11 +24,24 @@
 int MemoryTrackerUniqueId=0;
 
 
+std::vector<std::string> *thread_tags = NULL;
+#pragma omp threadprivate(thread_tags)
+
 MemoryTrackerClass MemoryTracker;
 
-std::vector<std::string> thread_tags;
+
+
 
 int alloc_clock = 1;
+
+MemoryTrackerClass::MemoryTrackerClass():active(false)
+{
+  #pragma omp parallel
+  {
+    thread_tags = new std::vector<std::string>();
+  }
+}
+
 
 void MemoryTrackerClass::add(void *p, size_t bytes, const std::string &name)
 {
@@ -211,7 +224,7 @@ MemoryTrackerClass::startTag(const std::string &tag)
   {
     //#pragma omp critical
     //thread_tags.insert(tag);
-    thread_tags.push_back(tag);
+    thread_tags->push_back(tag);
   }
 #endif
 }
@@ -224,11 +237,11 @@ MemoryTrackerClass::endTag(const std::string &tag)
   {
     //#pragma omp critical
     //thread_tags.erase(tag);
-    if (thread_tags.back() != tag) {
+    if (thread_tags->back() != tag) {
       printf("Error in MemoryTracker: Popping tag %s but should be %s\n",
-             thread_tags.back().c_str(), tag.c_str());
+             thread_tags->back().c_str(), tag.c_str());
     }
-    thread_tags.pop_back();
+    thread_tags->pop_back();
   }
 #endif
 }
@@ -238,8 +251,8 @@ MemoryTrackerClass::get_tagged_name(const std::string &name, std::string &tagged
 {
   tagged_name = name;
   //std::set<std::string>::iterator it = thread_tags.begin();
-  std::vector<std::string>::iterator it = thread_tags.begin();
-  for (; it != thread_tags.end(); ++it)
+  std::vector<std::string>::iterator it = thread_tags->begin();
+  for (; it != thread_tags->end(); ++it)
   {
     //tagged_name += "," + *it;
     tagged_name += "/" + *it;

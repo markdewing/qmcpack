@@ -54,10 +54,6 @@ struct tracked_mem_object
 };
 
 
-extern std::vector<std::string> thread_tags;
-#pragma omp threadprivate(thread_tags)
-  
-
 class MemoryTrackerClass
 {
 private:
@@ -71,7 +67,7 @@ private:
   void remove(void *p, const std::string &name, size_t bytes);
 
 public:
-  MemoryTrackerClass():active(false) {}
+  MemoryTrackerClass();
   void add(void *p, size_t bytes, const std::string &name);
   void resize(const std::string &name, long int delta_bytes, size_t new_bytes);
 
