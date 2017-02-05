@@ -116,11 +116,11 @@ namespace qmcplusplus
             phi[nl]=Rnl[nl]->evaluate(r,dphi[nl],d2phi[nl]);
 
           //V,Gx,Gy,Gz,L
-          T* restrict psi   =vgl[0]+offset; const T* restrict ylm_v=Ylm[0]; //value
-          T* restrict dpsi_x=vgl[1]+offset; const T* restrict ylm_x=Ylm[1]; //gradX
-          T* restrict dpsi_y=vgl[2]+offset; const T* restrict ylm_y=Ylm[2]; //gradY
-          T* restrict dpsi_z=vgl[3]+offset; const T* restrict ylm_z=Ylm[3]; //gradZ
-          T* restrict d2psi =vgl[4]+offset; const T* restrict ylm_l=Ylm[4]; //lap
+          T* restrict psi   =vgl.data(0)+offset; const T* restrict ylm_v=Ylm[0]; //value
+          T* restrict dpsi_x=vgl.data(1)+offset; const T* restrict ylm_x=Ylm[1]; //gradX
+          T* restrict dpsi_y=vgl.data(2)+offset; const T* restrict ylm_y=Ylm[2]; //gradY
+          T* restrict dpsi_z=vgl.data(3)+offset; const T* restrict ylm_z=Ylm[3]; //gradZ
+          T* restrict d2psi =vgl.data(4)+offset; const T* restrict ylm_l=Ylm[4]; //lap
           const T rinv=cone/r;
           const size_t ib_max=NL.size();
           for(size_t ib=0; ib<ib_max; ++ib)
