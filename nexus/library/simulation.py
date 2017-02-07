@@ -1667,7 +1667,8 @@ except:
     Image = unavailable('Image')
 #end try
 import tempfile
-exit_call = exit
+import sys
+exit_call = sys.exit
 def graph_sims(sims,useid=False,exit=True,quants=True):
     graph = Dot(graph_type='digraph')
     graph.set_label('simulation workflows')
