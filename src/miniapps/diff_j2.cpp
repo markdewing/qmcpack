@@ -144,7 +144,7 @@ int main(int argc, char** argv)
     vector<RealType> ur(nels);
     random_th.generate_uniform(ur.data(),nels);
 
-    J2OrbitalSoA<BsplineFunctorSoA<RealType> > J(els,ip);
+    J2OrbitalSoA<BsplineFunctor<RealType> > J(els,ip);
     TwoBodyJastrowOrbital<BsplineFunctor<RealType> > J_aos(els_aos,ip);
 
     buildJ2(J);
@@ -164,7 +164,7 @@ int main(int argc, char** argv)
     {
       els.G=czero;
       els.L=czero;
-      J.evaluateLogAndStore(els,els.G,els.L);
+      J.evaluateLog(els,els.G,els.L);
 
       els_aos.G=czero;
       els_aos.L=czero;
@@ -196,9 +196,14 @@ int main(int argc, char** argv)
       double r_ratio=0.0;
       double g_ratio=0.0;
 
-      els.Ready4Measure=false;
+      els.update();
+      els_aos.update();
 
+      els.G=czero;
+      els.L=czero;
+      J.evaluateLog(els,els.G,els.L);
       int naccepted=0;
+
       for(int iel=0; iel<nels; ++iel)
       {
         els.setActive(iel);
@@ -206,17 +211,19 @@ int main(int argc, char** argv)
 
         els_aos.setActive(iel);
         PosType grad_aos=J_aos.evalGrad(els_aos,iel)-grad_soa;
-
         g_eval+=sqrt(dot(grad_aos,grad_aos));
 
         PosType dr=sqrttau*delta[iel];
 
         grad_soa=0;
-        els.makeMoveAndCheck(iel,dr); 
-        RealType r_soa=J.ratioGrad(els,iel,grad_soa);
+        bool good_soa=els.makeMoveAndCheck(iel,dr); 
 
         grad_aos=0;
-        els_aos.makeMoveAndCheck(iel,dr); 
+        bool good_aos=els_aos.makeMoveAndCheck(iel,dr); 
+
+        if(!good_soa) continue;
+
+        RealType r_soa=J.ratioGrad(els,iel,grad_soa);
         RealType r_aos=J_aos.ratioGrad(els_aos,iel,grad_aos);
 
         grad_aos-=grad_soa;
