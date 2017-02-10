@@ -94,6 +94,8 @@ ELSE()
   )
 ENDIF()
 
+INCLUDE_DIRECTORIES("/home/mdewing/software/profilers/caliper/usr/include")
+LINK_LIBRARIES("/home/mdewing/software/profilers/caliper/usr/lib/libcaliper.so")
 
 if(QMC_PHI)
   MESSAGE(STATUS "Minimal build to test codelets on phi")

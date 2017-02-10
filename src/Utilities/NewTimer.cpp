@@ -36,6 +36,10 @@ void TimerManagerClass::addTimer(NewTimer* t)
 {
   #pragma omp critical
   {
+#ifdef USE_CALIPER
+    t->cs = cs;
+#endif
+#ifdef USE_STACK_TIMERS
     if (t->get_name().find(TIMER_STACK_SEPARATOR) != std::string::npos)
     {
       app_log() << "Warning: Timer name (" << t->get_name()
@@ -64,6 +68,7 @@ void TimerManagerClass::addTimer(NewTimer* t)
     {
       t->set_id(timer_name_to_id[t->get_name()]);
     }
+#endif
     t->set_manager(this);
     t->set_active_by_timer_threshold(timer_threshold);
     TimerList.push_back(t);

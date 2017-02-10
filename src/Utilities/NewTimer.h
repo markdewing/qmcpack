@@ -27,8 +27,11 @@
 #include <algorithm>
 #include <map>
 #include <iostream>
+// Caliper
+#include "caliper/Annotation.h"
 
-#define USE_STACK_TIMERS
+#define USE_CALIPER
+//#define USE_STACK_TIMERS
 
 class Communicate;
 
@@ -136,9 +139,12 @@ protected:
   bool max_timers_exceeded;
   std::map<timer_id_t, std::string> timer_id_name;
   std::map<std::string, timer_id_t> timer_name_to_id;
+#ifdef USE_CALIPER
+  cali::Annotation *cs;
+#endif
 public:
   TimerManagerClass():timer_threshold(timer_level_coarse),max_timer_id(1),
-    max_timers_exceeded(false) {}
+    max_timers_exceeded(false) {cs = new cali::Annotation("timerstack");}
   void addTimer (NewTimer* t);
 
   void push_timer(NewTimer *t)
@@ -228,7 +234,12 @@ protected:
   std::map<StackKey, double> per_stack_total_time;
   std::map<StackKey, long> per_stack_num_calls;
 #endif
+
+  
 public:
+#ifdef USE_CALIPER
+  cali::Annotation*  cs;
+#endif
 #if not(ENABLE_TIMERS)
   inline void start() {}
   inline void stop() {}
@@ -264,6 +275,8 @@ public:
         }
         start_time = cpu_clock();
       }
+#elif defined(USE_CALIPER)
+      cs->begin(name.c_str());
 #else
       start_time = cpu_clock();
 #endif
@@ -278,9 +291,13 @@ public:
       #pragma omp master
 #endif
       {
+#ifdef USE_CALIPER
+        cs->end();
+#else
         double elapsed = cpu_clock() - start_time;
         total_time += elapsed;
         num_calls++;
+#endif
 
 #ifdef USE_STACK_TIMERS
         per_stack_total_time[current_stack_key] += elapsed;
@@ -361,6 +378,9 @@ public:
     ,timer_id(0)
 #ifdef USE_STACK_TIMERS
   ,manager(NULL), parent(NULL)
+#endif
+#ifdef USE_CALIPER
+  ,cs(NULL)
 #endif
   { }
 
