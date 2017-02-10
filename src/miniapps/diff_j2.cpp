@@ -147,9 +147,10 @@ int main(int argc, char** argv)
     J2OrbitalSoA<BsplineFunctor<RealType> > J(els,ip);
     TwoBodyJastrowOrbital<BsplineFunctor<RealType> > J_aos(els_aos,ip);
 
-    buildJ2(J);
+    RealType r2_cut=std::min(RealType(6.4),els.Lattice.WignerSeitzRadius);
+    buildJ2(J,r2_cut);
     cout << "Done with the J2 " << endl;
-    buildJ2(J_aos);
+    buildJ2(J_aos,r2_cut);
     cout << "Done with the J2_aos " << endl;
 
     constexpr RealType czero(0);
