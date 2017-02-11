@@ -258,7 +258,7 @@ int main(int argc, char** argv)
 #ifdef VERSION_YE
       J.evaluateGL(els, els.G, els.L);
 #else
-      J.evaluateGL(els);
+      J.evaluateGL(els, els.G, els.L);
 #endif
 
       els_aos.G=czero;
