@@ -118,7 +118,7 @@ namespace qmcplusplus
    */
   template<typename T, typename T1, typename T2>
     inline void fix_phase_rotate_c2r(Array<std::complex<T>,3>& in
-    , Array<T1,3>& out, const TinyVector<T2,3>& twist)
+    , Array<T1,3>& out, const TinyVector<T2,3>& twist, T& phase_r, T& phase_i)
   {
     const T two_pi=-2.0*M_PI;
     const int nx=in.size(0);
@@ -152,11 +152,11 @@ namespace qmcplusplus
       }
     }
 
-    T x = (rNorm-iNorm) / riNorm;
-    T y = 1.0/std::sqrt(x*x+4.0);
-    T phs = std::sqrt(0.5-y);
-    T phase_r = phs;
-    T phase_i = (x<0) ? std::sqrt(1.0-phs*phs) : -std::sqrt(1.0-phs*phs);
+    const T x = (rNorm-iNorm) / riNorm;
+    const T y = 1.0/std::sqrt(x*x+4.0);
+    const T phs = std::sqrt(0.5-y);
+    phase_r = phs;
+    phase_i = (x<0) ? std::sqrt(1.0-phs*phs) : -std::sqrt(1.0-phs*phs);
 
     #pragma omp parallel for
     for (int ix=0; ix<nx; ix++)
@@ -203,9 +203,8 @@ namespace qmcplusplus
 
   template<typename T, typename T1, typename T2>
   inline void fix_phase_rotate_c2c(const Array<std::complex<T>,3>& in
-      , Array<T1,3>& out_r, Array<T1,3>& out_i, const TinyVector<T2,3>& twist)
+      , Array<T1,3>& out_r, Array<T1,3>& out_i, const TinyVector<T2,3>& twist, T& phase_r, T& phase_i)
   {
-
     const T2 eps=std::numeric_limits<float>::epsilon();
     const T2 k2=dot(twist,twist);
 
