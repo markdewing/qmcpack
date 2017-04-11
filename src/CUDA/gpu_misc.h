@@ -58,6 +58,19 @@ void synchronize();
 
 void streamsSynchronize();
 
+#ifdef ENABLE_TIMERS
+class gpu_timer
+{
+  cudaEvent_t startEvent; 
+  cudaEvent_t stopEvent;
+public:
+  gpu_timer();
+  void start();
+  void stop();
+  double elapsed();
+};
+#endif
+
 }
 #endif
 

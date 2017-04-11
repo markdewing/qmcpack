@@ -519,7 +519,7 @@ bool QMCMain::validateXML()
       traces_xml = cur;
     }
 #endif
-    else
+    else if(cname != "text")
     {
       //everything else goes to m_qmcaction
       m_qmcaction.push_back(std::pair<xmlNodePtr,bool>(cur,true));
@@ -623,7 +623,11 @@ bool QMCMain::runQMC(xmlNodePtr cur)
     qmcDriver->process(cur);
     OhmmsInfo::flush();
     Timer qmcTimer;
-    NewTimer *t1 = TimerManager.createTimer(qmcDriver->getEngineName(), timer_level_coarse);
+    bool track_gpu = false;
+#ifdef QMC_CUDA
+    track_gpu = true;
+#endif
+    NewTimer *t1 = TimerManager.createTimer(qmcDriver->getEngineName(), timer_level_coarse, track_gpu);
     t1->start();
     qmcDriver->run();
     t1->stop();

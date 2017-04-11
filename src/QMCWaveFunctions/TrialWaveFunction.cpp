@@ -107,10 +107,15 @@ TrialWaveFunction::addOrbital(OrbitalBase* aterm, const std::string& aname, bool
   suffixes[3] = "_NLratio";
   suffixes[4] = "_recompute";
   suffixes[5] = "_derivs";
+  bool track_gpu = false;
+#ifdef QMC_CUDA
+  track_gpu = true;
+#endif
   for (int i = 0; i < suffixes.size(); i++)
   {
     std::string name = "WaveFunction::" + aname + suffixes[i];
-    myTimers.push_back(TimerManager.createTimer(name));
+  
+    myTimers.push_back(TimerManager.createTimer(name,timer_level_fine,track_gpu));
   }
 }
 

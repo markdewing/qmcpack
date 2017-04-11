@@ -70,9 +70,9 @@ void TimerManagerClass::addTimer(NewTimer* t)
   }
 }
 
-NewTimer *TimerManagerClass::createTimer(const std::string& myname, timer_levels mytimer)
+NewTimer *TimerManagerClass::createTimer(const std::string& myname, timer_levels mytimer, bool track_gpu)
 {
-  NewTimer *t = new NewTimer(myname, mytimer);
+  NewTimer *t = new NewTimer(myname, mytimer, track_gpu);
   addTimer(t);
   return t;
 }
@@ -105,12 +105,14 @@ void TimerManagerClass::collate_flat_profile(Communicate *comm, FlatProfileData 
       p.nameList[timer.get_name()]=ind;
       p.timeList.push_back(timer.get_total());
       p.callList.push_back(timer.get_num_calls());
+      p.timeList_gpu.push_back(timer.get_total_gpu());
     }
     else
     {
       int ind=(*it).second;
       p.timeList[ind]+=timer.get_total();
       p.callList[ind]+=timer.get_num_calls();
+      p.timeList_gpu[ind]+=timer.get_total_gpu();
     }
   }
 
@@ -125,10 +127,12 @@ struct ProfileData
 {
     double time;
     double calls;
+    double time_gpu;
 
     ProfileData &operator+=(const ProfileData &pd)
     {
         time += pd.time;
+        time_gpu += pd.time_gpu;
         calls += pd.calls;
         return *this;
     }
@@ -193,6 +197,7 @@ void TimerManagerClass::collate_stack_profile(Communicate *comm, StackProfileDat
         std::string stack_name;
         get_stack_name_from_id(key, stack_name);
         pd.time = timer.get_total(key);
+        pd.time_gpu = timer.get_total_gpu(key);
         pd.calls = timer.get_num_calls(key);
 
         all_stacks[stack_name] += pd;
@@ -207,8 +212,13 @@ void TimerManagerClass::collate_stack_profile(Communicate *comm, StackProfileDat
     std::string stack_name = si->first;
     p.nameList[stack_name] = idx;
     p.names.push_back(stack_name);
+
     p.timeList.push_back(si->second.time);
+    p.timeList_gpu.push_back(si->second.time_gpu);
+
     p.timeExclList.push_back(si->second.time);
+    p.timeExclList_gpu.push_back(si->second.time_gpu);
+
     p.callList.push_back(si->second.calls);
     idx++;
   }
@@ -223,6 +233,7 @@ void TimerManagerClass::collate_stack_profile(Communicate *comm, StackProfileDat
       if (level == start_level+1)
       {
         p.timeExclList[idx] -= p.timeExclList[i];
+        p.timeExclList_gpu[idx] -= p.timeExclList_gpu[i];
       }
       if (level == start_level)
       {
@@ -238,6 +249,11 @@ TimerManagerClass::print(Communicate* comm)
 {
 #if ENABLE_TIMERS
 #ifdef USE_STACK_TIMERS
+  if(comm == NULL || comm->rank() == 0)
+  {
+    printf("\nFlat profile\n");
+  }
+  print_flat(comm);
   if(comm == NULL || comm->rank() == 0)
   {
     printf("Stack timer profile\n");
@@ -270,11 +286,12 @@ TimerManagerClass::print_flat(Communicate* comm)
       {
         int i=(*it).second;
         //if(callList[i]) //skip zeros
-        printf ("%-40s  %9.4f  %13ld  %16.9f  %12.6f TIMER\n"
+        printf ("%-40s  %9.4f  %13ld  %16.9f  %12.6f %12.6f TIMER\n"
         , (*it).first.c_str()
         , p.timeList[i], p.callList[i]
         , p.timeList[i]/(static_cast<double>(p.callList[i])+std::numeric_limits<double>::epsilon())
-        , p.timeList[i]/static_cast<double>(omp_get_max_threads()*comm->size()));
+        , p.timeList[i]/static_cast<double>(omp_get_max_threads()*comm->size())
+        , p.timeList_gpu[i]);
         ++it;
       }
     }
@@ -320,7 +337,8 @@ TimerManagerClass::print_stack(Communicate* comm)
 
     std::string timer_name;
     pad_string("Timer", timer_name, max_name_len);
-    printf("%s  %-9s  %-9s  %-10s  %-13s\n",timer_name.c_str(),"Inclusive_time","Exclusive_time","Calls","Time_per_call");
+    //printf("%s  %-9s  %-9s  %-10s  %-13s\n",timer_name.c_str(),"Inclusive_time","Exclusive_time","Calls","Time_per_call");
+    printf("%s  %-9s  %-9s  %-10s  %-13s %-9s %-9s\n",timer_name.c_str(),"Inclusive_time","Exclusive_time","Calls","Time_per_call","GPU Inc","GPU Excl");
     for (int i = 0; i < p.names.size(); i++)
     {
       std::string stack_name = p.names[i];
@@ -330,12 +348,15 @@ TimerManagerClass::print_stack(Communicate* comm)
       std::string indented_str = indent_str + name;
       std::string padded_name_str;
       pad_string(indented_str, padded_name_str, max_name_len);
-      printf ("%s  %9.4f  %9.4f  %13ld  %16.9f\n"
+      printf ("%s  %9.4f  %9.4f  %13ld  %16.9f %9.4f %9.4f\n"
               , padded_name_str.c_str()
               , p.timeList[i]
               , p.timeExclList[i]
               , p.callList[i]
-              , p.timeList[i]/(static_cast<double>(p.callList[i])+std::numeric_limits<double>::epsilon()));
+              , p.timeList[i]/(static_cast<double>(p.callList[i])+std::numeric_limits<double>::epsilon())
+              , p.timeList_gpu[i]
+              , p.timeExclList_gpu[i]
+             );
     }
   }
 #endif

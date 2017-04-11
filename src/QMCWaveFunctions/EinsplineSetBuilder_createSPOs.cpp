@@ -173,6 +173,7 @@ EinsplineSetBuilder::createSPOSetFromXML(xmlNodePtr cur)
     qafm=0;
     app_log() << "SPOSet parameters match in EinsplineSetBuilder:  "
               << "cloning EinsplineSet object.\n";
+    spo_timer->stop();
     return iter->second->makeClone();
   }
 

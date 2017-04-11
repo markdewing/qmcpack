@@ -27,6 +27,9 @@
 #include <algorithm>
 #include <map>
 #include <iostream>
+#ifdef QMC_CUDA
+#include <CUDA/gpu_misc.h>
+#endif
 
 #define USE_STACK_TIMERS
 
@@ -140,7 +143,7 @@ public:
   TimerManagerClass():timer_threshold(timer_level_coarse),max_timer_id(1),
     max_timers_exceeded(false) {}
   void addTimer (NewTimer* t);
-  NewTimer *createTimer(const std::string& myname, timer_levels mytimer = timer_level_fine);
+  NewTimer *createTimer(const std::string& myname, timer_levels mytimer = timer_level_fine, bool track_gpu=true);
 
   void push_timer(NewTimer *t)
   {
@@ -187,6 +190,7 @@ public:
     nameList_t nameList;
     timeList_t timeList;
     callList_t callList;
+    timeList_t timeList_gpu;
   };
 
   struct StackProfileData {
@@ -194,6 +198,8 @@ public:
     nameList_t nameList;
     timeList_t timeList;
     timeList_t timeExclList;
+    timeList_t timeList_gpu;
+    timeList_t timeExclList_gpu;
     callList_t callList;
   };
 
@@ -221,6 +227,7 @@ protected:
   bool active;
   timer_levels timer_level;
   timer_id_t timer_id;
+  bool track_gpu;
 #ifdef USE_STACK_TIMERS
   TimerManagerClass *manager;
   NewTimer *parent;
@@ -228,6 +235,12 @@ protected:
 
   std::map<StackKey, double> per_stack_total_time;
   std::map<StackKey, long> per_stack_num_calls;
+#ifdef QMC_CUDA
+  double gpu_total_time;
+  std::map<StackKey, double> gpu_per_stack_total_time;
+  std::map<StackKey, long> gpu_per_stack_num_calls;
+  gpu::gpu_timer gpu_timer;
+#endif
 #endif
 public:
 #if not(ENABLE_TIMERS)
@@ -238,6 +251,13 @@ public:
   {
     if (active)
     {
+#ifdef QMC_CUDA
+      if (track_gpu)
+      {
+        gpu_timer.start();
+      }
+#endif
+        
 #ifdef USE_STACK_TIMERS
       #pragma omp master
       {
@@ -287,6 +307,17 @@ public:
         per_stack_total_time[current_stack_key] += elapsed;
         per_stack_num_calls[current_stack_key] += 1;
 
+#ifdef QMC_CUDA
+        if (track_gpu)
+        {
+          gpu_timer.stop();
+          double gpu_elapsed_time = gpu_timer.elapsed();
+          gpu_total_time += gpu_elapsed_time;
+          gpu_per_stack_total_time[current_stack_key] += gpu_elapsed_time;
+          gpu_per_stack_num_calls[current_stack_key] += 1;
+        }
+#endif
+
         if (manager)
         {
           manager->current_timer()->set_parent(NULL);
@@ -317,10 +348,20 @@ public:
     return total_time;
   }
 
+  inline double    get_total_gpu() const
+  {
+    return gpu_total_time;
+  }
+
 #ifdef USE_STACK_TIMERS
   inline double get_total(const StackKey &key)
   {
     return per_stack_total_time[key];
+  }
+
+  inline double get_total_gpu(const StackKey &key)
+  {
+    return gpu_per_stack_total_time[key];
   }
 #endif
 
@@ -357,11 +398,14 @@ public:
     total_time=0.0;
   }
 
-  NewTimer(const std::string& myname, timer_levels mytimer = timer_level_fine) :
+  NewTimer(const std::string& myname, timer_levels mytimer = timer_level_fine, bool track_gpu=true) :
     total_time(0.0), num_calls(0), name(myname), active(true), timer_level(mytimer)
-    ,timer_id(0)
+    ,timer_id(0), track_gpu(track_gpu)
 #ifdef USE_STACK_TIMERS
   ,manager(NULL), parent(NULL)
+#endif
+#ifdef QMC_CUDA
+  ,gpu_timer(),gpu_total_time(0)
 #endif
   { }
 

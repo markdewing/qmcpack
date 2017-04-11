@@ -41,9 +41,9 @@ Communicate::irecv(int source, int tag, T& )
 template<typename T> inline void
 Communicate::send(int dest, int tag, T&) { }
 
-template<typename T> inline void Communicate::gather(T& sb, T& rb, int dest) { }
+template<typename T> inline void Communicate::gather(T& sb, T& rb, int dest) { rb = sb; }
 
-template<typename T> inline void Communicate::allgather(T& sb, T& rb, int count) { }
+template<typename T> inline void Communicate::allgather(T& sb, T& rb, int count) { rb = sb; }
 
 template<typename T> inline void Communicate::scatter(T& sb, T& rb, int dest) { }
 

@@ -45,13 +45,17 @@ initCUDAStreams()
 void
 initCUDAEvents()
 {
-  cudaEventCreateWithFlags(&syncEvent, cudaEventDisableTiming);
-  cudaEventCreateWithFlags(&gradientSyncDiracEvent, cudaEventDisableTiming);
-  cudaEventCreateWithFlags(&gradientSyncOneBodyEvent, cudaEventDisableTiming);
-  cudaEventCreateWithFlags(&gradientSyncTwoBodyEvent, cudaEventDisableTiming);
-  cudaEventCreateWithFlags(&ratioSyncDiracEvent, cudaEventDisableTiming);
-  cudaEventCreateWithFlags(&ratioSyncOneBodyEvent, cudaEventDisableTiming);
-  cudaEventCreateWithFlags(&ratioSyncTwoBodyEvent, cudaEventDisableTiming);
+  unsigned int flag = cudaEventDisableTiming;
+#ifdef ENABLE_TIMERS
+  flag = cudaEventDefault;
+#endif
+  cudaEventCreateWithFlags(&syncEvent, flag);
+  cudaEventCreateWithFlags(&gradientSyncDiracEvent, flag);
+  cudaEventCreateWithFlags(&gradientSyncOneBodyEvent, flag);
+  cudaEventCreateWithFlags(&gradientSyncTwoBodyEvent, flag);
+  cudaEventCreateWithFlags(&ratioSyncDiracEvent, flag);
+  cudaEventCreateWithFlags(&ratioSyncOneBodyEvent, flag);
+  cudaEventCreateWithFlags(&ratioSyncTwoBodyEvent, flag);
 }
 
 void
@@ -96,5 +100,48 @@ streamsSynchronize()
 {
   cudaEventRecord(syncEvent, 0);
 }
+
+#ifdef ENABLE_TIMERS
+gpu_timer::gpu_timer()
+{
+  cudaEventCreate(&startEvent);
+  cudaEventCreate(&stopEvent);
+}
+
+void gpu_timer::start()
+{
+  cudaEventRecord(startEvent);
+}
+
+void gpu_timer::stop()
+{
+  cudaEventRecord(stopEvent);
+}
+
+double gpu_timer::elapsed()
+{
+  float ms;
+  cudaError_t err = cudaEventElapsedTime(&ms, startEvent, stopEvent);
+  if (err == cudaErrorNotReady)
+  {
+    //printf("GPU section not done\n");
+    cudaError_t err2 = cudaEventSynchronize(stopEvent);
+    if (err2 != cudaSuccess)
+    {
+      printf("GPU stop event sync error = %d\n",err);
+    }
+    err = cudaEventElapsedTime(&ms, startEvent, stopEvent);
+    if (err != cudaSuccess)
+    {
+      printf("GPU event timer try again error = %d\n",err);
+    }
+  }
+  if (err != cudaSuccess)
+  {
+    printf("GPU event timer error = %d\n",err);
+  }
+  return ms/1000.0;
+}
+#endif
 
 }
