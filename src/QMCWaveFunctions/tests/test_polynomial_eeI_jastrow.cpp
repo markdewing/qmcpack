@@ -94,7 +94,11 @@ TEST_CASE("PolynomialFunctor3D Jastrow", "[wavefunction]")
   target_species(chargeIdx, downIdx) = -1;
   //elec_.resetGroups();
 
-  elec_.addTable(ions_);
+#ifdef ENABLE_AA_SOA
+  elec_.addTable(ions_, DT_SOA);
+#else
+  elec_.addTable(ions_, DT_AOS);
+#endif
   elec_.update();
 
   TrialWaveFunction psi = TrialWaveFunction(c);

@@ -16,13 +16,16 @@
 
 #include <config.h>
 #include <vector>
+#include <cstdlib>
 
 #if (__cplusplus >= 201103L)
 #if defined(__INTEL_COMPILER)
  #include <tbb/cache_aligned_allocator.h>
 #else
- #if defined(HAVE_LIBBOOST)
-   #include <boost/align/aligned_allocator.hpp>
+  #if defined(HAVE_LIBBOOST)
+    #if (BOOST_VERSION >= 105600) 
+      #include <boost/align/aligned_allocator.hpp>
+    #endif
  #endif
 #endif
 
@@ -46,7 +49,6 @@ namespace qmcplusplus
 
 }
 #else
-#include <cstdlib>
 namespace qmcplusplus
 {
   /** dummy inherited class to use aligned_vector<T> */

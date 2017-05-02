@@ -139,5 +139,25 @@ template<typename T>
 void gmax(T&,Communicate::mpi_comm_type comm)
 { }
 
+#if 1
+template<typename T>
+inline void
+Communicate::reduce_in_place(T* restrict, int n)
+{ }
+#endif
+#if 0
+template<>
+inline void
+Communicate::reduce_in_place(double* restrict res, int n)
+{ }
+
+template<>
+inline void
+Communicate::reduce_in_place(float* restrict res, int n)
+{ }
+#endif
+
+
+
 #endif
 

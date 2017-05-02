@@ -281,6 +281,8 @@ ENDIF(HAVE_LIBHDF5 OR HAVE_ADIOS)
     )
   ENDIF(HAVE_ADIOS)
 
+  ADD_LIBRARY(adios_config ${ADIOS})
+
   SET(WFSTEMP QMCWaveFunctions/OrbitalBase.cpp) 
   ADD_LIBRARY(qmcbase ${PARTICLE}  ${PARTICLEIO} ${WFSTEMP} ${X})
 
