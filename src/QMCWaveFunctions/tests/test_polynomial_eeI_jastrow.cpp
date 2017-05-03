@@ -94,7 +94,7 @@ TEST_CASE("PolynomialFunctor3D Jastrow", "[wavefunction]")
   target_species(chargeIdx, downIdx) = -1;
   //elec_.resetGroups();
 
-  elec_.addTable(ions_);
+  elec_.addTable(ions_,DT_AOS);
   elec_.update();
 
   TrialWaveFunction psi = TrialWaveFunction(c);

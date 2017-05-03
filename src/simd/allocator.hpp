@@ -23,7 +23,9 @@
  #include <tbb/cache_aligned_allocator.h>
 #else
  #if defined(HAVE_LIBBOOST)
-   #include <boost/align/aligned_allocator.hpp>
+    #if (BOOST_VERSION >= 105600)
+      #include <boost/align/aligned_allocator.hpp>
+    #endif
  #endif
 #endif
 
@@ -34,7 +36,7 @@ namespace qmcplusplus
   template<class T>
     using aligned_allocator=tbb::cache_aligned_allocator<T>;
 #else
- #if defined(HAVE_LIBBOOST)
+ #if defined(HAVE_LIBBOOST) && (BOOST_VERSION >= 105600)
   template<class T>
     using aligned_allocator=boost::alignment::aligned_allocator<T, QMC_CLINE>;
  #else
