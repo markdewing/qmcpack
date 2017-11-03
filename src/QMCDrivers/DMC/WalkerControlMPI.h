@@ -45,11 +45,9 @@ struct WalkerControlMPI: public WalkerControlBase
   int branch(int iter, MCWalkerConfiguration& W, RealType trigger);
 
   void swapWalkersSimple(MCWalkerConfiguration& W);
-
-  //old implementations
   void swapWalkersAsync(MCWalkerConfiguration& W);
-  void swapWalkersBlocked(MCWalkerConfiguration& W);
-  void swapWalkersMap(MCWalkerConfiguration& W);
+
+  // deleted swapWalkersBlocked and swapWalkersMap
 };
 }
 #endif

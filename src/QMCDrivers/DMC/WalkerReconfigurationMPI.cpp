@@ -19,6 +19,10 @@
 #include "Utilities/IteratorUtility.h"
 #include "Utilities/UtilityFunctions.h"
 #include "Utilities/RandomGenerator.h"
+
+// temporary
+#include "QMCDrivers/DMC/PackWrapper.h"
+
 using namespace qmcplusplus;
 
 /** default constructor
@@ -238,11 +242,9 @@ void WalkerReconfigurationMPI::sendWalkers(MCWalkerConfiguration& W,
   {
     if(plusN[ic]==MyContext)
     {
-      //OOMPI_Packed sendBuffer(wbuffer_size,OOMPI_COMM_WORLD);
-      OOMPI_Packed sendBuffer(wbuffer_size,myComm->getComm());
+      PackedBuffer sendBuffer(wbuffer_size);
       W[plus[last]]->putMessage(sendBuffer);
-      //OOMPI_COMM_WORLD[minusN[ic]].Send(sendBuffer);
-      myComm->getComm()[minusN[ic]].Send(sendBuffer);
+      myComm->getComm()[minusN[ic]].Send(toMessage(sendBuffer));
       --last;
     }
     ++ic;
@@ -273,10 +275,8 @@ void WalkerReconfigurationMPI::recvWalkers(MCWalkerConfiguration& W,
   {
     if(minusN[ic]==MyContext)
     {
-      //OOMPI_Packed recvBuffer(wbuffer_size,OOMPI_COMM_WORLD);
-      //OOMPI_COMM_WORLD[plusN[ic]].Recv(recvBuffer);
-      OOMPI_Packed recvBuffer(wbuffer_size,myComm->getComm());
-      myComm->getComm()[plusN[ic]].Recv(recvBuffer);
+      PackedBuffer recvBuffer(wbuffer_size);
+      myComm->getComm()[plusN[ic]].Recv(toMessage(recvBuffer));
       int im=minus[last];
       W[im]->getMessage(recvBuffer);
       W[im]->ParentID=W[im]->ID;
