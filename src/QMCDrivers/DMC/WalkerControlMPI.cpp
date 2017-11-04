@@ -20,6 +20,7 @@
 #include <Utilities/UtilityFunctions.h>
 #include <Utilities/NewTimer.h>
 #include <Utilities/Timer.h>
+#include <cassert>
 
 namespace qmcplusplus
 {
@@ -147,15 +148,43 @@ WalkerControlMPI::branch(int iter, MCWalkerConfiguration& W, RealType trigger)
   return Cur_pop;
 }
 
-/** swap Walkers with Recv/Send
- *
- * The algorithm ensures that the load per node can differ only by one walker.
- * The communication is one-dimensional.
- */
-void WalkerControlMPI::swapWalkersSimple(MCWalkerConfiguration& W)
+#define CONTRACTS_ON
+#ifdef CONTRACTS_ON
+#define PRECONDITION(x) assert(x)
+#define POSTCONDITION(x) assert(x)
+#else
+#define PRECONDITION(x)
+#define POSTCONDITION(x)
+#endif
+
+void assignWalkerPopulation(int Cur_pop, int NumContexts, int MyContext, std::vector<int> NumPerNode, std::vector<int> &minus, std::vector<int> &plus)
 {
+  // Cur_pop - in - current population
+  // NumContexts -in - number of MPI processes
+  // MyContext - in - my MPI rank
+  // NumPerNode - in - current walkers per node
+  // minus - out - number of walkers to be removed from each node
+  // plus -  out - number of walkers to be added to each node
+
+  PRECONDITION(Cur_pop >= 0);
+  PRECONDITION(NumContexts >= 0);
+  PRECONDITION(MyContext >= 0);
+#ifdef CONTRACTS_ON
+  int total = 0;
+  for (auto i = NumPerNode.begin(); i != NumPerNode.end(); i++) {
+    total += *i;
+  }
+  PRECONDITION(total == Cur_pop);
+#endif
+  // preconditions
+  //  assume minus and plus are empty upon input
+  //  sum NumPerNode = Cur_pop
+  //  size NumPerNode = NumContexts
+  //  Cur_pop, NumContexts, myContext >=0
+  // postconditions
+  //   size of minus and plus are the same
+  std::vector<int> FairOffSet;
   FairDivideLow(Cur_pop,NumContexts,FairOffSet);
-  std::vector<int> minus, plus;
   int deltaN;
   for(int ip=0; ip<NumContexts; ip++)
   {
@@ -166,12 +195,23 @@ void WalkerControlMPI::swapWalkersSimple(MCWalkerConfiguration& W)
     {
       plus.insert(plus.end(),dn,ip);
     }
-    else
-      if(dn<0)
-      {
-        minus.insert(minus.end(),-dn,ip);
-      }
+    else if(dn<0)
+    {
+      minus.insert(minus.end(),-dn,ip);
+    }
   }
+  POSTCONDITION(plus.size() == minus.size());
+}
+
+/** swap Walkers with Recv/Send
+ *
+ * The algorithm ensures that the load per node can differ only by one walker.
+ * The communication is one-dimensional.
+ */
+void WalkerControlMPI::swapWalkersSimple(MCWalkerConfiguration& W)
+{
+  std::vector<int> minus, plus;
+  assignWalkerPopulation(Cur_pop, NumContexts, MyContext, NumPerNode, minus, plus);
   Walker_t& wRef(*W[0]);
   std::vector<Walker_t*> newW;
   std::vector<Walker_t*> oldW;
@@ -195,6 +235,10 @@ void WalkerControlMPI::swapWalkersSimple(MCWalkerConfiguration& W)
   }
   fout << std::endl;
 #endif
+ //  From the class
+  // MyContext (read)
+  // myComm (read)
+  // NumWalkersSent (write)
   int nswap=std::min(plus.size(), minus.size());
   int last=W.getActiveWalkers()-1;
   int nsend=0;
@@ -236,24 +280,8 @@ void WalkerControlMPI::swapWalkersSimple(MCWalkerConfiguration& W)
  */
 void WalkerControlMPI::swapWalkersAsync(MCWalkerConfiguration& W)
 {
-  FairDivideLow(Cur_pop,NumContexts,FairOffSet);
   std::vector<int> minus, plus;
-  int deltaN;
-  for(int ip=0; ip<NumContexts; ip++)
-  {
-    int dn=NumPerNode[ip]-(FairOffSet[ip+1]-FairOffSet[ip]);
-    if(ip == MyContext)
-      deltaN=dn;
-    if(dn>0)
-    {
-      plus.insert(plus.end(),dn,ip);
-    }
-    else
-      if(dn<0)
-      {
-        minus.insert(minus.end(),-dn,ip);
-      }
-  }
+  assignWalkerPopulation(Cur_pop, NumContexts, MyContext, NumPerNode, minus, plus);
   Walker_t& wRef(*W[0]);
   std::vector<Walker_t*> newW;
   std::vector<Walker_t*> oldW;
