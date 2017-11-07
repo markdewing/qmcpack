@@ -40,7 +40,6 @@ ParticleSetPool::ParticleSetPool(Communicate* c, const char* aname)
   : MPIObjectBase(c), SimulationCell(0), TileMatrix(0)
 {
   TileMatrix.diagonal(1);
-  ClassName="ParticleSetPool";
   myName=aname;
 }
 

@@ -29,13 +29,11 @@ struct BsplineJastrowBuilder: public OrbitalBuilderBase
                         ParticleSet& source) :
     OrbitalBuilderBase(target,psi), sourcePtcl(&source)
   {
-    ClassName="BsplineJastrowBuilder";
   }
   // Two-body constructor
   BsplineJastrowBuilder(ParticleSet& target, TrialWaveFunction& psi) :
     OrbitalBuilderBase(target,psi), sourcePtcl(NULL)
   {
-    ClassName="BsplineJastrowBuilder";
   }
 
   /** create one-body Jastrow

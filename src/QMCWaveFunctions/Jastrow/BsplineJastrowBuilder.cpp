@@ -41,7 +41,7 @@ namespace qmcplusplus
 template<typename OBJT, typename DOBJT>
 bool BsplineJastrowBuilder::createOneBodyJastrow(xmlNodePtr cur)
 {
-  ReportEngine PRE(ClassName,"createOneBodyJastrow(xmlNodePtr)");
+  ReportEngine PRE("BsplineJastrowBuilder","createOneBodyJastrow(xmlNodePtr)");
   std::string j1name("J1");
   {
     OhmmsAttributeSet a;
@@ -175,7 +175,7 @@ struct BsplineInitializer
 
 bool BsplineJastrowBuilder::put(xmlNodePtr cur)
 {
-  ReportEngine PRE(ClassName,"put(xmlNodePtr)");
+  ReportEngine PRE("BsplineJastrowBuilder","put(xmlNodePtr)");
   bool PrintTables=false;
   typedef BsplineFunctor<RealType> RadFuncType;
   // Create a one-body Jastrow

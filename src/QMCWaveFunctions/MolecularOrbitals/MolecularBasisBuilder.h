@@ -50,7 +50,6 @@ public:
   MolecularBasisBuilder(ParticleSet& els, ParticleSet& ions, bool cusp=false, std::string cusp_info=""):
     targetPtcl(els), sourcePtcl(ions), thisBasisSet(0),cuspCorr(cusp),cuspInfo(cusp_info)
   {
-    ClassName="MolecularBasisBuilder";
   }
 
   inline bool is_same(const xmlChar* a, const char* b)
@@ -62,7 +61,7 @@ public:
   {
     if(thisBasisSet)
       return true;
-    ReportEngine PRE(ClassName,"put(xmlNodePtr)");
+    ReportEngine PRE("MolecularBasisBuilder","put(xmlNodePtr)");
     PRE.echo(cur);
     //create the BasisSetType
     thisBasisSet = new ThisBasisSetType(sourcePtcl,targetPtcl);
@@ -120,7 +119,7 @@ public:
 
   SPOSetBase* createSPOSetFromXML(xmlNodePtr cur)
   {
-    ReportEngine PRE(ClassName,"createSPO(xmlNodePtr)");
+    ReportEngine PRE("MolecularBasisBuilder","createSPO(xmlNodePtr)");
     std::string spo_name(""), id, cusp_file("");
     OhmmsAttributeSet spoAttrib;
     spoAttrib.add (spo_name, "name");

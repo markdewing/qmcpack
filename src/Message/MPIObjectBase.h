@@ -89,9 +89,6 @@ protected:
    * @todo use smart pointer
    */
   Communicate* myComm;
-  /** class Name
-   */
-  std::string ClassName;
 
   //private:
   //  //disable copy constructor for now

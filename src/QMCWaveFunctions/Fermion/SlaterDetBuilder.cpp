@@ -63,7 +63,6 @@ SlaterDetBuilder::SlaterDetBuilder(ParticleSet& els, TrialWaveFunction& psi,
   , myBasisSetFactory(0), slaterdet_0(0), multislaterdet_0(0)
   , multislaterdetfast_0(0)
 {
-  ClassName="SlaterDetBuilder";
   BFTrans=0;
   UseBackflow=false;
 }
@@ -88,7 +87,7 @@ SlaterDetBuilder::~SlaterDetBuilder()
  */
 bool SlaterDetBuilder::put(xmlNodePtr cur)
 {
-  ReportEngine PRE(ClassName,"put(xmlNodePtr)");
+  ReportEngine PRE("SlaterDetBuilder","put(xmlNodePtr)");
   ///save the current node
   xmlNodePtr curRoot=cur;
   xmlNodePtr BFnode;
@@ -419,7 +418,7 @@ bool SlaterDetBuilder::put(xmlNodePtr cur)
  */
 bool SlaterDetBuilder::putDeterminant(xmlNodePtr cur, int spin_group)
 {
-  ReportEngine PRE(ClassName,"putDeterminant(xmlNodePtr,int)");
+  ReportEngine PRE("SlaterDetBuilder","putDeterminant(xmlNodePtr,int)");
 
   SpeciesSet& myspecies=targetPtcl.mySpecies;
 

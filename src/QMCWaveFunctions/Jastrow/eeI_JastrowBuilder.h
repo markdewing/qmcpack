@@ -28,7 +28,6 @@ struct eeI_JastrowBuilder: public OrbitalBuilderBase
                      ParticleSet& source) :
     OrbitalBuilderBase(target,psi), sourcePtcl(&source)
   {
-    ClassName="eeI_JastrowBuilder";
   }
 
   bool put(xmlNodePtr cur);

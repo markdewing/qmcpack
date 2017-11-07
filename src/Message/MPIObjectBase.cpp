@@ -22,7 +22,7 @@ namespace qmcplusplus
 {
 
 MPIObjectBase::MPIObjectBase(Communicate* c): ReportLevel(1),
-  myComm(0), ClassName("MPIObjectBase")
+  myComm(0)
 {
   initCommunicator(c);
   if(myComm->rank())

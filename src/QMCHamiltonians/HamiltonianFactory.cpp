@@ -88,7 +88,6 @@ HamiltonianFactory::HamiltonianFactory(ParticleSet* qp,
 {
   //PBCType is zero or 1 but should be generalized
   PBCType=targetPtcl->Lattice.SuperCellEnum;
-  ClassName="HamiltonianFactory";
   myName="psi0";
   targetPtcl->set_quantum();
 }

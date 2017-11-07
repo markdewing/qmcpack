@@ -31,7 +31,6 @@ namespace qmcplusplus
 WaveFunctionPool::WaveFunctionPool(Communicate* c, const char* aname)
   : MPIObjectBase(c)
 {
-  ClassName="WaveFunctionPool";
   myName=aname;
 }
 

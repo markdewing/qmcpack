@@ -34,7 +34,6 @@ namespace qmcplusplus
 HamiltonianPool::HamiltonianPool(Communicate* c, const char* aname)
   : MPIObjectBase(c), curH(0), ptclPool(0), psiPool(0), curDoc(0)
 {
-  ClassName="HamiltonianPool";
   myName=aname;
 }
 

@@ -104,7 +104,6 @@ namespace qmcplusplus
 BasisSetFactory::BasisSetFactory(ParticleSet& els, TrialWaveFunction& psi, PtclPoolType& psets):
   OrbitalBuilderBase(els,psi), ptclPool(psets)
 {
-  ClassName="BasisSetFactory";
 }
 
 BasisSetFactory::~BasisSetFactory()
@@ -119,7 +118,7 @@ bool BasisSetFactory::put(xmlNodePtr cur)
 
 BasisSetBuilder* BasisSetFactory::createBasisSet(xmlNodePtr cur,xmlNodePtr  rootNode)
 {
-  ReportEngine PRE(ClassName,"createBasisSet");
+  ReportEngine PRE("BasisSetFactory","createBasisSet");
   std::string sourceOpt("ion0");
   std::string type("");
   std::string name("");

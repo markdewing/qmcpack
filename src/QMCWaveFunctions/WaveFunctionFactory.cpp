@@ -45,7 +45,6 @@ WaveFunctionFactory::WaveFunctionFactory(ParticleSet* qp, PtclPoolType& pset, Co
   : MPIObjectBase(c)
   , targetPtcl(qp),ptclPool(pset),targetPsi(0), myNode(NULL)
 {
-  ClassName="WaveFunctionFactory";
   myName="psi0";
 }
 
@@ -57,7 +56,7 @@ void WaveFunctionFactory::setPsi(TrialWaveFunction* psi)
 
 bool WaveFunctionFactory::build(xmlNodePtr cur, bool buildtree)
 {
-  ReportEngine PRE(ClassName,"build");
+  ReportEngine PRE("WaveFunctionFactory","build");
   if(cur == NULL)
     return false;
   bool attach2Node=false;
@@ -164,7 +163,7 @@ bool WaveFunctionFactory::build(xmlNodePtr cur, bool buildtree)
 
 bool WaveFunctionFactory::addFermionTerm(xmlNodePtr cur)
 {
-  ReportEngine PRE(ClassName,"addFermionTerm");
+  ReportEngine PRE("WaveFunctionFactory","addFermionTerm");
   std::string orbtype("MolecularOrbital");
   std::string nuclei("i");
   OhmmsAttributeSet oAttrib;

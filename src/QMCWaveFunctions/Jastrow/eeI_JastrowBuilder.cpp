@@ -106,7 +106,7 @@ bool eeI_JastrowBuilder::putkids (xmlNodePtr kids, J3type &J3)
 
 bool eeI_JastrowBuilder::put(xmlNodePtr cur)
 {
-  ReportEngine PRE(ClassName,"put(xmlNodePtr)");
+  ReportEngine PRE("eeI_JastrowBuilder","put(xmlNodePtr)");
   bool PrintTables=true;
   xmlNodePtr kids = cur->xmlChildrenNode;
   typedef BsplineFunctor3D FuncType;

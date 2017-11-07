@@ -37,7 +37,6 @@ JastrowBuilder::JastrowBuilder(ParticleSet& p, TrialWaveFunction& psi, PtclPoolT
   OrbitalBuilderBase(p,psi), ptclPool(psets)
 {
   resetOptions();
-  ClassName="JastrowBuilder";
 }
 
 void JastrowBuilder::resetOptions()
@@ -100,7 +99,7 @@ bool JastrowBuilder::addkSpace(xmlNodePtr cur)
 
 bool JastrowBuilder::addOneBody(xmlNodePtr cur)
 {
-  ReportEngine PRE(ClassName,"addOneBody(xmlNodePtr)");
+  ReportEngine PRE("JastrowBuilder","addOneBody(xmlNodePtr)");
   if(sourceOpt == targetPtcl.getName())
   {
     PRE.warning("One-Body Jastrow Function needs a source different from "+targetPtcl.getName()
@@ -146,7 +145,7 @@ bool JastrowBuilder::addOneBody(xmlNodePtr cur)
 bool JastrowBuilder::add_eeI (xmlNodePtr cur)
 {
 #if OHMMS_DIM ==3
-  ReportEngine PRE(ClassName,"add_eeI(xmlNodePtr)");
+  ReportEngine PRE("JastrowBuilder","add_eeI(xmlNodePtr)");
   PtclPoolType::iterator pit(ptclPool.find(sourceOpt));
   if(pit == ptclPool.end())
   {
@@ -167,7 +166,7 @@ bool JastrowBuilder::add_eeI (xmlNodePtr cur)
 
 bool JastrowBuilder::addTwoBody(xmlNodePtr cur)
 {
-  ReportEngine PRE(ClassName,"addTwoBody(xmlNodePtr)");
+  ReportEngine PRE("JastrowBuilder","addTwoBody(xmlNodePtr)");
   bool success=false;
   bool useSpline = (targetPtcl.Lattice.BoxBConds[0] && transformOpt == "yes");
   bool ignoreSpin = (spinOpt == "no");

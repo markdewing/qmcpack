@@ -34,7 +34,6 @@ TrialWaveFunction::TrialWaveFunction(Communicate* c)
   , Ordered(true), NumPtcls(0), TotalDim(0), BufferCursor(0), BufferCursor_DP(0)
   , PhaseValue(0.0),LogValue(0.0),OneOverM(1.0), PhaseDiff(0.0), FermionWF(0)
 {
-  ClassName="TrialWaveFunction";
   myName="psi0";
 }
 
@@ -44,7 +43,6 @@ TrialWaveFunction::TrialWaveFunction()
   , Ordered(true), NumPtcls(0), TotalDim(0), BufferCursor(0), BufferCursor_DP(0)
   ,  PhaseValue(0.0),LogValue(0.0) ,OneOverM(1.0), PhaseDiff(0.0)
 {
-  ClassName="TrialWaveFunction";
   myName="psi0";
 }
 

@@ -30,12 +30,11 @@ PadeJastrowBuilder::PadeJastrowBuilder(ParticleSet& target, TrialWaveFunction& p
                                        PtclPoolType& psets):
   OrbitalBuilderBase(target,psi),ptclPool(psets)
 {
-  ClassName="PadeJastrowBuilder";
 }
 
 bool PadeJastrowBuilder::put(xmlNodePtr cur)
 {
-  ReportEngine PRE(ClassName,"put()");
+  ReportEngine PRE("PadeJastrowBuilder","put()");
   std::string sourceOpt=targetPtcl.getName();
   std::string jname="PadeJastrow";
   std::string spin="yes";
