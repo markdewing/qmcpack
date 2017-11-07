@@ -27,7 +27,7 @@ namespace qmcplusplus
 
 /** Factory class to build a many-body wavefunction
  */
-class HamiltonianFactory: public MPIObjectBase
+class HamiltonianFactory: public MPIObjectBase, public NamedObjectBase
 {
   public:
   typedef std::map<std::string,ParticleSet*> PtclPoolType;

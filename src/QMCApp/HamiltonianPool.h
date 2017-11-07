@@ -40,7 +40,7 @@ class Libxml2Document;
  * This object handles \<hamiltonian\> elements and
  * functions as a builder class for QMCHamiltonian objects.
  */
-class HamiltonianPool : public MPIObjectBase
+class HamiltonianPool : public MPIObjectBase, public NamedObjectBase
 {
 
 public:

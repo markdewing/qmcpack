@@ -23,12 +23,13 @@
 #include "QMCWaveFunctions/OrbitalBuilderBase.h"
 #include "QMCWaveFunctions/BasisSetFactory.h"
 #include "Message/MPIObjectBase.h"
+#include "Message/NamedObjectBase.h"
 namespace qmcplusplus
 {
 
 /** Factory class to build a many-body wavefunction
  */
-struct WaveFunctionFactory: public MPIObjectBase
+struct WaveFunctionFactory: public MPIObjectBase, public NamedObjectBase
 {
 
   typedef std::map<std::string,ParticleSet*> PtclPoolType;

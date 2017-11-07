@@ -23,6 +23,7 @@
 
 #include "Particle/ParticleSet.h"
 #include "Message/MPIObjectBase.h"
+#include "Message/NamedObjectBase.h"
 #include "QMCWaveFunctions/OrbitalSetTraits.h"
 #include "QMCWaveFunctions/SPOSetInfo.h"
 #include <QMCWaveFunctions/SPOSetInputInfo.h>
@@ -153,7 +154,7 @@ struct BasisSetBase: public OrbitalSetTraits<T>
  * the user classes {\bf KNOW} what they need to use.
  * }
  */
-struct BasisSetBuilder: public QMCTraits, public MPIObjectBase
+struct BasisSetBuilder: public QMCTraits, public MPIObjectBase, public NamedObjectBase
 {
   typedef std::map<std::string,SPOSetBase*> SPOPool_t;
   typedef std::vector<int> indices_t;

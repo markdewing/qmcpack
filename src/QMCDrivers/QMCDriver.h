@@ -66,7 +66,7 @@ class TraceManager;
  * @{
  * @brief abstract base class for QMC engines
  */
-class QMCDriver: public QMCTraits, public MPIObjectBase
+class QMCDriver: public QMCTraits, public MPIObjectBase, public NamedObjectBase
 {
 
 public:

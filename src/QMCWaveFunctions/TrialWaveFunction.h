@@ -23,6 +23,7 @@
 #define QMCPLUSPLUS_TRIALWAVEFUNCTION_H
 
 #include "Message/MPIObjectBase.h"
+#include "Message/NamedObjectBase.h"
 #include "Particle/VirtualParticleSet.h"
 #include "QMCWaveFunctions/OrbitalBase.h"
 #include "QMCWaveFunctions/FermionBase.h"
@@ -97,7 +98,7 @@ struct CoefficientHolder
  *Each OrbitalBase should provide proper evaluate functions
  *for the value, gradient and laplacian values.
  */
-class TrialWaveFunction: public MPIObjectBase
+class TrialWaveFunction: public MPIObjectBase, public NamedObjectBase
 {
 
 public:

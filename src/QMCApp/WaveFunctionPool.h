@@ -38,7 +38,7 @@ class ParticleSet;
  * This object handles \<wavefunction\> elements and
  * functions as a builder class for TrialWaveFunction objects.
  */
-class WaveFunctionPool : public MPIObjectBase
+class WaveFunctionPool : public MPIObjectBase, public NamedObjectBase
 {
 
 public:

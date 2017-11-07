@@ -24,6 +24,7 @@
 #include "OhmmsData/OhmmsElementBase.h"
 #include "Particle/MCWalkerConfiguration.h"
 #include "Message/MPIObjectBase.h"
+#include "Message/NamedObjectBase.h"
 
 namespace qmcplusplus
 {
@@ -34,7 +35,7 @@ namespace qmcplusplus
  * This object handles \<particleset\> elements and
  * functions as a builder class for ParticleSet objects.
  */
-class ParticleSetPool : public MPIObjectBase
+class ParticleSetPool : public MPIObjectBase, public NamedObjectBase
 {
 
 public:
