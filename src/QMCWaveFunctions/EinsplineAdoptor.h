@@ -255,11 +255,11 @@ struct BsplineSet: public SPOSetBase, public SplineAdoptor
 
   inline void evaluateValues(const ParticleSet& P, ValueMatrix_t& psiM)
   {
-    ValueVector_t psi(psiM.cols());
+    const size_t m=psiM.cols();
     for(int iat=0; iat<P.getTotalNum(); ++iat)
     {
+      ValueVector_t psi(psiM[iat],m);
       SplineAdoptor::evaluate_v(P,iat,psi);
-      copy(psi.begin(),psi.end(),psiM[iat]);
     }
   }
 

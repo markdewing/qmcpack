@@ -92,7 +92,7 @@ namespace MatrixOperators
   {
     for (int i=0; i<C.rows(); i++)
       for (int j=0; j<C.cols(); j++)
-        C(iat,i)+=M(i,j)*B(j);
+        C(iat,i)+=M(i,j)*B[j];
     //for (int i=0; i<C.rows(); i++)
     //  C(iat,i)+=simd::dot(M[i],B.data(),C.cols());
   }
@@ -104,7 +104,7 @@ namespace MatrixOperators
   {
     for (int i=0; i<C.rows(); i++)
       for (int j=0; j<C.cols(); j++)
-        C(i,iat)+=M(i,j)*B(j);
+        C(i,iat)+=M(i,j)*B[j];
     //for (int i=0; i<C.rows(); i++)
     //  C(i,iat)+=simd::dot(M[i],B.data(),C.cols());
   }
@@ -114,7 +114,7 @@ namespace MatrixOperators
   {
     double tot=0.0;
     for (int i=0; i<A.size(); i++)
-      tot+=A(i)*B(i);
+      tot+=A[i]*B[i];
     return tot;
     //return simd::dot(A.data(),B.data(),A.size());
   }
@@ -144,7 +144,7 @@ namespace MatrixOperators
   {
     for (int i=0; i<C.rows(); ++i)
       for (int j=0; j<C.cols(); ++j)
-        C(i,j)=A(i,j)*B(j);
+        C(i,j)=A(i,j)*B[j];
     //works?
     //const int ccols = C.cols();
     //const int ijmax = C.size();
@@ -162,7 +162,7 @@ namespace MatrixOperators
 
     for (int i=0; i<C.rows(); ++i)
       for (int j=0; j<C.cols(); ++j)
-        C(i,j)=A(i)*B(i,j);
+        C(i,j)=A[i]*B(i,j);
 
 
     //const int crows = C.rows();

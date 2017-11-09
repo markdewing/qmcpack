@@ -46,7 +46,7 @@ struct SplineC2RSoA: public SplineAdoptorBase<ST,3>
   using PointType=typename BaseType::PointType;
   using SingleSplineType=typename BaseType::SingleSplineType;
 
-  using vContainer_type=aligned_vector<ST>;
+  using vContainer_type=Vector<ST,aligned_allocator<ST> >;
   using gContainer_type=VectorSoaContainer<ST,3>;
   using hContainer_type=VectorSoaContainer<ST,6>;
 

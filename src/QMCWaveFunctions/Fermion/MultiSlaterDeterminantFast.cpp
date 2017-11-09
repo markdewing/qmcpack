@@ -119,9 +119,9 @@ void MultiSlaterDeterminantFast::testMSD(ParticleSet& P, int iat)
 
        for(int i=0; i<n; i++) {
          std::cout <<i  <<"\n"
-             <<"  x: " <<G(i)[0]-G0(i)[0] <<"\n"
-             <<"  y: " <<G(i)[1]-G0(i)[1] <<"\n"
-             <<"  z: " <<G(i)[2]-G0(i)[2] <<"\n"
+             <<"  x: " <<G[i][0]-G0[i][0] <<"\n"
+             <<"  y: " <<G[i][1]-G0[i][1] <<"\n"
+             <<"  z: " <<G[i][2]-G0[i][2] <<"\n"
              <<"  d2: " <<L(i)-L0(i) <<"\n"
              << std::endl;
        }
@@ -148,9 +148,9 @@ void MultiSlaterDeterminantFast::testMSD(ParticleSet& P, int iat)
   for(int i=0; i<n; i++)
   {
     std::cout <<i  <<"\n"
-        <<"  x: " <<G(i)[0]-G0(i)[0] <<"  " <<G(i)[0]   <<"\n"
-        <<"  y: " <<G(i)[1]-G0(i)[1] <<"  " <<G(i)[1] <<"\n"
-        <<"  z: " <<G(i)[2]-G0(i)[2] <<"  " <<G(i)[2] <<"\n"
+        <<"  x: " <<G[i][0]-G0[i][0] <<"  " <<G[i][0]   <<"\n"
+        <<"  y: " <<G[i][1]-G0[i][1] <<"  " <<G[i][1] <<"\n"
+        <<"  z: " <<G[i][2]-G0[i][2] <<"  " <<G[i][2] <<"\n"
         << std::endl;
   }
   std::cout << std::endl << std::endl;
