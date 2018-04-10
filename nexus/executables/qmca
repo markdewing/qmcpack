@@ -1372,31 +1372,35 @@ def convert(value,source_unit,target_unit):
 
 
 
-success = False
-try:
-    import matplotlib
-    gui_envs = ['GTKAgg','TKAgg','Qt4Agg','WXAgg']
-    for gui in gui_envs:
-        try:
-            matplotlib.use(gui,warn=False, force=True)
-            from matplotlib import pyplot
-            success = True
-            break
-        except:
-            continue
-        #end try
-    #end for
-    from matplotlib.pyplot import figure,plot,xlabel,ylabel,title,show,ylim,legend,xlim,rcParams,savefig,bar,xticks,subplot,grid,setp,errorbar,loglog,semilogx,semilogy,text
+def import_matplotlib():
+  success = False
+  global figure,plot,xlabel,ylabel,title,show,ylim,legend,xlim,rcParams,savefig,bar,xticks,subplot,grid,setp,errorbar,loglog,semilogx,semilogy,text
+  try:
+      import matplotlib
+      gui_envs = ['GTKAgg','TKAgg','Qt4Agg','WXAgg']
+      for gui in gui_envs:
+          try:
+              matplotlib.use(gui,warn=False, force=True)
+              from matplotlib import pyplot
+              success = True
+              break
+          except:
+              continue
+          #end try
+      #end for
+      if not success:
+        raise ImportError
+      #end if
 
-    params = {'legend.fontsize':14,'figure.facecolor':'white','figure.subplot.hspace':0.,
-          'axes.labelsize':16,'xtick.labelsize':14,'ytick.labelsize':14}
-    rcParams.update(params)
-except (ImportError,RuntimeError):
-    success = False
-#end try
-if not success:
-    figure,plot,xlabel,ylabel,title,show,ylim,legend,xlim,rcParams,savefig,bar,xticks,subplot,grid,setp,errorbar,loglog,semilogx,semilogy,text = unavailable('matplotlib.pyplot','figure','plot','xlabel','ylabel','title','show','ylim','legend','xlim','rcParams','savefig','bar','xticks','subplot','grid','setp','errorbar','loglog','semilogx','semilogy','text')
-#end if
+      from matplotlib.pyplot import figure,plot,xlabel,ylabel,title,show,ylim,legend,xlim,rcParams,savefig,bar,xticks,subplot,grid,setp,errorbar,loglog,semilogx,semilogy,text
+
+      params = {'legend.fontsize':14,'figure.facecolor':'white','figure.subplot.hspace':0.,
+            'axes.labelsize':16,'xtick.labelsize':14,'ytick.labelsize':14}
+      rcParams.update(params)
+  except (ImportError,RuntimeError):
+      figure,plot,xlabel,ylabel,title,show,ylim,legend,xlim,rcParams,savefig,bar,xticks,subplot,grid,setp,errorbar,loglog,semilogx,semilogy,text = unavailable('matplotlib.pyplot','figure','plot','xlabel','ylabel','title','show','ylim','legend','xlim','rcParams','savefig','bar','xticks','subplot','grid','setp','errorbar','loglog','semilogx','semilogy','text')
+  #end try
+
 
 
 def sigfig_round(some_float, nsigfig):
@@ -1563,9 +1567,9 @@ def equilibration_length(x,tail=.5,plot=False,xlim=None,bounces=2):
         eqlen = bounce[0]+random.randint(bounce[1]-bounce[0]+1)
     #end if
     if plot:
+        import_matplotlib()
         xlims = xlim
         del plot,xlim
-        from matplotlib.pyplot import plot,figure,show,xlim
         figure()
         ix = arange(nx)
         plot(ix,x,'b.-')
@@ -2619,6 +2623,7 @@ QMCA examples:
             #end for
         #end if
         if plots:
+            import_matplotlib()
             color       = 'b'
             line        = '-'
             marker      = '.'
