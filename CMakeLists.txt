@@ -382,7 +382,7 @@ ELSE(CMAKE_TOOLCHAIN_FILE)
   # Check for the compiler C++11 flag, if we go to requiring >= cmake 3.1.3 we could drop this
   # and just write
   # set(CMAKE_CXX_STANDARD_REQUIRED 11 CACHE INTEGER "C++ stangard must be at least 11")
-  SET(CXX11_FLAG "-std=c++11")
+  SET(CXX11_FLAG "-std=c++14")
   #check if the CXX compiler supports -std=c++11 option
   include(CheckCXXCompilerFlag) # works with clean load paths and non system compilers with CMP0056
   CHECK_CXX_COMPILER_FLAG(${CXX11_FLAG} CXX_COMPILER_SUPPORT_CXX11)

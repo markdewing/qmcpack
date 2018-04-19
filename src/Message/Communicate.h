@@ -22,8 +22,9 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
+#include "mpi_wrapper/boost/mpi3/environment.hpp"
 
-#ifdef HAVE_OOMPI
+//#ifdef HAVE_OOMPI
 #include "oompi.h"
 struct CommunicatorTraits
 {
@@ -39,7 +40,8 @@ struct CommunicatorTraits
 {std::cerr << "Fatal Error. Aborting at " << l \
   << "::" << f << "\n " <<  msg << std::endl; OOMPI_COMM_WORLD.Abort();}
 
-#else
+//#else
+#if 0
 struct CommunicatorTraits
 {
   typedef int  mpi_comm_type;
@@ -81,7 +83,8 @@ public:
   Communicate();
 
   ///constructor with arguments
-  Communicate(int argc, char **argv);
+  //Communicate(int argc, char **argv);
+  Communicate(boost::mpi3::environment &env);
 
   ///constructor with communicator
   Communicate(const mpi_comm_type comm_input);
@@ -102,18 +105,17 @@ public:
   virtual ~Communicate();
 
   void initialize(int argc, char **argv);
-  void finalize();
+  void initialize(boost::mpi3::environment &env);
+  //void finalize();
   void abort();
   void abort(const char* msg);
-  void set_world();
+  //void set_world();
 
-#if defined(HAVE_MPI)
   ///operator for implicit conversion to MPI_Comm
   inline operator MPI_Comm() const
   {
     return myMPI;
   }
-#endif
 
   ///return the Communicator ID (typically MPI_WORLD_COMM)
   inline mpi_comm_type getMPI() const
@@ -283,6 +285,9 @@ protected:
 public:
   /// Group Lead Communicator
   Communicate *GroupLeaderComm;
+
+  // Communicator wrapper
+  boost::mpi3::communicator comm;
 };
 
 
@@ -291,6 +296,7 @@ namespace OHMMS
 /** Global Communicator for a process
  */
 extern Communicate* Controller;
+//extern boost::mpi3::environment* Environment;
 }
 
 

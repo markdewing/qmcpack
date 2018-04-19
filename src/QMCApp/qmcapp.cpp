@@ -50,7 +50,9 @@ int main(int argc, char **argv)
   //TAU_INIT(&argc, &argv);
   using namespace qmcplusplus;
   //qmc_common  and MPI is initialized
-  OHMMS::Controller->initialize(argc,argv);
+  boost::mpi3::environment env(argc, argv);
+  //OHMMS::Controller->initialize(argc,argv);
+  OHMMS::Controller->initialize(env);
   qmcplusplus::qmc_common.initialize(argc,argv);
   int clones=1;
   bool useGPU=(qmc_common.compute_device == 1);
@@ -167,7 +169,7 @@ int main(int argc, char **argv)
       std::cerr << "No input file is given." << std::endl;
       std::cerr << "Usage: qmcpack <input-files> " << std::endl;
     }
-    OHMMS::Controller->finalize();
+    //OHMMS::Controller->finalize();
     return 1;
   }
   if (useGPU)
@@ -231,7 +233,7 @@ int main(int argc, char **argv)
     delete qmc;
   if(useGPU)
     Finalize_CUDA();
-  OHMMS::Controller->finalize();
+  //OHMMS::Controller->finalize();
   return 0;
 }
 

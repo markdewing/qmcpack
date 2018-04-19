@@ -93,7 +93,7 @@ void QMCState::initialize(int argc, char **argv)
   }
   if(stopit)
   {
-    OHMMS::Controller->finalize();
+    //OHMMS::Controller->finalize();
     exit(1);
   }
 }

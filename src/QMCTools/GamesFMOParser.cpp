@@ -358,7 +358,7 @@ void GamesFMOParser::parse(const std::string& fname)
    delete [] ESPValenceChargeIndex;
    delete [] ESPAtomicNumberIndex;
    delete [] ESPSystem;
-   OHMMS::Controller->finalize();
+   //OHMMS::Controller->finalize();
 
 }
 void GamesFMOParser::getAllMonomer(std::istream& is, int Index)

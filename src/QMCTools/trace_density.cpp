@@ -1428,7 +1428,7 @@ int main(int argc, char** argv)
 
   ta.analyze(argv[1]);
 
-  comm->finalize();
+  //comm->finalize();
 
   return 0;
 }

@@ -380,7 +380,7 @@ int main(int argc, char **argv)
     }
     
 
-    OHMMS::Controller->finalize();
+    //OHMMS::Controller->finalize();
     
 
   }

@@ -1,0 +1,320 @@
+In file included from average.cpp:5:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/main.hpp:8:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/environment.hpp:7:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/communicator.hpp:7:
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/info.hpp:28:62: error: no matching member function for call to 'call'
+        void                        delete_(std::string const& key){call<MPI_Info_delete>(key);}
+                                                                    ^~~~~~~~~~~~~~~~~~~~~
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:45:50: note: candidate template ignored: invalid explicitly-specified argument for template parameter 'F'
+        template<int(*F)(Impl, int, char*)> std::string call(int n) const{
+                                                        ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:51:71: note: candidate template ignored: invalid explicitly-specified argument for template parameter 'F'
+        template<int(*F)(Impl, char const*, int*, int*)> std::pair<int, int> call(std::string const& key) const{
+                                                                             ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:65:44: note: candidate template ignored: invalid explicitly-specified argument for template parameter 'F'
+        template<int(*F)(Impl, char const*)> void call(std::string const& key) const{
+                                                  ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:58:85: note: candidate function template not viable: requires 2 arguments, but 1 was provided
+        template<int(*F)(Impl, char const*, int, char*, int*)> std::pair<std::string, int> call(std::string const& key, int valuelen) const{
+                                                                                           ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:38:36: note: candidate function template not viable: requires 0 arguments, but 1 was provided
+        template<int(*F)(Impl, int*)> int call() const{
+                                          ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:31:57: note: candidate function template not viable: requires 2 arguments, but 1 was provided
+        template<int(*F)(Impl, char const*, char const*)> void call(char const* c1, char const* c2){
+                                                               ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:35:57: note: candidate function template not viable: requires 2 arguments, but 1 was provided
+        template<int(*F)(Impl, char const*, char const*)> void call(std::string const& s1, std::string const& s2){
+                                                               ^
+In file included from average.cpp:5:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/main.hpp:8:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/environment.hpp:7:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/communicator.hpp:7:
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/info.hpp:29:91: error: no matching member function for call to 'call'
+        std::pair<std::string, int> get(std::string const& key, int valuelen) const{return base::call<MPI_Info_get>(key, valuelen);}
+                                                                                           ~~~~~~^~~~~~~~~~~~~~~~~~
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:31:57: note: candidate template ignored: invalid explicitly-specified argument for template parameter 'F'
+        template<int(*F)(Impl, char const*, char const*)> void call(char const* c1, char const* c2){
+                                                               ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:35:57: note: candidate template ignored: invalid explicitly-specified argument for template parameter 'F'
+        template<int(*F)(Impl, char const*, char const*)> void call(std::string const& s1, std::string const& s2){
+                                                               ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:58:85: note: candidate template ignored: invalid explicitly-specified argument for template parameter 'F'
+        template<int(*F)(Impl, char const*, int, char*, int*)> std::pair<std::string, int> call(std::string const& key, int valuelen) const{
+                                                                                           ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:38:36: note: candidate function template not viable: requires 0 arguments, but 2 were provided
+        template<int(*F)(Impl, int*)> int call() const{
+                                          ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:45:50: note: candidate function template not viable: requires single argument 'n', but 2 arguments were provided
+        template<int(*F)(Impl, int, char*)> std::string call(int n) const{
+                                                        ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:51:71: note: candidate function template not viable: requires single argument 'key', but 2 arguments were provided
+        template<int(*F)(Impl, char const*, int*, int*)> std::pair<int, int> call(std::string const& key) const{
+                                                                             ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:65:44: note: candidate function template not viable: requires single argument 'key', but 2 arguments were provided
+        template<int(*F)(Impl, char const*)> void call(std::string const& key) const{
+                                                  ^
+In file included from average.cpp:5:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/main.hpp:8:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/environment.hpp:7:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/communicator.hpp:7:
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/info.hpp:32:80: error: no matching member function for call to 'call'
+        std::pair<int, int>         get_valuelen(std::string const& key) const{return call<MPI_Info_get_valuelen>(key);}
+                                                                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:45:50: note: candidate template ignored: invalid explicitly-specified argument for template parameter 'F'
+        template<int(*F)(Impl, int, char*)> std::string call(int n) const{
+                                                        ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:51:71: note: candidate template ignored: invalid explicitly-specified argument for template parameter 'F'
+        template<int(*F)(Impl, char const*, int*, int*)> std::pair<int, int> call(std::string const& key) const{
+                                                                             ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:65:44: note: candidate template ignored: invalid explicitly-specified argument for template parameter 'F'
+        template<int(*F)(Impl, char const*)> void call(std::string const& key) const{
+                                                  ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:58:85: note: candidate function template not viable: requires 2 arguments, but 1 was provided
+        template<int(*F)(Impl, char const*, int, char*, int*)> std::pair<std::string, int> call(std::string const& key, int valuelen) const{
+                                                                                           ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:38:36: note: candidate function template not viable: requires 0 arguments, but 1 was provided
+        template<int(*F)(Impl, int*)> int call() const{
+                                          ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:31:57: note: candidate function template not viable: requires 2 arguments, but 1 was provided
+        template<int(*F)(Impl, char const*, char const*)> void call(char const* c1, char const* c2){
+                                                               ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:35:57: note: candidate function template not viable: requires 2 arguments, but 1 was provided
+        template<int(*F)(Impl, char const*, char const*)> void call(std::string const& s1, std::string const& s2){
+                                                               ^
+In file included from average.cpp:5:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/main.hpp:8:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/environment.hpp:7:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/communicator.hpp:7:
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/info.hpp:33:84: error: no matching member function for call to 'call'
+        void                        set(std::string const& key, std::string const& value){call<MPI_Info_set>(key, value);}
+                                                                                          ^~~~~~~~~~~~~~~~~~
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:31:57: note: candidate template ignored: invalid explicitly-specified argument for template parameter 'F'
+        template<int(*F)(Impl, char const*, char const*)> void call(char const* c1, char const* c2){
+                                                               ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:35:57: note: candidate template ignored: invalid explicitly-specified argument for template parameter 'F'
+        template<int(*F)(Impl, char const*, char const*)> void call(std::string const& s1, std::string const& s2){
+                                                               ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:58:85: note: candidate template ignored: invalid explicitly-specified argument for template parameter 'F'
+        template<int(*F)(Impl, char const*, int, char*, int*)> std::pair<std::string, int> call(std::string const& key, int valuelen) const{
+                                                                                           ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:38:36: note: candidate function template not viable: requires 0 arguments, but 2 were provided
+        template<int(*F)(Impl, int*)> int call() const{
+                                          ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:45:50: note: candidate function template not viable: requires single argument 'n', but 2 arguments were provided
+        template<int(*F)(Impl, int, char*)> std::string call(int n) const{
+                                                        ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:51:71: note: candidate function template not viable: requires single argument 'key', but 2 arguments were provided
+        template<int(*F)(Impl, char const*, int*, int*)> std::pair<int, int> call(std::string const& key) const{
+                                                                             ^
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/handle.hpp:65:44: note: candidate function template not viable: requires single argument 'key', but 2 arguments were provided
+        template<int(*F)(Impl, char const*)> void call(std::string const& key) const{
+                                                  ^
+In file included from average.cpp:5:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/main.hpp:8:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/environment.hpp:7:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/communicator.hpp:8:
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/port.hpp:34:16: error: no matching function for call to 'MPI_Close_port'
+                int status = MPI_Close_port(name_.c_str());
+                             ^~~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:1080:20: note: candidate function not viable: 1st argument ('const char *') would lose const qualifier
+OMPI_DECLSPEC  int MPI_Close_port(char *port_name);
+                   ^
+In file included from average.cpp:5:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/main.hpp:8:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/environment.hpp:7:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/communicator.hpp:9:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/status.hpp:8:
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/detail/datatype.hpp:17:74: error: value of type 'MPI_Datatype' (aka 'ompi_datatype_t *') is not implicitly convertible to 'int'
+template<> struct datatype<char          > : std::integral_constant<int, MPI_CHAR         >{};
+                                                                         ^~~~~~~~
+/usr/lib/openmpi/include/mpi.h:902:18: note: expanded from macro 'MPI_CHAR'
+#define MPI_CHAR OMPI_PREDEFINED_GLOBAL(MPI_Datatype, ompi_mpi_char)
+                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:305:46: note: expanded from macro 'OMPI_PREDEFINED_GLOBAL'
+#define OMPI_PREDEFINED_GLOBAL(type, global) ((type) ((void *) &(global)))
+                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from average.cpp:5:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/main.hpp:8:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/environment.hpp:7:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/communicator.hpp:9:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/status.hpp:8:
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/detail/datatype.hpp:18:74: error: value of type 'MPI_Datatype' (aka 'ompi_datatype_t *') is not implicitly convertible to 'int'
+template<> struct datatype<unsigned char > : std::integral_constant<int, MPI_UNSIGNED_CHAR>{};
+                                                                         ^~~~~~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:909:27: note: expanded from macro 'MPI_UNSIGNED_CHAR'
+#define MPI_UNSIGNED_CHAR OMPI_PREDEFINED_GLOBAL(MPI_Datatype, ompi_mpi_unsigned_char)
+                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:305:46: note: expanded from macro 'OMPI_PREDEFINED_GLOBAL'
+#define OMPI_PREDEFINED_GLOBAL(type, global) ((type) ((void *) &(global)))
+                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from average.cpp:5:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/main.hpp:8:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/environment.hpp:7:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/communicator.hpp:9:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/status.hpp:8:
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/detail/datatype.hpp:19:74: error: value of type 'MPI_Datatype' (aka 'ompi_datatype_t *') is not implicitly convertible to 'int'
+template<> struct datatype<int           > : std::integral_constant<int, MPI_INT          >{};
+                                                                         ^~~~~~~
+/usr/lib/openmpi/include/mpi.h:904:17: note: expanded from macro 'MPI_INT'
+#define MPI_INT OMPI_PREDEFINED_GLOBAL(MPI_Datatype, ompi_mpi_int)
+                ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:305:46: note: expanded from macro 'OMPI_PREDEFINED_GLOBAL'
+#define OMPI_PREDEFINED_GLOBAL(type, global) ((type) ((void *) &(global)))
+                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from average.cpp:5:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/main.hpp:8:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/environment.hpp:7:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/communicator.hpp:9:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/status.hpp:8:
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/detail/datatype.hpp:20:74: error: value of type 'MPI_Datatype' (aka 'ompi_datatype_t *') is not implicitly convertible to 'int'
+template<> struct datatype<long          > : std::integral_constant<int, MPI_LONG         >{};
+                                                                         ^~~~~~~~
+/usr/lib/openmpi/include/mpi.h:905:18: note: expanded from macro 'MPI_LONG'
+#define MPI_LONG OMPI_PREDEFINED_GLOBAL(MPI_Datatype, ompi_mpi_long)
+                 ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:305:46: note: expanded from macro 'OMPI_PREDEFINED_GLOBAL'
+#define OMPI_PREDEFINED_GLOBAL(type, global) ((type) ((void *) &(global)))
+                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from average.cpp:5:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/main.hpp:8:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/environment.hpp:7:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/communicator.hpp:9:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/status.hpp:8:
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/detail/datatype.hpp:21:74: error: value of type 'MPI_Datatype' (aka 'ompi_datatype_t *') is not implicitly convertible to 'int'
+template<> struct datatype<float         > : std::integral_constant<int, MPI_FLOAT        >{};
+                                                                         ^~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:906:19: note: expanded from macro 'MPI_FLOAT'
+#define MPI_FLOAT OMPI_PREDEFINED_GLOBAL(MPI_Datatype, ompi_mpi_float)
+                  ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:305:46: note: expanded from macro 'OMPI_PREDEFINED_GLOBAL'
+#define OMPI_PREDEFINED_GLOBAL(type, global) ((type) ((void *) &(global)))
+                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from average.cpp:5:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/main.hpp:8:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/environment.hpp:7:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/communicator.hpp:9:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/status.hpp:8:
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/detail/datatype.hpp:22:74: error: value of type 'MPI_Datatype' (aka 'ompi_datatype_t *') is not implicitly convertible to 'int'
+template<> struct datatype<double        > : std::integral_constant<int, MPI_DOUBLE       >{};
+                                                                         ^~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:907:20: note: expanded from macro 'MPI_DOUBLE'
+#define MPI_DOUBLE OMPI_PREDEFINED_GLOBAL(MPI_Datatype, ompi_mpi_double)
+                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:305:46: note: expanded from macro 'OMPI_PREDEFINED_GLOBAL'
+#define OMPI_PREDEFINED_GLOBAL(type, global) ((type) ((void *) &(global)))
+                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from average.cpp:5:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/main.hpp:8:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/environment.hpp:7:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/communicator.hpp:9:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/status.hpp:8:
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/detail/datatype.hpp:23:74: error: value of type 'MPI_Datatype' (aka 'ompi_datatype_t *') is not implicitly convertible to 'int'
+template<> struct datatype<unsigned int  > : std::integral_constant<int, MPI_UNSIGNED     >{};
+                                                                         ^~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:913:22: note: expanded from macro 'MPI_UNSIGNED'
+#define MPI_UNSIGNED OMPI_PREDEFINED_GLOBAL(MPI_Datatype, ompi_mpi_unsigned)
+                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:305:46: note: expanded from macro 'OMPI_PREDEFINED_GLOBAL'
+#define OMPI_PREDEFINED_GLOBAL(type, global) ((type) ((void *) &(global)))
+                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from average.cpp:5:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/main.hpp:8:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/environment.hpp:7:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/communicator.hpp:9:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/status.hpp:8:
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/detail/datatype.hpp:24:74: error: value of type 'MPI_Datatype' (aka 'ompi_datatype_t *') is not implicitly convertible to 'int'
+template<> struct datatype<unsigned long > : std::integral_constant<int, MPI_UNSIGNED_LONG>{};
+                                                                         ^~~~~~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:912:27: note: expanded from macro 'MPI_UNSIGNED_LONG'
+#define MPI_UNSIGNED_LONG OMPI_PREDEFINED_GLOBAL(MPI_Datatype, ompi_mpi_unsigned_long)
+                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:305:46: note: expanded from macro 'OMPI_PREDEFINED_GLOBAL'
+#define OMPI_PREDEFINED_GLOBAL(type, global) ((type) ((void *) &(global)))
+                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from average.cpp:5:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/main.hpp:8:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/environment.hpp:7:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/communicator.hpp:9:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/status.hpp:8:
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/detail/datatype.hpp:25:74: error: value of type 'MPI_Datatype' (aka 'ompi_datatype_t *') is not implicitly convertible to 'int'
+template<> struct datatype<long double   > : std::integral_constant<int, MPI_LONG_DOUBLE>{};
+                                                                         ^~~~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:908:25: note: expanded from macro 'MPI_LONG_DOUBLE'
+#define MPI_LONG_DOUBLE OMPI_PREDEFINED_GLOBAL(MPI_Datatype, ompi_mpi_long_double)
+                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:305:46: note: expanded from macro 'OMPI_PREDEFINED_GLOBAL'
+#define OMPI_PREDEFINED_GLOBAL(type, global) ((type) ((void *) &(global)))
+                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from average.cpp:5:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/main.hpp:8:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/environment.hpp:7:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/communicator.hpp:9:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/status.hpp:8:
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/detail/datatype.hpp:26:74: error: value of type 'MPI_Datatype' (aka 'ompi_datatype_t *') is not implicitly convertible to 'int'
+template<> struct datatype<long long int>  : std::integral_constant<int, MPI_LONG_LONG_INT>{};
+                                                                         ^~~~~~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:924:27: note: expanded from macro 'MPI_LONG_LONG_INT'
+#define MPI_LONG_LONG_INT OMPI_PREDEFINED_GLOBAL(MPI_Datatype, ompi_mpi_long_long_int)
+                          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:305:46: note: expanded from macro 'OMPI_PREDEFINED_GLOBAL'
+#define OMPI_PREDEFINED_GLOBAL(type, global) ((type) ((void *) &(global)))
+                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from average.cpp:5:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/main.hpp:8:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/environment.hpp:7:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/communicator.hpp:9:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/status.hpp:8:
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/detail/datatype.hpp:27:80: error: value of type 'MPI_Datatype' (aka 'ompi_datatype_t *') is not implicitly convertible to 'int'
+template<> struct datatype<std::pair<float, int>>: std::integral_constant<int, MPI_FLOAT_INT>{};
+                                                                               ^~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:914:23: note: expanded from macro 'MPI_FLOAT_INT'
+#define MPI_FLOAT_INT OMPI_PREDEFINED_GLOBAL(MPI_Datatype, ompi_mpi_float_int)
+                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:305:46: note: expanded from macro 'OMPI_PREDEFINED_GLOBAL'
+#define OMPI_PREDEFINED_GLOBAL(type, global) ((type) ((void *) &(global)))
+                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from average.cpp:5:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/main.hpp:8:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/environment.hpp:7:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/communicator.hpp:9:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/status.hpp:8:
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/detail/datatype.hpp:28:80: error: value of type 'MPI_Datatype' (aka 'ompi_datatype_t *') is not implicitly convertible to 'int'
+template<> struct datatype<std::pair<long, int>> : std::integral_constant<int, MPI_LONG_INT>{};
+                                                                               ^~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:917:22: note: expanded from macro 'MPI_LONG_INT'
+#define MPI_LONG_INT OMPI_PREDEFINED_GLOBAL(MPI_Datatype, ompi_mpi_long_int)
+                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:305:46: note: expanded from macro 'OMPI_PREDEFINED_GLOBAL'
+#define OMPI_PREDEFINED_GLOBAL(type, global) ((type) ((void *) &(global)))
+                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from average.cpp:5:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/main.hpp:8:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/environment.hpp:7:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/communicator.hpp:9:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/status.hpp:8:
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/detail/datatype.hpp:29:82: error: value of type 'MPI_Datatype' (aka 'ompi_datatype_t *') is not implicitly convertible to 'int'
+template<> struct datatype<std::pair<double, int>> : std::integral_constant<int, MPI_DOUBLE_INT>{};
+                                                                                 ^~~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:915:24: note: expanded from macro 'MPI_DOUBLE_INT'
+#define MPI_DOUBLE_INT OMPI_PREDEFINED_GLOBAL(MPI_Datatype, ompi_mpi_double_int)
+                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:305:46: note: expanded from macro 'OMPI_PREDEFINED_GLOBAL'
+#define OMPI_PREDEFINED_GLOBAL(type, global) ((type) ((void *) &(global)))
+                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from average.cpp:5:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/main.hpp:8:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/environment.hpp:7:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/communicator.hpp:9:
+In file included from /home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/status.hpp:8:
+/home/mdewing/physics/codes/qmcpack/mpi/alf/boost/mpi3/../mpi3/detail/datatype.hpp:30:81: error: value of type 'MPI_Datatype' (aka 'ompi_datatype_t *') is not implicitly convertible to 'int'
+template<> struct datatype<std::pair<short, int>> : std::integral_constant<int, MPI_SHORT_INT>{};
+                                                                                ^~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:918:23: note: expanded from macro 'MPI_SHORT_INT'
+#define MPI_SHORT_INT OMPI_PREDEFINED_GLOBAL(MPI_Datatype, ompi_mpi_short_int)
+                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/usr/lib/openmpi/include/mpi.h:305:46: note: expanded from macro 'OMPI_PREDEFINED_GLOBAL'
+#define OMPI_PREDEFINED_GLOBAL(type, global) ((type) ((void *) &(global)))
+                                             ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.

@@ -29,6 +29,8 @@
 #include <Utilities/UtilityFunctions.h>
 #include <fstream>
 
+#include "mpi_wrapper/boost/mpi3/communicator.hpp"
+
 #ifdef HAVE_ADIOS
 #include <adios.h>
 #include <adios_read.h>
@@ -37,11 +39,14 @@
 #endif
 
 
+
+
 //static data of TagMaker::CurrentTag is initialized.
 int TagMaker::CurrentTag = 1000;
 
 //Global Communicator is created without initialization
 Communicate* OHMMS::Controller = new Communicate;
+//boost::mpi3::environment* OHMMS::Environment = nullptr;
 
 //default constructor: ready for a serial execution
 Communicate::Communicate():
@@ -49,10 +54,11 @@ Communicate::Communicate():
 {
 }
 
-Communicate::Communicate(int argc, char **argv):
+//Communicate::Communicate(int argc, char **argv):
+Communicate::Communicate(boost::mpi3::environment &env):
   GroupLeaderComm(nullptr)
 {
-  initialize(argc,argv);
+  initialize(env);
 }
 
 Communicate::~Communicate()
@@ -71,39 +77,50 @@ Communicate::Communicate(const mpi_comm_type comm_input):
   d_ncontexts=myComm.Size();
 }
 
+#if 0
 void
 Communicate::set_world()
 {
-  myComm = OOMPI_COMM_WORLD;
+  //myComm = OOMPI_COMM_WORLD;
+  myComm = OOMPI_Intra_comm(&OHMMS::Environment->world());
   myMPI = myComm.Get_mpi();
-  d_mycontext = OOMPI_COMM_WORLD.Rank();
-  d_ncontexts = OOMPI_COMM_WORLD.Size();
+  //d_mycontext = OOMPI_COMM_WORLD.Rank();
+  //d_ncontexts = OOMPI_COMM_WORLD.Size();
+  d_mycontext = OHMMS::Environment->world().rank();
+  d_ncontexts = OHMMS::Environment->world().size();
   d_groupid=0;
   d_ngroups=1;
 }
+#endif
 
 
-Communicate::Communicate(const Communicate& comm, int nparts)
+Communicate::Communicate(const Communicate& in_comm, int nparts)
 {
   std::vector<int> nplist(nparts+1);
 
   //this is a workaround due to the OOMPI bug with split
   if(nparts>1)
   {
-    int p=FairDivideLow(comm.rank(), comm.size(), nparts, nplist); //group
-    int q=comm.rank()-nplist[p];//rank within a group
+    int p=FairDivideLow(in_comm.rank(), in_comm.size(), nparts, nplist); //group
+    int q=in_comm.rank()-nplist[p];//rank within a group
     //int n=comm.size()/nparts;
     //int p=comm.rank()/n;
     //int q=comm.rank()%n;
+#if 0
     MPI_Comm row;
-    MPI_Comm_split(comm.getMPI(),p,q,&row);
+    MPI_Comm_split(in_comm.getMPI(),p,q,&row);
     myComm=OOMPI_Intra_comm(row);
+#else
+    comm = in_comm.comm.split(p,q);
+    myComm=OOMPI_Intra_comm(&comm);
+#endif
+    //comm = row;
     d_groupid=p;
   }
   else
   {
-    nplist[0]=0; nplist[1]=comm.size();
-    myComm=OOMPI_Intra_comm(comm.getComm());
+    nplist[0]=0; nplist[1]=in_comm.size();
+    myComm=OOMPI_Intra_comm(in_comm.getComm());
     d_groupid=0;
   }
   myMPI = myComm.Get_mpi();
@@ -112,10 +129,10 @@ Communicate::Communicate(const Communicate& comm, int nparts)
   d_ngroups=nparts;
   // create a communicator among group leaders.
   MPI_Group parent_group, leader_group;
-  MPI_Comm_group(comm.getMPI(), &parent_group);
+  MPI_Comm_group(in_comm.getMPI(), &parent_group);
   MPI_Group_incl(parent_group, nparts, nplist.data(), &leader_group);
   MPI_Comm leader_comm;
-  MPI_Comm_create(comm.getMPI(), leader_group, &leader_comm);
+  MPI_Comm_create(in_comm.getMPI(), leader_group, &leader_comm);
   if(isGroupLeader())
     GroupLeaderComm = new Communicate(leader_comm);
   else
@@ -166,13 +183,26 @@ Communicate::Communicate(const Communicate& comm, const std::vector<int>& jobs)
 // Implements Communicate with OOMPI library
 //================================================================
 
+//void Communicate::initialize(int argc, char **argv)
+// Empty to keep myriad unit tests happy for now
 void Communicate::initialize(int argc, char **argv)
 {
-  OOMPI_COMM_WORLD.Init(argc, argv);
-  myComm = OOMPI_COMM_WORLD;
+}
+
+void Communicate::initialize(boost::mpi3::environment &env)
+{
+  //myComm = OOMPI_Intra_comm(&OHMMS::Environment->world());
+  myComm = OOMPI_Intra_comm(&env.world());
+  comm = env.world();
+  //OOMPI_COMM_WORLD.Init(argc, argv);
+  //myComm = OOMPI_COMM_WORLD;
   myMPI = myComm.Get_mpi();
-  d_mycontext = OOMPI_COMM_WORLD.Rank();
-  d_ncontexts = OOMPI_COMM_WORLD.Size();
+  //d_mycontext = OOMPI_COMM_WORLD.Rank();
+  //d_ncontexts = OOMPI_COMM_WORLD.Size();
+  //d_mycontext = OHMMS::Environment->world().rank();
+  //d_ncontexts = OHMMS::Environment->world().size();
+  d_mycontext = env.world().rank();
+  d_ncontexts = env.world().size();
   d_groupid=0;
   d_ngroups=1;
 #ifdef __linux__
@@ -189,6 +219,9 @@ void Communicate::initialize(int argc, char **argv)
   std::string when="qmc."+getDateAndTime("%Y%m%d_%H%M");
 }
 
+
+
+#if 0
 void Communicate::finalize()
 {
   static bool has_finalized=false;
@@ -201,10 +234,12 @@ void Communicate::finalize()
       adios_finalize(OHMMS::Controller->rank());
     }
 #endif
-    OOMPI_COMM_WORLD.Finalize();
+    //OOMPI_COMM_WORLD.Finalize();
+    //if (OHMMS::Environment) delete OHMMS::Environment;
     has_finalized=true;
   }
 }
+#endif
 
 void Communicate::cleanupMessage(void*)
 {
@@ -212,7 +247,8 @@ void Communicate::cleanupMessage(void*)
 
 void Communicate::abort()
 {
-  OOMPI_COMM_WORLD.Abort();
+  //OOMPI_COMM_WORLD.Abort();
+  //OHMMS::Environment->world().abort();
 }
 
 void Communicate::barrier()
@@ -223,11 +259,14 @@ void Communicate::barrier()
 void Communicate::abort(const char* msg)
 {
   std::cerr << msg << std::endl;
-  OOMPI_COMM_WORLD.Abort();
+  //OOMPI_COMM_WORLD.Abort();
+  //OHMMS::Environment->world().abort();
 }
 
 
-#else
+#endif
+//#else
+#if 0
 
 void Communicate::initialize(int argc, char **argv)
 {

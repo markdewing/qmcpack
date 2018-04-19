@@ -116,6 +116,9 @@ IF (IS_GIT_PROJECT)
   MESSAGE("Git commit hash: ${GIT_CONFIG_COMMIT_HASH}")
 ENDIF()
 
+IF (NOT HAVE_MPI)
+  INCLUDE_DIRECTORIES("${qmcpack_SOURCE_DIR}/src/mpi_wrapper/fake")
+ENDIF()
 
 ####################################
 # create liboompi
@@ -344,6 +347,7 @@ ENDIF()
     INCLUDE(${PROJECT_SOURCE_DIR}/CMake/unit_test.cmake)
     SUBDIRS(OhmmsPETE/tests)
     SUBDIRS(Numerics/tests)
+    SUBDIRS(Message/tests)
     SUBDIRS(Utilities/tests)
     SUBDIRS(einspline/tests)
     SUBDIRS(spline2/tests)
