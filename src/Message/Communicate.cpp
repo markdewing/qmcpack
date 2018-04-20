@@ -67,7 +67,6 @@ Communicate::~Communicate()
 }
 
 //exclusive:  OOMPI, MPI or Serial
-#ifdef HAVE_OOMPI
 
 Communicate::Communicate(const mpi_comm_type comm_input):
   myMPI(comm_input), d_groupid(0), d_ngroups(1), GroupLeaderComm(nullptr)
@@ -76,22 +75,6 @@ Communicate::Communicate(const mpi_comm_type comm_input):
   d_mycontext=myComm.Rank();
   d_ncontexts=myComm.Size();
 }
-
-#if 0
-void
-Communicate::set_world()
-{
-  //myComm = OOMPI_COMM_WORLD;
-  myComm = OOMPI_Intra_comm(&OHMMS::Environment->world());
-  myMPI = myComm.Get_mpi();
-  //d_mycontext = OOMPI_COMM_WORLD.Rank();
-  //d_ncontexts = OOMPI_COMM_WORLD.Size();
-  d_mycontext = OHMMS::Environment->world().rank();
-  d_ncontexts = OHMMS::Environment->world().size();
-  d_groupid=0;
-  d_ngroups=1;
-}
-#endif
 
 
 Communicate::Communicate(const Communicate& in_comm, int nparts)
@@ -185,26 +168,6 @@ void Communicate::initialize(boost::mpi3::environment &env)
 
 
 
-#if 0
-void Communicate::finalize()
-{
-  static bool has_finalized=false;
-
-  if(!has_finalized)
-  {
-#ifdef HAVE_ADIOS
-    if(ADIOS::get_adios_init()){
-      adios_read_finalize_method(ADIOS_READ_METHOD_BP);
-      adios_finalize(OHMMS::Controller->rank());
-    }
-#endif
-    //OOMPI_COMM_WORLD.Finalize();
-    //if (OHMMS::Environment) delete OHMMS::Environment;
-    has_finalized=true;
-  }
-}
-#endif
-
 void Communicate::cleanupMessage(void*)
 {
 }
@@ -228,51 +191,3 @@ void Communicate::abort(const char* msg)
 }
 
 
-#endif
-//#else
-#if 0
-
-void Communicate::initialize(int argc, char **argv)
-{
-  std::string when="qmc."+getDateAndTime("%Y%m%d_%H%M");
-}
-
-void Communicate::set_world()
-{
-}
-
-void Communicate::finalize()
-{
-}
-
-void Communicate::abort()
-{
-  std::abort();
-}
-
-void Communicate::abort(const char* msg)
-{
-  std::cerr << msg << std::endl;
-  std::abort();
-}
-
-void Communicate::barrier()
-{
-}
-
-void Communicate::cleanupMessage(void*)
-{
-}
-
-Communicate::Communicate(const Communicate& comm, int nparts)
-  : myMPI(0), d_mycontext(0), d_ncontexts(1), d_groupid(0)
-{
-  GroupLeaderComm = new Communicate();
-}
-
-Communicate::Communicate(const Communicate& comm, const std::vector<int>& jobs)
-  : myMPI(0), d_mycontext(0), d_ncontexts(1), d_groupid(0), GroupLeaderComm(nullptr)
-{
-}
-
-#endif // !HAVE_OOMPI

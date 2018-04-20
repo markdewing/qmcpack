@@ -24,7 +24,6 @@
 #endif
 #include "mpi_wrapper/boost/mpi3/environment.hpp"
 
-//#ifdef HAVE_OOMPI
 #include "oompi.h"
 struct CommunicatorTraits
 {
@@ -40,25 +39,6 @@ struct CommunicatorTraits
 {std::cerr << "Fatal Error. Aborting at " << l \
   << "::" << f << "\n " <<  msg << std::endl; OOMPI_COMM_WORLD.Abort();}
 
-//#else
-#if 0
-struct CommunicatorTraits
-{
-  typedef int  mpi_comm_type;
-  typedef int  status;
-  typedef int  request;
-  typedef int  intra_comm_type;
-  static const int MPI_REQUEST_NULL = 1;
-};
-
-#define APP_ABORT(msg) \
-{std::cerr << "Fatal Error. Aborting at " << msg << std::endl; std::cerr.flush(); exit(1);}
-
-#define APP_ABORT_TRACE(f,l,msg) \
-{std::cerr << "Fatal Error. Aborting at " << l \
-  << "::" << f << "\n " <<  msg << std::endl; exit(1);}
-
-#endif
 
 #include <string>
 #include <vector>
@@ -103,7 +83,6 @@ public:
   //void finalize();
   void abort();
   void abort(const char* msg);
-  //void set_world();
 
   ///operator for implicit conversion to MPI_Comm
   inline operator MPI_Comm() const
