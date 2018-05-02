@@ -17,7 +17,10 @@
 
 #include <iostream>
 
+// For fake MPI
+#define DEFINE_MPI_CONSTS
 #include <mpi.h>
+#undef DEFINE_MPI_CONSTS
 
 #include "Comm.h"
 #include "Port.h"
@@ -159,7 +162,7 @@ operator!=(OOMPI_Comm &a, OOMPI_Comm &b)
 OOMPI_Group
 OOMPI_Comm::Group()
 {
-  MPI_Group mpi_group(0);
+  MPI_Group mpi_group(MPI_GROUP_NULL);
   if (MPI_Comm_group(comm_wrapper->Get(), &mpi_group) != MPI_SUCCESS)
     return OOMPI_Group(MPI_GROUP_NULL);
 
@@ -334,6 +337,7 @@ OOMPI_Comm::Sendrecv(OOMPI_Array_message sendbuf, int sendcount,
   return OOMPI_Status(mpi_status);
 }
  
+#if 0
  
 //
 // Sendrecv_replace
@@ -369,6 +373,7 @@ OOMPI_Comm::Sendrecv_replace(OOMPI_Array_message buf, int count,
  
   return OOMPI_Status(mpi_status);
 }
+#endif
 
 
 //
@@ -484,6 +489,7 @@ OOMPI_Comm::install_handler()
   util.Get_sem(SEM_ERR_HANDLER);
 
   MPI_Comm comm = comm_wrapper->Get();
+#if 0
   if (comm != MPI_COMM_NULL) {
     OOMPI_ERROR.Add(comm, this, OOMPI_ERRORS_ARE_FATAL);
     MPI_Errhandler_create((MPI_Handler_function *) OOMPI_Error_handler, 
@@ -492,5 +498,6 @@ OOMPI_Comm::install_handler()
     MPI_Errhandler_free(&err_handler);
     // The MPI 1.1 spec claims that it is OK to free the error handler right away, as the implementation will handle deleting it at the appropriate time.
   }
+#endif
   util.Release_sem(SEM_ERR_HANDLER);
 }

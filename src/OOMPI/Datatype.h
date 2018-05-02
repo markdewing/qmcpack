@@ -118,12 +118,14 @@ public:
   void Hvector_type(int blocklength, int stride,
                     OOMPI_Datatype type, int count);
 
+#if 0
   void Indexed(int blocklengths[], int disps[],
                OOMPI_Message type, int count);
   void Indexed(int blocklengths[], int disps[],
                OOMPI_Array_message type, int count);
   void Indexed_type(int blocklengths[], int disps[],
                     OOMPI_Datatype type, int count);
+#endif
 
   void Hindexed(int blocklengths[], OOMPI_Aint disps[],
                 OOMPI_Message type, int count);

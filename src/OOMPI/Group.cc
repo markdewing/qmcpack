@@ -307,9 +307,11 @@ operator-(OOMPI_Group g1, OOMPI_Group g2)
 {
   MPI_Group mpi_group;
 
+#if 0
   if (MPI_Group_difference(g1.group_wrapper->Get(), g2.group_wrapper->Get(), 
 			   &mpi_group) != MPI_SUCCESS)
     return OOMPI_Group(MPI_GROUP_NULL);
+#endif
 
   return OOMPI_Group(mpi_group);
 }

@@ -84,6 +84,7 @@ OOMPI_Port::operator=(const OOMPI_Port &a)
 //
 // Making intercommunicators
 //
+#if 0
 OOMPI_Inter_comm
 OOMPI_Port::Intercomm_create(OOMPI_Intra_comm &peer_comm, 
 			     int remote_leader, int tag)
@@ -97,7 +98,9 @@ OOMPI_Port::Intercomm_create(OOMPI_Intra_comm &peer_comm,
 
   return OOMPI_Inter_comm(mpi_newintercomm, true);
 }
+#endif
 
+#if 0
 OOMPI_Inter_comm
 OOMPI_Port::Intercomm_create(OOMPI_Port &peer_port, int tag)
 {
@@ -110,5 +113,6 @@ OOMPI_Port::Intercomm_create(OOMPI_Port &peer_port, int tag)
 
   return OOMPI_Inter_comm(mpi_newintercomm, true);
 }
+#endif
 
 

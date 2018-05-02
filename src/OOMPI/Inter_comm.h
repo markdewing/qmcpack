@@ -19,6 +19,7 @@
 
 #include "Intra_comm.h"
 
+#if 0
 
 class OOMPI_Inter_comm : public OOMPI_Comm
 {
@@ -76,6 +77,7 @@ inline OOMPI_Inter_comm::OOMPI_Inter_comm(MPI_Comm mpi_comm, bool needs_to_be_fr
 {
   do_full_init(mpi_comm, needs_to_be_freed);
 }
+#endif
 
 #endif
 

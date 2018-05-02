@@ -203,6 +203,7 @@ OOMPI_Comm_world::Finalize(void)
   a.Get_sem(SEM_FINAL);
   MPI_Initialized(&flag);
 
+#if 0
   if (valid && flag && !oompi_finalized) {
     // Free all remaining MPI datatypes.
     MPI_Errhandler_set(MPI_COMM_WORLD, MPI_ERRORS_RETURN);
@@ -216,6 +217,7 @@ OOMPI_Comm_world::Finalize(void)
 
     MPI_Finalize();
   }
+#endif
   a.Release_sem(SEM_FINAL);
 }
 

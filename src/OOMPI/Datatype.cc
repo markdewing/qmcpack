@@ -235,6 +235,7 @@ OOMPI_Datatype::Vector_type(int blocklength, int stride,
 }
 
 
+#if 0
 void
 OOMPI_Datatype::Hvector(int blocklength, int stride, 
 			OOMPI_Message type, int cnt)
@@ -275,8 +276,10 @@ OOMPI_Datatype::Hvector_type(int blocklength, int stride,
   delete out;
   Release();
 }
+#endif
 
 
+#if 0
 void
 OOMPI_Datatype::Indexed(int blocklengths[], int disps[], 
 			OOMPI_Message type, int cnt)
@@ -317,8 +320,10 @@ OOMPI_Datatype::Indexed_type(int blocklengths[], int disps[],
   delete out;
   Release();
 }
+#endif
 
 
+#if 0
 void
 OOMPI_Datatype::Hindexed(int blocklengths[], OOMPI_Aint disps[], 
 			 OOMPI_Message type, int cnt)
@@ -359,8 +364,10 @@ OOMPI_Datatype::Hindexed_type(int blocklengths[], OOMPI_Aint disps[],
   delete out;
   Release();
 }
+#endif
 
 
+#if 0
 OOMPI_Aint
 OOMPI_Datatype::Extent()
 {
@@ -376,6 +383,7 @@ OOMPI_Datatype::Extent()
 
   return (OOMPI_Aint) extent;
 }
+#endif
 
 
 int
@@ -395,6 +403,7 @@ OOMPI_Datatype::Size()
 }
 
 
+#if 0
 OOMPI_Aint 
 OOMPI_Datatype::Lb()
 {
@@ -427,12 +436,14 @@ OOMPI_Datatype::Ub()
 
   return (OOMPI_Aint) ub;
 }
+#endif
 
 
 //
 // Building a structure datatype
 //
 
+#if 0
 void
 OOMPI_Datatype::Struct_start(void *t, void *lb)
 {
@@ -446,7 +457,6 @@ OOMPI_Datatype::Struct_start(void *t, void *lb)
     Type_list = new Type_info(1, disp, MPI_LB, Type_list);
   }
 }
-
 
 OOMPI_Datatype &
 OOMPI_Datatype::Entry(OOMPI_Message d)
@@ -529,6 +539,7 @@ OOMPI_Datatype::Struct_end(void *ub)
   delete[] types;
   Release();
 }
+#endif
 
 
 /////////////////////////////////////////////////

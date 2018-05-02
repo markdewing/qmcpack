@@ -16,6 +16,7 @@
 
 #include "Inter_comm.h"
 
+#if 0
 
 // Creates an OOMPI_Inter_comm from an mpi_comm
 void OOMPI_Inter_comm::do_full_init(MPI_Comm mpi_comm, bool needs_to_be_freed)
@@ -131,4 +132,5 @@ OOMPI_Inter_comm::Merge(bool high)
 
   return OOMPI_Intra_comm(mpi_comm, true);
 }
+#endif
 

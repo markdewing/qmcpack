@@ -22,6 +22,7 @@
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
+#include <mpi.h>
 #include "mpi_wrapper/boost/mpi3/environment.hpp"
 
 #include "oompi.h"

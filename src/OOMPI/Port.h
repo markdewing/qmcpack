@@ -72,9 +72,11 @@ public:
   inline OOMPI_Request Irecv(OOMPI_Array_message buf, int count,
                              int tag = OOMPI_NO_TAG);
 
+#if 0
   inline OOMPI_Request Recv_init(OOMPI_Message buf, int tag = OOMPI_NO_TAG);
   inline OOMPI_Request Recv_init(OOMPI_Array_message buf, int count,
                                  int tag = OOMPI_NO_TAG);
+#endif
 
   //
   // Probe
@@ -87,11 +89,13 @@ public:
   // Making intercommunicators
   //
 
+#if 0
   OOMPI_Inter_comm Intercomm_create(OOMPI_Intra_comm &peer_comm,
                                     int remote_leader,
                                     int tag= OOMPI_INTERCOMM_CREATE_TAG);
   OOMPI_Inter_comm Intercomm_create(OOMPI_Port &peer_port,
                                     int tag= OOMPI_INTERCOMM_CREATE_TAG);
+#endif
 
   //
   // Rooted collective functions
@@ -320,6 +324,7 @@ OOMPI_Port::Irecv(OOMPI_Array_message buf, int count, int tag)
 }
 
 
+#if 0
 OOMPI_Request
 OOMPI_Port::Recv_init(OOMPI_Message buf, int tag)
 {
@@ -341,6 +346,7 @@ OOMPI_Port::Recv_init(OOMPI_Array_message buf, int count, int tag)
   return OOMPI_Request(mpi_request);
 }
 
+#endif
 
 //
 // Rooted collective functions
@@ -723,6 +729,7 @@ OOMPI_Port::Send(OOMPI_Array_message buf, int count, int tag)
 }
 
 
+#if 0
 void
 OOMPI_Port::Ssend(OOMPI_Message buf, int tag)
 {
@@ -739,8 +746,10 @@ OOMPI_Port::Ssend(OOMPI_Array_message buf, int count, int tag)
   MPI_Ssend(buf.Get_top(), count, buf.Get_type(),
             my_rank, my_tag, comm_wrapper->Get());
 }
+#endif
 
 
+#if 0
 OOMPI_Request
 OOMPI_Port::Bsend_init(OOMPI_Message buf, int tag)
 {
@@ -761,8 +770,10 @@ OOMPI_Port::Bsend_init(OOMPI_Array_message buf, int count, int tag)
                  my_rank, my_tag, comm_wrapper->Get(), &mpi_request);
   return OOMPI_Request(mpi_request);
 }
+#endif
 
 
+#if 0
 OOMPI_Request
 OOMPI_Port::Rsend_init(OOMPI_Message buf, int tag)
 {
@@ -783,8 +794,10 @@ OOMPI_Port::Rsend_init(OOMPI_Array_message buf, int count, int tag)
                  my_rank, my_tag, comm_wrapper->Get(), &mpi_request);
   return OOMPI_Request(mpi_request);
 }
+#endif
 
 
+#if 0
 OOMPI_Request
 OOMPI_Port::Send_init(OOMPI_Message buf, int tag)
 {
@@ -805,8 +818,10 @@ OOMPI_Port::Send_init(OOMPI_Array_message buf, int count, int tag)
                 my_rank, my_tag, comm_wrapper->Get(), &mpi_request);
   return OOMPI_Request(mpi_request);
 }
+#endif
 
 
+#if 0
 OOMPI_Request
 OOMPI_Port::Ssend_init(OOMPI_Message buf, int tag)
 {
@@ -827,8 +842,10 @@ OOMPI_Port::Ssend_init(OOMPI_Array_message buf, int count, int tag)
                  my_rank, my_tag, comm_wrapper->Get(), &mpi_request);
   return OOMPI_Request(mpi_request);
 }
+#endif
 
 
+#if 0
 OOMPI_Request
 OOMPI_Port::Ibsend(OOMPI_Message buf, int tag)
 {
@@ -849,8 +866,10 @@ OOMPI_Port::Ibsend(OOMPI_Array_message buf, int count, int tag)
              my_rank, my_tag, comm_wrapper->Get(), &mpi_request);
   return OOMPI_Request(mpi_request);
 }
+#endif
 
 
+#if 0
 OOMPI_Request
 OOMPI_Port::Irsend(OOMPI_Message buf, int tag)
 {
@@ -871,6 +890,7 @@ OOMPI_Port::Irsend(OOMPI_Array_message buf, int count, int tag)
              my_rank, my_tag, comm_wrapper->Get(), &mpi_request);
   return OOMPI_Request(mpi_request);
 }
+#endif
 
 
 OOMPI_Request
@@ -895,6 +915,7 @@ OOMPI_Port::Isend(OOMPI_Array_message buf, int count, int tag)
 }
 
 
+#if 0
 OOMPI_Request
 OOMPI_Port::Issend(OOMPI_Message buf, int tag)
 {
@@ -915,6 +936,7 @@ OOMPI_Port::Issend(OOMPI_Array_message buf, int count, int tag)
              my_rank, my_tag, comm_wrapper->Get(), &mpi_request);
   return OOMPI_Request(mpi_request);
 }
+#endif
 
 
 //

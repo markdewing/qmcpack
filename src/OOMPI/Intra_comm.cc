@@ -115,6 +115,7 @@ OOMPI_Intra_comm::Split(int color, int key)
 //
 // Intercomm_create
 //
+#if 0
 OOMPI_Inter_comm
 OOMPI_Intra_comm::Intercomm_create(int local_leader, 
 				   OOMPI_Intra_comm &peer_comm,
@@ -145,6 +146,7 @@ OOMPI_Intra_comm::Intercomm_create(int local_leader,
 
   return OOMPI_Inter_comm(mpi_comm, true);
 } 
+#endif
 
 
 //
@@ -443,8 +445,10 @@ OOMPI_Intra_comm::Recv_init(OOMPI_Message buf, int tag)
 {
   MPI_Request mpi_request;
   int my_tag= (tag == OOMPI_NO_TAG) ? buf.Get_tag() : tag;
+#if 0
   MPI_Recv_init(buf.Get_top(), buf.Get_count(), buf.Get_type(),
 		MPI_ANY_SOURCE, my_tag, comm_wrapper->Get(), &mpi_request);
+#endif
 
   return OOMPI_Request(mpi_request);
 }
@@ -454,10 +458,12 @@ OOMPI_Request
 OOMPI_Intra_comm::Recv_init(OOMPI_Array_message buf, int count, int tag)
 {
   MPI_Request mpi_request;
+#if 0
   int my_tag= (tag == OOMPI_NO_TAG) ? buf.Get_tag() : tag;
   MPI_Recv_init(buf.Get_top(), count, buf.Get_type(),
 		MPI_ANY_SOURCE, my_tag, comm_wrapper->Get(), &mpi_request);
 
+#endif
   return OOMPI_Request(mpi_request);
 }
 
@@ -527,7 +533,9 @@ OOMPI_Intra_comm::Dims_create(int ndims, int dims[], int nnodes)
   if (nnodes == 0)
     nnodes = num_ports;
   
+#if 0
   MPI_Dims_create(nnodes, ndims, dims);
+#endif
   return dims;
 }
 
@@ -541,17 +549,21 @@ OOMPI_Intra_comm::Cart_map(int ndims, int dims[], bool periods[])
   int *int_ptr = new int[ndims];
   for (int i = 0; i < ndims; i++)
     int_ptr[i] = (int) periods[i];
+#if 0
   if (MPI_Cart_map(comm_wrapper->Get(), ndims, dims, int_ptr, 
 		   &newrank) != MPI_SUCCESS) {
+#endif
     delete[] int_ptr;
     return OOMPI_UNDEFINED;
   }
 
   delete[] int_ptr;
 #else
+#if 0
   if (MPI_Cart_map(comm_wrapper->Get(), ndims, dims, (int *) periods, 
 		   &newrank) != MPI_SUCCESS)
     return OOMPI_UNDEFINED;
+#endif
 #endif
   return newrank;
 }
@@ -565,9 +577,11 @@ OOMPI_Intra_comm::Cart_map(int ndims, int dims[], bool periods)
   for (int i = 0; i < ndims; i++)
     period_array[i] = (int) periods;
 
+#if 0
   if (MPI_Cart_map(comm_wrapper->Get(), ndims, dims, (int *) period_array, 
 	       &newrank) != MPI_SUCCESS)
     return OOMPI_UNDEFINED;
+#endif
   delete[] period_array;
   return newrank;
 }
@@ -577,9 +591,11 @@ int
 OOMPI_Intra_comm::Graph_map(int nnodes, int index[], int edges[])
 {
   int newrank;
+#if 0
   if (MPI_Graph_map(comm_wrapper->Get(), nnodes, index, edges, &newrank) !=
       MPI_SUCCESS)
     return OOMPI_UNDEFINED;
+#endif
 
   return newrank;
 }

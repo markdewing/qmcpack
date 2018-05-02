@@ -22,6 +22,7 @@
 #include "Error.h"
 
 
+#if 0
 void OOMPI_Cart_comm::do_full_init(MPI_Comm mpi_comm, bool needs_to_be_freed)
 {
   if (mpi_comm == MPI_COMM_NULL)
@@ -418,4 +419,5 @@ OOMPI_Cart_comm::Test_inter()
 {
   return OOMPI_Intra_comm::Test_inter();
 }
+#endif
 

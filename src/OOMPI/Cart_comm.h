@@ -22,7 +22,7 @@
 #include "Intra_comm.h"
 #include <stdarg.h>
 
-
+#if 0
 class OOMPI_Cart_comm : public OOMPI_Intra_comm
 {
   friend class OOMPI_Intra_comm;
@@ -124,5 +124,6 @@ inline OOMPI_Cart_comm::OOMPI_Cart_comm(MPI_Comm mpi_comm, bool needs_to_be_free
 {
   do_full_init(mpi_comm, needs_to_be_freed);
 }
+#endif
 
 #endif

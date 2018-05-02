@@ -15,11 +15,11 @@
 
 
 #include <type_traits/scalar_traits.h>
-#if defined(HAVE_MPI)
+//#if defined(HAVE_MPI)
 #include <mpi.h>
-#else
-typedef int MPI_Datatype;
-#endif
+//#else
+//typedef int MPI_Datatype;
+//#endif
 
 namespace qmcplusplus
 {
@@ -28,7 +28,8 @@ namespace mpi
 
 typedef Communicate communicator;
 
-#if defined(HAVE_MPI)
+//#if defined(HAVE_MPI)
+#if 1
 
 ///@typedef mpi::request
 typedef MPI_Request request;

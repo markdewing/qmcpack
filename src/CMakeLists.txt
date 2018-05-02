@@ -123,11 +123,12 @@ ENDIF()
 ####################################
 # create liboompi
 ####################################
+CONFIGURE_FILE(${qmcpack_SOURCE_DIR}/src/oompi-config.h.cmake.in 
+  ${qmcpack_BINARY_DIR}/src/oompi-config.h)
+INCLUDE_DIRECTORIES(${qmcpack_SOURCE_DIR}/src/OOMPI)
+SUBDIRS(OOMPI)
+SET(HAVE_OOMPI 1)
 IF(HAVE_OOMPI)
-  CONFIGURE_FILE(${qmcpack_SOURCE_DIR}/src/oompi-config.h.cmake.in 
-    ${qmcpack_BINARY_DIR}/src/oompi-config.h)
-  INCLUDE_DIRECTORIES(${qmcpack_SOURCE_DIR}/src/OOMPI)
-  SUBDIRS(OOMPI)
   IF ( MPI_LIBRARY )
      SET(MPI_LIBRARY oompi ${MPI_LIBRARY})
   ELSE()

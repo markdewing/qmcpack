@@ -67,6 +67,7 @@ OOMPI_Environment::Buffer_attach(int size)
     return;
   }
 
+#if 0
   OOMPI_Util a;
   a.Get_sem(SEM_BUFFER);
 
@@ -92,6 +93,7 @@ OOMPI_Environment::Buffer_attach(int size)
       size = 0;
     }
   }
+#endif
 }
 
 
@@ -101,6 +103,7 @@ OOMPI_Environment::Buffer_attach(void *buf, int size)
   if (!valid)
     OOMPI_ERROR.Handler(&OOMPI_COMM_WORLD, OOMPI_ERR_OTHER);
 
+#if 0
   OOMPI_Util a;
 
   a.Get_sem(SEM_BUFFER);
@@ -113,6 +116,7 @@ OOMPI_Environment::Buffer_attach(void *buf, int size)
     buffer = 0;
     buf_size = 0;
   }
+#endif
 }
 
 
@@ -125,11 +129,12 @@ OOMPI_Environment::Buffer_detach()
   if (!valid)
     OOMPI_ERROR.Handler(&OOMPI_COMM_WORLD, OOMPI_ERR_OTHER);
 
+  int dummy = 0;
+#if 0
   OOMPI_Util a;
   a.Get_sem(SEM_BUFFER);
 
   void *temp = buffer;
-  int dummy = 0;
 
   buffer = 0;
   buf_size = 0;
@@ -140,6 +145,7 @@ OOMPI_Environment::Buffer_detach()
   if( alloc ) {
     delete[] (char*)temp;
   }
+#endif
 
   return dummy;
 }
@@ -201,9 +207,11 @@ OOMPI_Environment::Pcontrol(int level, ...)
   va_list ap;
   int ret;
 
+#if 0
   va_start(ap, level);
   ret = MPI_Pcontrol(level, ap);
   va_end(ap);
+#endif
   
   return ret;
 }
