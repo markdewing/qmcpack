@@ -374,7 +374,8 @@ bool LCOrbitalSetWithCorrection<BS,false>::transformSPOSet()
   if(cuspInfoFile != "")
     readCuspCoeff = readCuspInfo(info);
   targetPtcl->R[0]=0;
-  CuspCorr<BS> myCorr(0.2,500,targetPtcl,sourcePtcl,true);
+  bool printOrbs = outputManager.isDebugActive();
+  CuspCorr<BS> myCorr(0.2,500,targetPtcl,sourcePtcl,printOrbs);
   Vector<RealType> rad_orb, xgrid;
   std::vector<bool> rmv;
   rmv.resize(myBasisSet->BasisSetSize);

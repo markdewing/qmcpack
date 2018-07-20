@@ -299,6 +299,7 @@ RealType execute(int curOrb_, int curCenter_, RealType Zion, LCOrbitalSet<BS,fal
   if(writeout && printOrbs)
   {
     std::ofstream out(thisFile.c_str());
+    out << "# r  EL_ideal(r)  EL_orig(r)  EL_curr(r) phi(r) phiBar(r) pr(r)" << std::endl;
     for(int i=0; i<nElms; i++)
     {
       out<<pos[i] <<"  "
@@ -314,6 +315,7 @@ RealType execute(int curOrb_, int curCenter_, RealType Zion, LCOrbitalSet<BS,fal
     std::string full;
     full = thisFile + ".full.dat";
     out.open(full.c_str());
+    out << "# r   phi(r)" << std::endl;
     int nx = 500;
     for(int i=0; i<nx; i++)
     {
