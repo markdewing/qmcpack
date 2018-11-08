@@ -47,7 +47,10 @@ int main(int argc, char **argv)
     std::cout << " *.Fchk -> gaussian; *.out -> gamess; *.data -> casino; *.xml -> gamesxml" << std::endl;
     return 1;
   }
-  OHMMS::Controller->initialize(argc,argv);
+#ifdef HAVE_MPI
+  boost::mpi3::environment env(argc, argv);
+  OHMMS::Controller->initialize(env);
+#endif
   if (OHMMS::Controller->rank() != 0) {
     outputManager.shutOff();
   }
@@ -385,7 +388,6 @@ int main(int argc, char **argv)
     }
     
 
-    OHMMS::Controller->finalize();
     
 
   }

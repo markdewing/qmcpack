@@ -23,6 +23,12 @@
 #include "config.h"
 #endif
 
+#if HAVE_MPI
+#include "mpi3/environment.hpp"
+namespace mpi3 = boost::mpi3;
+#endif
+
+
 #ifdef HAVE_OOMPI
 #include "oompi.h"
 struct CommunicatorTraits
@@ -80,8 +86,10 @@ public:
   ///constructor
   Communicate();
 
+#if HAVE_MPI
   ///constructor with arguments
-  Communicate(int argc, char **argv);
+  Communicate(mpi3::environment &env);
+#endif
 
   ///constructor with communicator
   Communicate(const mpi_comm_type comm_input);
@@ -102,10 +110,11 @@ public:
   virtual ~Communicate();
 
   void initialize(int argc, char **argv);
-  void finalize();
+#if HAVE_MPI
+  void initialize(mpi3::environment &env);
+#endif
   void abort();
   void abort(const char* msg);
-  void set_world();
 
 #if defined(HAVE_MPI)
   ///operator for implicit conversion to MPI_Comm
@@ -283,6 +292,11 @@ protected:
 public:
   /// Group Lead Communicator
   Communicate *GroupLeaderComm;
+
+#if HAVE_MPI
+  // Communicator wrapper
+  mpi3::communicator comm;
+#endif
 };
 
 

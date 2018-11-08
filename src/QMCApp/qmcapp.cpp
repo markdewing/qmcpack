@@ -33,6 +33,10 @@
 #include "qmc_common.h"
 //#include "tau/profiler.h"
 
+#ifdef HAVE_MPI
+namespace mpi3 = boost::mpi3;
+#endif
+
 void output_hardware_info(Communicate *comm, Libxml2Document &doc, xmlNodePtr root);
 
 /** @file qmcapp.cpp
@@ -50,7 +54,10 @@ int main(int argc, char **argv)
   //TAU_INIT(&argc, &argv);
   using namespace qmcplusplus;
   //qmc_common  and MPI is initialized
-  OHMMS::Controller->initialize(argc,argv);
+#ifdef HAVE_MPI
+  mpi3::environment env(argc, argv);
+  OHMMS::Controller->initialize(env);
+#endif
   qmcplusplus::qmc_common.initialize(argc,argv);
   int clones=1;
   bool useGPU=(qmc_common.compute_device == 1);
@@ -169,7 +176,6 @@ int main(int argc, char **argv)
       std::cerr << "No input file is given." << std::endl;
       std::cerr << "Usage: qmcpack <input-files> " << std::endl;
     }
-    OHMMS::Controller->finalize();
     return 1;
   }
   if (useGPU)
@@ -233,7 +239,6 @@ int main(int argc, char **argv)
     delete qmc;
   if(useGPU)
     Finalize_CUDA();
-  OHMMS::Controller->finalize();
   return 0;
 }
 

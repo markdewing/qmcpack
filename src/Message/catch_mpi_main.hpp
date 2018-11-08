@@ -18,13 +18,22 @@
 
 #include "Message/Communicate.h"
 
+#ifdef HAVE_MPI
+namespace mpi3 = boost::mpi3;
+#endif
+
 // Replacement unit test main function to ensure that MPI is finalized once 
 // (and only once) at the end of the unit test.
 
-int main(int argc, const char* argv[])
+int main(int argc, char* argv[])
 {
+#ifdef HAVE_MPI
+  mpi3::environment env(argc, argv);
+  OHMMS::Controller = new Communicate(env);
+#else
+  OHMMS::Controller = new Communicate();
+#endif
   int result = Catch::Session().run(argc, argv);
-  OHMMS::Controller->finalize();
   return result;
 }
 
