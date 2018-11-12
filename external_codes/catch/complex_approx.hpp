@@ -9,9 +9,14 @@ namespace Catch {
 class ComplexApprox
 {
 public:
-    ComplexApprox(std::complex<double> value) : m_value(value), m_compare_real_only(false) {}
+    ComplexApprox(std::complex<double> value) : m_value(value), m_compare_real_only(false) {
+      // Copied from catch.hpp - would be better to copy it from Approx object
+      m_epsilon = std::numeric_limits<float>::epsilon()*100;
+    }
+
     std::complex<double> m_value;
     bool m_compare_real_only;
+    double m_epsilon;
 
     friend bool operator == (double const& lhs, ComplexApprox const& rhs)
     {
@@ -63,7 +68,17 @@ public:
       m_compare_real_only = true;
       return *this;
     }
-  
+
+    ComplexApprox &epsilon(double new_epsilon)
+    {
+      m_epsilon = new_epsilon;
+      return *this;
+    }
+
+    double epsilon() const
+    {
+      return m_epsilon;
+    }
 
     std::string toString() const {
         std::ostringstream oss;
