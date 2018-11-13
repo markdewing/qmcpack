@@ -12,6 +12,9 @@
     
 
 
+#ifdef HAVE_MPI
+#define CATCH_CONFIG_DEFAULT_REPORTER "mpi"
+#endif
 
 #define CATCH_CONFIG_RUNNER
 #include "catch.hpp"
@@ -20,6 +23,10 @@
 
 #ifdef HAVE_MPI
 namespace mpi3 = boost::mpi3;
+#endif
+
+#ifdef HAVE_MPI
+#include "mpi_reporter.hpp"
 #endif
 
 // Replacement unit test main function to ensure that MPI is finalized once 
