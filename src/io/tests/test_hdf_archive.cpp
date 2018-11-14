@@ -24,14 +24,27 @@ using std::string;
 
 using namespace qmcplusplus;
 
+// Values are read from a file only on the root node when using serial HDF with MPI
+// If parallel HDF is enabled and parallel I/O is requested from hdf_archive,
+//    values read from a file are on all nodes.
+bool check_on_this_node()
+{
+  bool root = true;
+#ifndef ENABLE_PHDF5
+  root = (OHMMS::Controller->rank() == 0);
+#endif
+  return root;
+}
+
 TEST_CASE("hdf_archive_empty_file", "[hdf]")
 {
-  hdf_archive hd;
+  bool request_pio = true;
+  hdf_archive hd(OHMMS::Controller, request_pio);
   bool okay = hd.create("test1.hdf");
   REQUIRE(okay);
   hd.close();
 
-  hdf_archive hd2;
+  hdf_archive hd2(OHMMS::Controller, request_pio);
   okay = hd2.open("test1.hdf");
   REQUIRE(okay);
   hd2.close();
@@ -40,7 +53,7 @@ TEST_CASE("hdf_archive_empty_file", "[hdf]")
 // Ensure failure if the file we're trying to open does not exist.
 TEST_CASE("hdf_archive_failed_to_open", "[hdf]")
 {
-  hdf_archive hd;
+  hdf_archive hd(OHMMS::Controller);
   bool okay = hd.open("should_not_exist.hdf");
   REQUIRE(okay == false);
   hd.close();
@@ -49,7 +62,8 @@ TEST_CASE("hdf_archive_failed_to_open", "[hdf]")
 // Simple scalar data types in hdf_datatype.h
 TEST_CASE("hdf_archive_simple_data", "[hdf]")
 {
-  hdf_archive hd;
+  bool request_pio = true;
+  hdf_archive hd(OHMMS::Controller, request_pio);
   hd.create("test_simple_data.hdf");
   int i = 23;
   bool okay = hd.write(i, "int");
@@ -71,35 +85,38 @@ TEST_CASE("hdf_archive_simple_data", "[hdf]")
 
   // now read the file and ensure the values are the same
 
-  hdf_archive hd2;
-  hd2.open("test_simple_data.hdf");
-  int i2;
-  okay = hd2.read(i2, "int");
-  REQUIRE(okay);
-  REQUIRE(i == i2);
+  hdf_archive hd2(OHMMS::Controller, request_pio);
+  if (check_on_this_node()) {
+    hd2.open("test_simple_data.hdf");
+    int i2;
+    okay = hd2.read(i2, "int");
+    REQUIRE(okay);
+    REQUIRE(i == i2);
 
-  // deliberately out of order
-  double d2;
-  okay = hd2.read(d2, "double");
-  REQUIRE(okay);
-  REQUIRE(d == d2);
+    // deliberately out of order
+    double d2;
+    okay = hd2.read(d2, "double");
+    REQUIRE(okay);
+    REQUIRE(d == d2);
 
-  double f2;
-  okay = hd2.read(f2, "float");
-  REQUIRE(okay);
-  REQUIRE(f == f2);
+    double f2;
+    okay = hd2.read(f2, "float");
+    REQUIRE(okay);
+    REQUIRE(f == f2);
 
-  std::complex<float> cf2;
-  okay = hd2.read(cf2, "complex float");
-  REQUIRE(okay);
-  REQUIRE(cf == cf2);
+    std::complex<float> cf2;
+    okay = hd2.read(cf2, "complex float");
+    REQUIRE(okay);
+    REQUIRE(cf == cf2);
 
-  hd2.close();
+    hd2.close();
+  }
 }
 
 TEST_CASE("hdf_archive_vector", "[hdf]")
 {
-  hdf_archive hd;
+  bool request_pio = true;
+  hdf_archive hd(OHMMS::Controller, request_pio);
   hd.create("test_stl.hdf");
 
   vector<double> v(3);
@@ -112,22 +129,25 @@ TEST_CASE("hdf_archive_vector", "[hdf]")
 
   hd.close();
 
-  hdf_archive hd2;
-  okay = hd2.open("test_stl.hdf");
-  REQUIRE(okay);
+  if (check_on_this_node()) {
+    hdf_archive hd2(OHMMS::Controller, request_pio);
+    okay = hd2.open("test_stl.hdf");
+    REQUIRE(okay);
 
-  vector<double> v2;
-  okay = hd2.read(v2, "vector_double");
-  REQUIRE(v2.size() == 3);
-  for (int i = 0; i < v.size(); i++)
-  {
-    REQUIRE(v[i] == v2[i]);
+    vector<double> v2;
+    okay = hd2.read(v2, "vector_double");
+    REQUIRE(v2.size() == 3);
+    for (int i = 0; i < v.size(); i++)
+    {
+      REQUIRE(v[i] == v2[i]);
+    }
   }
 }
 
 TEST_CASE("hdf_archive_group", "[hdf]")
 {
-  hdf_archive hd;
+  bool request_pio = true;
+  hdf_archive hd(OHMMS::Controller, request_pio);
   hd.create("test_group.hdf");
 
   int i = 3;
@@ -142,31 +162,34 @@ TEST_CASE("hdf_archive_group", "[hdf]")
 
   hd.close();
 
-  hdf_archive hd2;
-  hd2.open("test_group.hdf");
-  bool int_is_group = hd2.is_group("int");
-  REQUIRE(int_is_group == false);
+  if (check_on_this_node()) {
+    hdf_archive hd2(OHMMS::Controller, request_pio);
+    hd2.open("test_group.hdf");
+    bool int_is_group = hd2.is_group("int");
+    REQUIRE(int_is_group == false);
 
-  bool name1_is_group = hd2.is_group("name1");
-  REQUIRE(name1_is_group);
+    bool name1_is_group = hd2.is_group("name1");
+    REQUIRE(name1_is_group);
 
-  int j2 = 0;
-  okay = hd2.read(j2, "name1/int2");
-  REQUIRE(okay);
-  REQUIRE(j2 == j);
+    int j2 = 0;
+    okay = hd2.read(j2, "name1/int2");
+    REQUIRE(okay);
+    REQUIRE(j2 == j);
 
-  int j3 = 0;
-  hd2.push("name1", false);
-  okay = hd2.read(j3, "int2");
-  REQUIRE(okay);
-  REQUIRE(j3 == j);
+    int j3 = 0;
+    hd2.push("name1", false);
+    okay = hd2.read(j3, "int2");
+    REQUIRE(okay);
+    REQUIRE(j3 == j);
 
-  hd2.close();
+    hd2.close();
+  }
 }
 
 TEST_CASE("hdf_archive_tiny_vector", "[hdf]")
 {
-  hdf_archive hd;
+  bool request_pio = true;
+  hdf_archive hd(OHMMS::Controller, request_pio);
   hd.create("test_tiny_vector.hdf");
 
   TinyVector<double, 2> v(2);
@@ -179,21 +202,24 @@ TEST_CASE("hdf_archive_tiny_vector", "[hdf]")
 
   hd.close();
 
-  hdf_archive hd2;
-  hd2.open("test_tiny_vector.hdf");
+  if (check_on_this_node()) {
+    hdf_archive hd2(OHMMS::Controller, request_pio);
+    hd2.open("test_tiny_vector.hdf");
 
-  TinyVector<double, 2> v2;
-  okay = hd2.read(v2, "tiny_vector_double");
-  REQUIRE(okay);
-  for (int i = 0; i < v.size(); i++)
-  {
-    REQUIRE(v[i] == v2[i]);
+    TinyVector<double, 2> v2;
+    okay = hd2.read(v2, "tiny_vector_double");
+    REQUIRE(okay);
+    for (int i = 0; i < v.size(); i++)
+    {
+      REQUIRE(v[i] == v2[i]);
+    }
   }
 }
 
 TEST_CASE("hdf_archive_tensor", "[hdf]")
 {
-  hdf_archive hd;
+  bool request_pio = true;
+  hdf_archive hd(OHMMS::Controller, request_pio);
   hd.create("test_tensor.hdf");
 
   Tensor<float, 2> v(2);
@@ -208,24 +234,27 @@ TEST_CASE("hdf_archive_tensor", "[hdf]")
 
   hd.close();
 
-  hdf_archive hd2;
+  hdf_archive hd2(OHMMS::Controller, request_pio);
   hd2.open("test_tensor.hdf");
 
-  Tensor<float, 2> v2;
-  okay = hd2.read(v2, "tiny_tensor_float");
-  REQUIRE(okay);
-  for (int i = 0; i < 2; i++)
-  {
-    for (int j = 0; j < 2; j++)
+  if (check_on_this_node()) {
+    Tensor<float, 2> v2;
+    okay = hd2.read(v2, "tiny_tensor_float");
+    REQUIRE(okay);
+    for (int i = 0; i < 2; i++)
     {
-      REQUIRE(v(i,j) == v2(i,j));
+      for (int j = 0; j < 2; j++)
+      {
+        REQUIRE(v(i,j) == v2(i,j));
+      }
     }
   }
 }
 
 TEST_CASE("hdf_archive_string", "[hdf]")
 {
-  hdf_archive hd;
+  bool request_pio = true;
+  hdf_archive hd(OHMMS::Controller, request_pio);
   hd.create("test_string.hdf");
 
   string s("this is a test");
@@ -240,16 +269,18 @@ TEST_CASE("hdf_archive_string", "[hdf]")
 
   hd.close();
 
-  hdf_archive hd2;
-  okay = hd2.open("test_string.hdf");
-  REQUIRE(okay);
-  string s2;
-  okay = hd2.read(s2, "string");
-  REQUIRE(okay);
-  REQUIRE(s == s2);
+  if (check_on_this_node()) {
+    hdf_archive hd2(OHMMS::Controller, request_pio);
+    okay = hd2.open("test_string.hdf");
+    REQUIRE(okay);
+    string s2;
+    okay = hd2.read(s2, "string");
+    REQUIRE(okay);
+    REQUIRE(s == s2);
 
-  string o2;
-  okay = hd2.read(o2, "ostringstream");
-  REQUIRE(okay);
-  REQUIRE(o.str() == o2);
+    string o2;
+    okay = hd2.read(o2, "ostringstream");
+    REQUIRE(okay);
+    REQUIRE(o.str() == o2);
+  }
 }
