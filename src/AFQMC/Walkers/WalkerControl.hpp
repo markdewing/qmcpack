@@ -19,13 +19,13 @@
 #include <stack>
 #include <mpi.h>
 #include<AFQMC/config.0.h>
-#include <Utilities/UtilityFunctions.h>
+#include <Utilities/FairDivide.h>
 
 #include "AFQMC/Walkers/WalkerConfig.hpp"
 #include "AFQMC/Walkers/WalkerUtilities.hpp"
 
-#include "alf/boost/mpi3/communicator.hpp"
-#include "alf/boost/mpi3/request.hpp"
+#include "mpi3/communicator.hpp"
+#include "mpi3/request.hpp"
 
 namespace qmcplusplus
 {
@@ -182,7 +182,8 @@ inline int swapWalkersAsync(WlkBucket& wset, Mat&& Wexcess, IVec& CurrNumPerNode
         ComplexType* bf = new ComplexType[countSend*wlk_size];
         buffers.push_back(bf);
         recvCounts.push_back(countSend);
-        requests.emplace_back( comm.ireceive(bf,bf+countSend*wlk_size,plus[ic],plus[ic]+1999) );
+        //requests.emplace_back( comm.ireceive_n(bf,bf+countSend*wlk_size,plus[ic],plus[ic]+1999) );
+        requests.emplace_back( comm.ireceive_n(bf,countSend,plus[ic],plus[ic]+1999) );
         countSend = 1;
       }
     }
