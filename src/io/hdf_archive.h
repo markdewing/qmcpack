@@ -21,7 +21,9 @@
 #include <io/hdf_pete.h>
 #include <io/hdf_stl.h>
 #include <io/hdf_hyperslab.h>
+#include <io/hdf_double_hyperslab.h>
 #if defined(HAVE_LIBBOOST)
+#include <io/hdf_ma.h>
 #if !defined(__bgq__)
 #include <io/hdf_boost_smvector.h>
 #endif
@@ -29,6 +31,7 @@
 #endif
 #include <stack>
 #include <bitset>
+#include "mpi3/communicator.hpp"
 
 class Communicate;
 
@@ -56,24 +59,47 @@ struct hdf_archive
   ///error type
   H5E_auto_t err_func;
   ///error handling
+  Communicate *myComm;
   void *client_data;
-  ///Pointer to communicator
-  Communicate* myComm;
   ///FILO to handle H5Group
   std::stack<hid_t> group_id;
   /** constructor
    * @param c communicator
    * @param request_pio turns on parallel I/O,
-   *        if true and PHDF5 is available, hdf_archive is in parallel collective IO mode
-   *        if true and PHDF5 is not available, hdf_archive is in master-only IO mode
+   *        if ture and PHDF5 is available, hdf_archive is in parallel collective IO mode
+   *        if ture and PHDF5 is not available, hdf_archive is in master-only IO mode
    *        if false, hdf_archive is in independent IO mode
    */
-  hdf_archive(Communicate* c=nullptr, bool request_pio=false);
+  //template<class Comm=Communicate*>
+  hdf_archive(boost::mpi3::communicator& c, bool request_pio=false)
+  : file_id(is_closed), access_id(H5P_DEFAULT), xfer_plist(H5P_DEFAULT),myComm(nullptr)
+  {
+    H5Eget_auto (&err_func, &client_data);
+    H5Eset_auto (NULL, NULL);
+    set_access_plist(request_pio,c);
+  }
+  hdf_archive(Communicate* c, bool request_pio=false)
+  : file_id(is_closed), access_id(H5P_DEFAULT), xfer_plist(H5P_DEFAULT), myComm(c)
+  {
+    H5Eget_auto (&err_func, &client_data);
+    H5Eset_auto (NULL, NULL);
+    set_access_plist(request_pio,c);
+  }
+  hdf_archive()
+  : file_id(is_closed), access_id(H5P_DEFAULT), xfer_plist(H5P_DEFAULT),myComm(nullptr)
+  {
+    H5Eget_auto (&err_func, &client_data);
+    H5Eset_auto (NULL, NULL);
+    set_access_plist();
+  }
+  //hdf_archive(Communicate* comm, bool request_pio=false);
   ///destructor
   ~hdf_archive();
 
   ///set the access property
   void set_access_plist(bool request_pio, Communicate* comm);
+  void set_access_plist(bool request_pio, boost::mpi3::communicator& comm);
+  void set_access_plist();
 
   ///return true if parallel i/o
   inline bool is_parallel() const
