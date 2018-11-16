@@ -33,6 +33,8 @@ struct shared_window : window<T>{
 	{}
 	shared_window(shared_window const&) = default;
 	shared_window(shared_window&& other) : window<T>{std::move(other)}{}//, comm_{other.comm_}{}
+  shared_window& operator=(shared_window&& other) = default;
+
 	using query_t = std::tuple<mpi3::size_t, int, void*>;
 	query_t query(int rank = MPI_PROC_NULL) const{
 		query_t ret;
@@ -253,6 +255,9 @@ struct is_root{
 	template<class Alloc>
 	is_root(Alloc& a) : comm_(a.comm_){}
 	bool root(){return comm_.root();}
+  void barrier() {comm_.barrier();}
+  int size() { return comm_.size();}
+  int rank() { return comm_.rank();}
 };
 
 }
