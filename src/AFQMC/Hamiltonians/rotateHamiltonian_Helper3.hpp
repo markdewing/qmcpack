@@ -21,7 +21,7 @@
 #include<mpi.h>
 
 #include "Numerics/OhmmsBlas.h"
-#include "Utilities/UtilityFunctions.h"
+#include "Utilities/FairDivide.h"
 #include "AFQMC/config.h"
 #include "AFQMC/Numerics/ma_operations.hpp"
 #include "AFQMC/Utilities/taskgroup.h"
