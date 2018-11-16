@@ -24,9 +24,9 @@
 #endif
 
 #include "Configuration.h"
-#include "Utilities/UtilityFunctions.h"
+#include "Utilities/FairDivide.h"
 #include "Message/CommOperators.h"
-#include "Utilities/UtilityFunctions.h"
+#include "Utilities/FairDivide.h"
 
 #include "AFQMC/Utilities/Utils.h"
 #include<AFQMC/config.0.h>

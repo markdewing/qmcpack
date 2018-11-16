@@ -25,7 +25,7 @@
 #endif
 
 #include "Configuration.h"
-#include "Utilities/UtilityFunctions.h"
+#include "Utilities/FairDivide.h"
 #include "io/hdf_archive.h"
 
 #include "AFQMC/config.0.h"
@@ -33,9 +33,9 @@
 #include "AFQMC/Matrix/array_partition.hpp"
 #include "AFQMC/Matrix/matrix_emplace_wrapper.hpp"
 
-#include "alf/boost/mpi3/communicator.hpp"
-#include "alf/boost/mpi3/shared_communicator.hpp"
-#include "alf/boost/mpi3/shared_window.hpp"
+#include "mpi3/communicator.hpp"
+#include "mpi3/shared_communicator.hpp"
+#include "mpi3/shared_window.hpp"
 
 #include "AFQMC/Matrix/csr_matrix.hpp"
 #include "AFQMC/Matrix/coo_matrix.hpp"
@@ -650,7 +650,8 @@ inline void write_distributed_CSR_to_HDF(SparseArray2D const& SpM, hdf_archive& 
       int nnodes_per_TG = TG.getNNodesPerTG();
       for(int core=1; core<nnodes_per_TG; ++core) {
         size_t nnz_;
-        TG.Cores().receive_value(nnz_,core,core);
+        //TG.Cores().receive_value(nnz_,core,core);
+        TG.Cores().receive_n(&nnz_,1,core,core);
         int nblk = ((nnz_-size_t(1))/CSR_HDF_BLOCK_SIZE + 1);
         for(int ni=0; ni<nblk; ++ni) {
           size_t sz = std::min(size_t(CSR_HDF_BLOCK_SIZE),nnz_-size_t(ni*CSR_HDF_BLOCK_SIZE));
