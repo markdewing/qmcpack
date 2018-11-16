@@ -18,9 +18,9 @@
 #include<iostream>
 #include<random>
 
-#include "alf/boost/mpi3/shared_window.hpp"
-#include "alf/boost/mpi3/shared_communicator.hpp"
-//#include "alf/boost/mpi3/shm/allocator.hpp" 
+#include "mpi3/shared_window.hpp"
+#include "mpi3/shared_communicator.hpp"
+//#include "mpi3/shm/allocator.hpp" 
 
 #include "AFQMC/Matrix/csr_matrix.hpp"
 
@@ -38,7 +38,7 @@ namespace qmcplusplus
 template<typename Type, typename IndxType, typename IntType, class Alloc, class is_root>
 void test_csr_matrix_shm_allocator(Alloc A, bool serial)
 {
-        auto world = mpi3::world;
+        auto world = OHMMS::Controller->comm;
         mpi3::shared_communicator node(world.split_shared());
 
         using ucsr_matrix = ma::sparse::ucsr_matrix<Type,IndxType,IntType,Alloc,is_root>;
@@ -437,7 +437,6 @@ void test_csr_matrix_shm_allocator(Alloc A, bool serial)
 
 TEST_CASE("csr_matrix_serial", "[csr]")
 {
-  OHMMS::Controller->initialize(0, NULL);
   // serial
   {
     using Type = double;
@@ -457,8 +456,7 @@ TEST_CASE("csr_matrix_serial", "[csr]")
 
 TEST_CASE("csr_matrix_shm", "[csr]")
 {
-  OHMMS::Controller->initialize(0, NULL);
-  auto world = mpi3::world;
+  auto world = OHMMS::Controller->comm;
   mpi3::shared_communicator node(world.split_shared());
 
   {
@@ -482,8 +480,7 @@ TEST_CASE("csr_matrix_shm", "[csr]")
 
 TEST_CASE("csr_matrix_shm_large_memory", "[csr]")
 {
-  OHMMS::Controller->initialize(0, NULL);
-  auto world = mpi3::world;
+  auto world = OHMMS::Controller->comm;
   mpi3::shared_communicator node(world.split_shared());
 
   using Type = std::complex<double>;

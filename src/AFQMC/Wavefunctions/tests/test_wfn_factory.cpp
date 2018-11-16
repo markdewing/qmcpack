@@ -16,7 +16,7 @@
 #include "Configuration.h"
 
 #include "OhmmsData/Libxml2Doc.h"
-#include "Utilities/OhmmsInfo.h"
+#include "Utilities/OutputManager.h"
 #include "OhmmsApp/ProjectData.h"
 #include "io/hdf_archive.h"
 #include "Utilities/RandomGenerator.h"
@@ -67,16 +67,13 @@ using namespace afqmc;
 
 TEST_CASE("wfn_fac_sdet", "[wavefunction_factory]")
 {
-  OHMMS::Controller->initialize(0, NULL);
-  OhmmsInfo("testlogfile",boost::mpi3::world.rank());
-
   if(not file_exists("./afqmc.h5") ||
      not file_exists("./wfn.dat") ) {
     app_log()<<" Skipping wfn_fac_collinear_sdet text. afqmc.h5 and ./wfn.dat files not found. \n";
   } else {
 
     // mpi3
-    communicator& world = boost::mpi3::world;
+    communicator& world = OHMMS::Controller->comm;
 
     // Global Task Group
     GlobalTaskGroup gTG(world);
@@ -330,16 +327,13 @@ const char *wlk_xml_block_noncol =
 
 TEST_CASE("wfn_fac_sdet_distributed", "[wavefunction_factory]")
 {
-  OHMMS::Controller->initialize(0, NULL);
-  OhmmsInfo("testlogfile",boost::mpi3::world.rank());
-
   if(not file_exists("./afqmc.h5") ||
      not file_exists("./wfn.dat") ) {
     app_log()<<" Skipping wfn_fac_sdet_distributed text. afqmc.h5 and ./wfn.dat files not found. \n";
   } else {
 
     // mpi3
-    communicator& world = boost::mpi3::world;
+    communicator& world = OHMMS::Controller->comm;
 
     // Global Task Group
     GlobalTaskGroup gTG(world);
@@ -640,16 +634,13 @@ const char *wlk_xml_block_noncol =
 
 TEST_CASE("wfn_fac_collinear_multidet", "[wavefunction_factory]")
 {
-  OHMMS::Controller->initialize(0, NULL);
-  OhmmsInfo("testlogfile",boost::mpi3::world.rank());
-
   if(not file_exists("./afqmc_msd.h5") ||
      not file_exists("./wfn_msd.dat") ) {
     app_log()<<" Skipping wfn_fac_collinear_multidet text. afqmc_msd.h5 and ./wfn_msd.dat files not found. \n";
   } else {
 
     // mpi3
-    communicator& world = boost::mpi3::world;
+    communicator& world = OHMMS::Controller->comm;
 
     // Global Task Group
     GlobalTaskGroup gTG(world);
@@ -785,16 +776,13 @@ const char *wlk_xml_block =
 
 TEST_CASE("wfn_fac_collinear_multidet_distributed", "[wavefunction_factory]")
 {
-  OHMMS::Controller->initialize(0, NULL);
-  OhmmsInfo("testlogfile",boost::mpi3::world.rank());
-
   if(not file_exists("./afqmc_msd.h5") ||
      not file_exists("./wfn_msd.dat") ) {
     app_log()<<" Skipping wfn_fac_collinear_multidet text. afqmc_msd.h5 and ./wfn_msd.dat files not found. \n";
   } else {
 
     // mpi3
-    communicator& world = boost::mpi3::world;
+    communicator& world = OHMMS::Controller->comm;
 
     // Global Task Group
     GlobalTaskGroup gTG(world);

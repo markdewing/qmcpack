@@ -16,7 +16,7 @@
 #include "Configuration.h"
 
 #include "OhmmsData/Libxml2Doc.h"
-#include "Utilities/OhmmsInfo.h"
+#include "Utilities/OutputManager.h"
 #include "OhmmsApp/ProjectData.h"
 #include "io/hdf_archive.h"
 
@@ -64,16 +64,13 @@ using namespace afqmc;
 
 TEST_CASE("ham_ops_basic_serial", "[hamiltonian_operations]")
 {
-  OHMMS::Controller->initialize(0, NULL);
-  OhmmsInfo("testlogfile",boost::mpi3::world.rank());
-
   if(not file_exists("./afqmc.h5") ||
      not file_exists("./wfn.dat") ) {
     app_log()<<" Skipping ham_ops_collinear_sdet text. afqmc.h5 and ./wfn.dat files not found. \n";
   } else {
 
     // mpi3
-    communicator& world = boost::mpi3::world;
+    communicator& world = OHMMS::Controller->comm;
 
     // Global Task Group
     afqmc::GlobalTaskGroup gTG(world);
@@ -197,8 +194,6 @@ TEST_CASE("ham_ops_basic_serial", "[hamiltonian_operations]")
 
 TEST_CASE("ham_ops_collinear_distributed", "[hamiltonian_operations]")
 {
-  OHMMS::Controller->initialize(0, NULL);
-  OhmmsInfo("testlogfile",boost::mpi3::world.rank());
 
   if(not file_exists("./afqmc.h5") ||
      not file_exists("./wfn.dat") ) {
@@ -206,7 +201,7 @@ TEST_CASE("ham_ops_collinear_distributed", "[hamiltonian_operations]")
   } else {
 
     // mpi3
-    communicator& world = boost::mpi3::world;
+    communicator& world = OHMMS::Controller->comm;
 
     // Global Task Group
     afqmc::GlobalTaskGroup gTG(world);
@@ -330,8 +325,6 @@ TEST_CASE("ham_ops_collinear_distributed", "[hamiltonian_operations]")
 
 TEST_CASE("test_thc_simple_serial", "[hamiltonian_operations]")
 {
-  OHMMS::Controller->initialize(0, NULL);
-  OhmmsInfo("testlogfile",boost::mpi3::world.rank());
 
   if(not file_exists("./thc.h5") ||
      not file_exists("./wfn_thc.dat") ) {
@@ -339,7 +332,7 @@ TEST_CASE("test_thc_simple_serial", "[hamiltonian_operations]")
   } else {
 
     // mpi3
-    communicator& world = boost::mpi3::world;
+    communicator& world = OHMMS::Controller->comm;
 
     // Global Task Group
     afqmc::GlobalTaskGroup gTG(world);
@@ -476,8 +469,6 @@ TEST_CASE("test_thc_simple_serial", "[hamiltonian_operations]")
 
 TEST_CASE("test_thc_simple_shared", "[hamiltonian_operations]")
 {
-  OHMMS::Controller->initialize(0, NULL);
-  OhmmsInfo("testlogfile",boost::mpi3::world.rank());
 
   if(not file_exists("./thc.h5") ||
      not file_exists("./wfn_thc.dat") ) {
@@ -485,7 +476,7 @@ TEST_CASE("test_thc_simple_shared", "[hamiltonian_operations]")
   } else {
 
     // mpi3
-    communicator& world = boost::mpi3::world;
+    communicator& world = OHMMS::Controller->comm;
 
     // Global Task Group
     afqmc::GlobalTaskGroup gTG(world);
@@ -626,8 +617,6 @@ TEST_CASE("test_thc_simple_shared", "[hamiltonian_operations]")
 
 TEST_CASE("test_thc_shared_testLuv", "[hamiltonian_operations]")
 {
-  OHMMS::Controller->initialize(0, NULL);
-  OhmmsInfo("testlogfile",boost::mpi3::world.rank());
 
   if(not file_exists("./thc.h5") ||
      not file_exists("./wfn_thc.dat") ) {
@@ -635,7 +624,7 @@ TEST_CASE("test_thc_shared_testLuv", "[hamiltonian_operations]")
   } else {
 
     // mpi3
-    communicator& world = boost::mpi3::world;
+    communicator& world = OHMMS::Controller->comm;
 
     // Global Task Group
     afqmc::GlobalTaskGroup gTG(world);

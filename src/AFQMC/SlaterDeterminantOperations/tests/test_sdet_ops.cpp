@@ -17,7 +17,7 @@
 //#include "catch.hpp"
 #include "Configuration.h"
 
-#include "Utilities/OhmmsInfo.h"
+#include "Utilities/OutputManager.h"
 #include "OhmmsApp/ProjectData.h"
 
 // Avoid the need to link with other libraries just to get APP_ABORT
@@ -29,8 +29,8 @@
 #include <vector>
 #include <complex>
 
-#include "alf/boost/mpi3/shared_communicator.hpp"
-#include "alf/boost/mpi3/environment.hpp"
+#include "mpi3/shared_communicator.hpp"
+#include "mpi3/environment.hpp"
 
 #include "boost/multi_array.hpp"
 #include "AFQMC/Matrix/csr_matrix_construct.hpp"
@@ -74,10 +74,6 @@ using namespace afqmc;
 
 TEST_CASE("SDetOps_double_serial", "[sdet_ops]")
 {
-  Communicate *c;
-  OHMMS::Controller->initialize(0, NULL);
-  //c = OHMMS::Controller;
-  //OhmmsInfo("testlogfile");
 
   const int NMO = 4;
   const int NEL = 3;  
@@ -218,15 +214,9 @@ TEST_CASE("SDetOps_double_serial", "[sdet_ops]")
 
 TEST_CASE("SDetOps_double_mpi3", "[sdet_ops]")
 {
-
-  Communicate *c;
-  OHMMS::Controller->initialize(0, NULL);
-  //c = OHMMS::Controller;
-  //OhmmsInfo("testlogfile");
-  
   using boost::mpi3::shared_communicator;
-
-  shared_communicator node = boost::mpi3::world.split_shared(boost::mpi3::world.rank()); 
+  Communicate *c = OHMMS::Controller;
+  shared_communicator node = c->comm.split_shared(c->comm.rank()); 
 
   const int NMO = 4;
   const int NEL = 3;
@@ -385,11 +375,6 @@ TEST_CASE("SDetOps_double_mpi3", "[sdet_ops]")
 
 TEST_CASE("SDetOps_complex_serial", "[sdet_ops]")
 {
-  Communicate *c;
-  OHMMS::Controller->initialize(0, NULL);
-  //c = OHMMS::Controller;
-  //OhmmsInfo("testlogfile");
-
   const int NMO = 4;
   const int NEL = 3;  
 
@@ -547,15 +532,10 @@ TEST_CASE("SDetOps_complex_serial", "[sdet_ops]")
 
 TEST_CASE("SDetOps_complex_mpi3", "[sdet_ops]")
 {
-
-  Communicate *c;
-  OHMMS::Controller->initialize(0, NULL);
-  //c = OHMMS::Controller;
-  //OhmmsInfo("testlogfile");
-  
   using boost::mpi3::shared_communicator;
 
-  shared_communicator node = boost::mpi3::world.split_shared(boost::mpi3::world.rank()); 
+  Communicate *c = OHMMS::Controller;
+  shared_communicator node = c->comm.split_shared(c->comm.rank()); 
 
   const int NMO = 4;
   const int NEL = 3;
@@ -734,12 +714,10 @@ TEST_CASE("SDetOps_complex_mpi3", "[sdet_ops]")
 TEST_CASE("SDetOps_complex_csr", "[sdet_ops]")
 {
 
-  Communicate *c;
-  OHMMS::Controller->initialize(0, NULL);
-  
+  Communicate *c = OHMMS::Controller;;
   using boost::mpi3::shared_communicator;
 
-  shared_communicator node = boost::mpi3::world.split_shared(boost::mpi3::world.rank()); 
+  shared_communicator node = c->comm.split_shared(c->comm.rank()); 
 
   const int NMO = 4;
   const int NEL = 3;

@@ -30,8 +30,8 @@
 
 #undef NDEBUG
 
-#include "alf/boost/mpi3/shared_communicator.hpp"
-#include "alf/boost/mpi3/environment.hpp"
+#include "mpi3/shared_communicator.hpp"
+#include "mpi3/environment.hpp"
 
 #include "boost/multi_array.hpp"
 #include "AFQMC/SlaterDeterminantOperations/SlaterDetOperations.hpp"
