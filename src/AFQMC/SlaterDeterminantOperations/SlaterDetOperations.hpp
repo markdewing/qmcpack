@@ -19,7 +19,7 @@
 #include "AFQMC/SlaterDeterminantOperations/mixed_density_matrix.hpp"
 #include "AFQMC/SlaterDeterminantOperations/apply_expM.hpp"
 
-#include "alf/boost/mpi3/shared_communicator.hpp"
+#include "mpi3/shared_communicator.hpp"
 #include "AFQMC/Matrix/mpi3_SHMBuffer.hpp"
 #include "type_traits/scalar_traits.h"
 

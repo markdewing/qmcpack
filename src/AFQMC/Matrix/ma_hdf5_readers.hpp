@@ -25,15 +25,15 @@
 #include<mpi.h>
 #endif
 
-#include "Utilities/UtilityFunctions.h"
+#include "Utilities/FairDivide.h"
 #include "io/hdf_archive.h"
 
 #include "AFQMC/config.0.h"
 #include "AFQMC/Utilities/afqmc_TTI.hpp"
 
-#include "alf/boost/mpi3/communicator.hpp"
-#include "alf/boost/mpi3/shared_communicator.hpp"
-#include "alf/boost/mpi3/shared_window.hpp"
+#include "mpi3/communicator.hpp"
+#include "mpi3/shared_communicator.hpp"
+#include "mpi3/shared_window.hpp"
 
 namespace qmcplusplus
 {

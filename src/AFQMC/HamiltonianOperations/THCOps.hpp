@@ -22,7 +22,7 @@
 #include "AFQMC/Numerics/ma_operations.hpp"
 
 #include "AFQMC/Utilities/taskgroup.h"
-#include "alf/boost/mpi3/shared_communicator.hpp"
+#include "mpi3/shared_communicator.hpp"
 #include "AFQMC/Matrix/mpi3_SHMBuffer.hpp"
 #include "AFQMC/Matrix/mpi3_shared_ma_proxy.hpp"
 #include "type_traits/scalar_traits.h"

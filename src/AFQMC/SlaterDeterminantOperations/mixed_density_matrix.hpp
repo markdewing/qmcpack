@@ -21,7 +21,7 @@
 
 #include "AFQMC/config.h"
 #include "AFQMC/Numerics/ma_operations.hpp"
-#include "Utilities/UtilityFunctions.h"
+#include "Utilities/FairDivide.h"
 
 namespace qmcplusplus
 {

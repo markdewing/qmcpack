@@ -2,7 +2,7 @@
 #define QMCPLUSPLUS_AFQMC_AFQMCDRIVER_H
 
 #include "io/hdf_archive.h"
-#include "alf/boost/mpi3/communicator.hpp"
+#include "mpi3/communicator.hpp"
 
 #include "AFQMC/config.h"
 #include "AFQMC/Propagators/Propagator.hpp"

@@ -120,8 +120,8 @@ auto non_zero_indices2_data(coo_matrix<Ts...>& s){
 
 #ifdef _TEST_SPARSE_COO_MATRIX
 
-#include "alf/boost/iterator/zipper.hpp"
-#include "alf/boost/timer/timed.hpp"
+#include "iterator/zipper.hpp"
+#include "timer/timed.hpp"
 
 #include <boost/timer/timer.hpp>
 

@@ -15,7 +15,7 @@
 #include<Message/MPIObjectBase.h>
 #include "OhmmsApp/RandomNumberControl.h"
 
-#include"alf/boost/mpi3/communicator.hpp"
+#include"mpi3/communicator.hpp"
 
 #include "config.h"
 

@@ -20,12 +20,12 @@
 #include<iostream>
 
 #include<boost/multi_array.hpp>
-#include "alf/boost/mpi3/communicator.hpp"
+#include "mpi3/communicator.hpp"
 
 #include "AFQMC/config.h"
 #include "AFQMC/Numerics/ma_operations.hpp"
 #include "AFQMC/Matrix/mpi3_SHMBuffer.hpp"
-#include "Utilities/UtilityFunctions.h"
+#include "Utilities/FairDivide.h"
 #include "AFQMC/Utilities/myTimer.h"
 
 using std::cout;

@@ -15,7 +15,7 @@
 #ifndef  AFQMC_MPI3_SHARED_MA_PROXY_HPP
 #define  AFQMC_MPI3_SHARED_MA_PROXY_HPP 
 
-#include "alf/boost/mpi3/shared_communicator.hpp"
+#include "mpi3/shared_communicator.hpp"
 #include "AFQMC/Matrix/mpi3_SHMBuffer.hpp"
 
 namespace qmcplusplus

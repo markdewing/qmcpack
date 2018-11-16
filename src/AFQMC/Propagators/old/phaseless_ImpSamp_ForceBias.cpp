@@ -26,7 +26,7 @@
 #include"AFQMC/Numerics/SparseMatrixOperations.h"
 #include"AFQMC/Numerics/DenseMatrixOperations.h"
 #include "Utilities/RandomGenerator.h"
-#include "Utilities/UtilityFunctions.h"
+#include "Utilities/FairDivide.h"
 #include "AFQMC/Utilities/Utils.hpp"
 #include "AFQMC/Utilities/readMat.hpp"
 

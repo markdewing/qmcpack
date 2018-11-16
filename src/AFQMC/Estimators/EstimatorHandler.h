@@ -18,7 +18,7 @@
 #include "AFQMC/Wavefunctions/Wavefunction.hpp"
 #include "AFQMC/Hamiltonians/Hamiltonian.hpp"
 
-#include "alf/boost/mpi3/communicator.hpp"
+#include "mpi3/communicator.hpp"
 
 namespace qmcplusplus
 {

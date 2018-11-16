@@ -1,7 +1,7 @@
 
 #include "Configuration.h"
 #include "Numerics/OhmmsBlas.h" 
-#include "Utilities/UtilityFunctions.h"
+#include "Utilities/FairDivide.h"
 #include "AFQMC/Utilities/Utils.h"
 #include "AFQMC/config.h" 
 #include "AFQMC/Propagators/AFQMCSharedPropagator.h"

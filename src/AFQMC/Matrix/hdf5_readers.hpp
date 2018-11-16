@@ -25,7 +25,7 @@
 #endif
 
 #include "Configuration.h"
-#include "Utilities/UtilityFunctions.h"
+#include "Utilities/FairDivide.h"
 #include "io/hdf_archive.h"
 #include "Message/CommOperators.h"
 

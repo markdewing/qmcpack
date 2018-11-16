@@ -18,8 +18,8 @@
 #include<Message/MPIObjectBase.h>
 #include<Message/CommOperators.h>
 
-#include "alf/boost/mpi3/communicator.hpp"
-#include "alf/boost/mpi3/shared_communicator.hpp"
+#include "mpi3/communicator.hpp"
+#include "mpi3/shared_communicator.hpp"
 
 namespace qmcplusplus
 {

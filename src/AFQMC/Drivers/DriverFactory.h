@@ -5,7 +5,7 @@
 #include "OhmmsData/libxmldefs.h"
 #include<Message/MPIObjectBase.h>
 
-#include "alf/boost/mpi3/communicator.hpp"
+#include "mpi3/communicator.hpp"
 
 #include "AFQMC/Utilities/taskgroup.h"
 

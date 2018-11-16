@@ -29,7 +29,7 @@
 #include "AFQMC/config.h"
 #include "AFQMC/Utilities/taskgroup.h"
 #include "AFQMC/Matrix/mpi3_SHMBuffer.hpp"
-#include "alf/boost/mpi3/shm/mutex.hpp"
+#include "mpi3/shm/mutex.hpp"
 #include "AFQMC/SlaterDeterminantOperations/SlaterDetOperations.hpp"
 
 #include "AFQMC/Wavefunctions/Wavefunction.hpp"

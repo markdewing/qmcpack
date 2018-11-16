@@ -27,7 +27,7 @@
 #include "AFQMC/Matrix/coo_matrix.hpp"
 #include<boost/multi_array.hpp>
 
-#include "alf/boost/mpi3/shared_window.hpp"
+#include "mpi3/shared_window.hpp"
 
 #include "Utilities/NewTimer.h"
 #include "AFQMC/Utilities/myTimer.h"

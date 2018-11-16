@@ -4,7 +4,7 @@
 #include "OhmmsData/libxmldefs.h"
 #include "OhmmsApp/RandomNumberControl.h"
 
-#include "alf/boost/mpi3/communicator.hpp"
+#include "mpi3/communicator.hpp"
 
 #include "AFQMC/Utilities/taskgroup.h"
 #include "AFQMC/Drivers/DriverFactory.h"

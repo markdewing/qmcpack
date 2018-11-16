@@ -19,8 +19,8 @@
 #ifndef  AFQMC_MPI3_SHMBUFFER_HPP 
 #define  AFQMC_MPI3_SHMBUFFER_HPP 
 
-#include "alf/boost/mpi3/shared_window.hpp"
-#include "alf/boost/mpi3/shared_communicator.hpp"
+#include "mpi3/shared_window.hpp"
+#include "mpi3/shared_communicator.hpp"
 #include <memory>
 
 namespace qmcplusplus

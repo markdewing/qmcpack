@@ -9,7 +9,7 @@
 #include "OhmmsData/libxmldefs.h"
 #include "OhmmsData/AttributeSet.h"
 #include "OhmmsData/ParameterSet.h"
-#include "Utilities/UtilityFunctions.h"
+#include "Utilities/FairDivide.h"
 
 #include "AFQMC/config.h"
 #include "AFQMC/Utilities/taskgroup.h"
