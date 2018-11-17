@@ -21,6 +21,7 @@
 #define OHMMS_NEW_PARTICLEATTRIB_PEPE_H
 
 #include <OhmmsPETE/OhmmsVector.h>
+#include <OhmmsPETE/TinyVector.h>
 #include "Utilities/OhmmsObject.h"
 
 namespace qmcplusplus
