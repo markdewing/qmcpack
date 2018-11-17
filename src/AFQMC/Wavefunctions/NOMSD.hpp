@@ -24,7 +24,7 @@
 
 #include "AFQMC/Utilities/readWfn.h"
 #include "AFQMC/config.h"
-#include "alf/boost/mpi3/shm/mutex.hpp"
+#include "mpi3/shm/mutex.hpp"
 #include "AFQMC/Utilities/taskgroup.h"
 #include "AFQMC/Matrix/mpi3_SHMBuffer.hpp"
 
@@ -51,7 +51,7 @@ class NOMSD: public AFQMCInfo
   using CVector = boost::multi_array<ComplexType,1>;  
   using CMatrix = boost::multi_array<ComplexType,2>;  
   using SHM_Buffer = mpi3_SHMBuffer<ComplexType>;  
-  using shared_mutex = boost::mpi3::mutex;  
+  using shared_mutex = boost::mpi3::shm::mutex;  
 
   public:
 
