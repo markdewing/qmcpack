@@ -26,7 +26,6 @@
 #include <Utilities/Timer.h>
 #include <Sandbox/common.hpp>
 #include <getopt.h>
-#include <mpi/collectives.h>
 
 using namespace std;
 using namespace qmcplusplus;
@@ -35,7 +34,7 @@ void setWalkerOffsets(MCWalkerConfiguration& W, Communicate* myComm)
 {
   std::vector<int> nw(myComm->size(),0),nwoff(myComm->size()+1,0);
   nw[myComm->rank()]=W.getActiveWalkers();
-  myComm->allreduce(nw);
+  myComm->comm.all_reduce_in_place_n(nw.begin(), nw.size(), std::plus<>{});
   for(int ip=0; ip<myComm->size(); ip++)
     nwoff[ip+1]=nwoff[ip]+nw[ip];
   W.setGlobalNumWalkers(nwoff[myComm->size()]);
@@ -45,7 +44,8 @@ void setWalkerOffsets(MCWalkerConfiguration& W, Communicate* myComm)
 int main(int argc, char** argv)
 {
 
-  OHMMS::Controller->initialize(0, NULL);
+  boost::mpi3::environment env(argc, argv);
+  OHMMS::Controller->initialize(env);
   Communicate* myComm=OHMMS::Controller;
   myComm->setName("restart");
 
@@ -173,10 +173,10 @@ int main(int argc, char** argv)
   Timer h5clock; //timer for the program
 
   // dump random seeds
-  myComm->barrier();
+  myComm->comm.barrier();
   h5clock.restart(); //start timer
   RandomNumberControl::write("restart",myComm);
-  myComm->barrier();
+  myComm->comm.barrier();
   h5write += h5clock.elapsed(); //store timer
 
   // flush random seeds to zero
@@ -191,10 +191,10 @@ int main(int argc, char** argv)
   Random.load(mt_temp);
 
   // load random seeds
-  myComm->barrier();
+  myComm->comm.barrier();
   h5clock.restart(); //start timer
   RandomNumberControl::read("restart",myComm);
-  myComm->barrier();
+  myComm->comm.barrier();
   h5read += h5clock.elapsed(); //store timer
 
   // validate random seeds
@@ -214,7 +214,7 @@ int main(int argc, char** argv)
   for(int i=0; i<Random.state_size(); i++)
     if(mt_temp[i]!=mt[i]) mismatch_count++;
 
-  myComm->allreduce(mismatch_count);
+  myComm->comm.all_reduce_in_place_n(&mismatch_count, 1, std::plus<>{});
 
   if(!myComm->rank())
   {
@@ -227,10 +227,10 @@ int main(int argc, char** argv)
 
   // dump electron coordinates.
   HDFWalkerOutput wOut(elecs[0],"restart",myComm);
-  myComm->barrier();
+  myComm->comm.barrier();
   h5clock.restart(); //start timer
   wOut.dump(elecs[0],1);
-  myComm->barrier();
+  myComm->comm.barrier();
   walkerWrite += h5clock.elapsed(); //store timer
   if(!myComm->rank()) std::cout << "Walkers are dumped!\n";
 
@@ -254,10 +254,10 @@ int main(int argc, char** argv)
 
   HDFVersion in_version(0,4);
   HDFWalkerInput_0_4 wIn(elecs[0],myComm,in_version);
-  myComm->barrier();
+  myComm->comm.barrier();
   h5clock.restart(); //start timer
   wIn.put(restart_leaf);
-  myComm->barrier();
+  myComm->comm.barrier();
   walkerRead += h5clock.elapsed(); //store time spent
 
   if(saved_walkers.size()!=elecs[0].getActiveWalkers())
@@ -270,7 +270,7 @@ int main(int argc, char** argv)
     saved_walkers[wi].R=saved_walkers[wi].R-elecs[0][wi]->R;
     if(Dot(saved_walkers[wi].R,saved_walkers[wi].R)>std::numeric_limits<RealType>::epsilon()) mismatch_count++;
   }
-  myComm->allreduce(mismatch_count);
+  myComm->comm.all_reduce_in_place_n(&mismatch_count, 1, std::plus<>{});
 
   if(!myComm->rank())
   {
@@ -283,7 +283,8 @@ int main(int argc, char** argv)
 
   //print out hdf5 R/W times
   TinyVector<double,4> timers(h5read, h5write, walkerRead, walkerWrite);
-  mpi::reduce(*myComm, timers);
+  //mpi::reduce(*myComm, timers);
+  myComm->comm.all_reduce_in_place_n(timers.data(), 4, std::plus<>{});
   h5read = timers[0]/myComm->size();
   h5write = timers[1]/myComm->size();
   walkerRead = timers[2]/myComm->size();
