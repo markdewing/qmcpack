@@ -86,9 +86,8 @@ Communicate::Communicate(const Communicate& in_comm, int nparts)
     //int n=comm.size()/nparts;
     //int p=comm.rank()/n;
     //int q=comm.rank()%n;
-    MPI_Comm row;
-    MPI_Comm_split(in_comm.getMPI(),p,q,&row);
-    myComm=OOMPI_Intra_comm(row);
+    comm = in_comm.comm.split(p,q);
+    myComm=OOMPI_Intra_comm(&comm);
     d_groupid=p;
   }
   else
@@ -102,17 +101,12 @@ Communicate::Communicate(const Communicate& in_comm, int nparts)
   d_ncontexts=myComm.Size();
   d_ngroups=nparts;
   // create a communicator among group leaders.
-  MPI_Group parent_group, leader_group;
-  MPI_Comm_group(in_comm.getMPI(), &parent_group);
-  MPI_Group_incl(parent_group, nparts, nplist.data(), &leader_group);
-  MPI_Comm leader_comm;
-  MPI_Comm_create(in_comm.getMPI(), leader_group, &leader_comm);
+  nplist.pop_back();
+  mpi3::communicator leader_comm = in_comm.comm.subcomm(nplist);
   if(isGroupLeader())
-    GroupLeaderComm = new Communicate(leader_comm);
+    GroupLeaderComm = new Communicate(&leader_comm);
   else
     GroupLeaderComm = nullptr;
-  MPI_Group_free(&parent_group);
-  MPI_Group_free(&leader_group);
 }
 
 
