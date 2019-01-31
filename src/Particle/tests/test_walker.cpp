@@ -43,7 +43,6 @@ TEST_CASE("walker", "[particle]")
 
 TEST_CASE("walker HDF read and write", "[particle]")
 {
-  OHMMS::Controller->initialize(0, NULL);
   Communicate *c = OHMMS::Controller;
 
   Walker_t w1(1);
@@ -84,7 +83,7 @@ TEST_CASE("walker HDF read and write", "[particle]")
   HDFWalkerOutput hout(W, "this string apparently does nothing", c);
   hout.dump(W, 0);
 
-  c->barrier();
+  c->comm.barrier();
 
   MCWalkerConfiguration W2;
   W2.setName("electrons");
