@@ -151,6 +151,7 @@ OOMPI_Error_table::Add(MPI_Comm comm, OOMPI_Comm *oompi,
   n->action = action;
   n->next = 0;
 
+#if 0
   if (root == (OOMPI_Error_entry *) 0) {
     root = n;
   }
@@ -168,6 +169,7 @@ OOMPI_Error_table::Add(MPI_Comm comm, OOMPI_Comm *oompi,
 
     prev->next = n;
   }
+#endif
 }
 
 
@@ -201,6 +203,7 @@ OOMPI_Error_table::Delete(MPI_Comm comm)
   if (comm == MPI_COMM_NULL)
     return;
 
+#if 0
   OOMPI_Error_entry *cur, *prev;
   int result;
 
@@ -219,6 +222,7 @@ OOMPI_Error_table::Delete(MPI_Comm comm)
       return;
     }
   }
+#endif
 }
 
 
