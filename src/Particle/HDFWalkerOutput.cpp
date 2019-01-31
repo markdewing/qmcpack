@@ -28,7 +28,7 @@
 #include <iostream>
 #include <sstream>
 #include <Message/Communicate.h>
-#include <mpi/collectives.h>
+//#include <mpi/collectives.h>
 #include <io/hdf_hyperslab.h>
 #if defined(HAVE_ADIOS) && defined(ADIOS_VERIFY)
 #include <adios.h>
@@ -243,7 +243,8 @@ void HDFWalkerOutput::write_configuration(MCWalkerConfiguration& W, hdf_archive&
       }
       if(!myComm->rank())
         RemoteData[1]->resize(wb*W.WalkerOffsets[myComm->size()]);
-      mpi::gatherv(*myComm,*RemoteData[0],*RemoteData[1],counts,displ);
+      //mpi::gatherv(*myComm,*RemoteData[0],*RemoteData[1],counts,displ);
+      myComm->comm.gatherv_n(RemoteData[0]->begin(),RemoteData[0]->size(),RemoteData[1]->begin(), counts.begin(),displ.begin(),0);
     }
     int buffer_id=(myComm->size()>1)?1:0;
     hyperslab_proxy<BufferType,3> slab(*RemoteData[buffer_id],gcounts);

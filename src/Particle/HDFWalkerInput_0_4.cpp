@@ -19,8 +19,8 @@
 #include <Particle/MCWalkerConfiguration.h>
 #include <Particle/HDFWalkerInput_0_4.h>
 #include <io/hdf_archive.h>
-#include <mpi/mpi_datatype.h>
-#include <mpi/collectives.h>
+//#include <mpi/mpi_datatype.h>
+//#include <mpi/collectives.h>
 #ifdef HAVE_ADIOS
 #include "ADIOS/ADIOS_config.h"
 #endif
@@ -243,7 +243,8 @@ bool HDFWalkerInput_0_4::read_hdf5_scatter( std::string h5name)
   }
 
   myComm->barrier();
-  mpi::bcast(*myComm,nw_in);
+  //mpi::bcast(*myComm,nw_in);
+  myComm->comm.broadcast_value(nw_in);
 
   if(nw_in==0)
   {
@@ -275,7 +276,8 @@ bool HDFWalkerInput_0_4::read_hdf5_scatter( std::string h5name)
     hin.read(slab,hdf::walkers);
   }
 
-  mpi::scatterv(*myComm,posin,posout,counts,woffsets);
+  //mpi::scatterv(*myComm,posin,posout,counts,woffsets);
+  myComm->comm.scatterv_n(posin.begin(), woffsets.size(), posout.begin(), counts.begin(), woffsets.begin(), 0);
 
   int curWalker=targetW.getActiveWalkers();
   targetW.createWalkers(nw_loc);
@@ -323,7 +325,8 @@ bool HDFWalkerInput_0_4::read_phdf5( std::string h5name)
         success=false;
       }
     }
-    mpi::bcast(*myComm,success);
+    //mpi::bcast(*myComm,success);
+    myComm->comm.broadcast_value(success);
     if(!success) return false;
 
     // load woffsets by master
@@ -335,9 +338,11 @@ bool HDFWalkerInput_0_4::read_phdf5( std::string h5name)
       assert(woffsets[woffsets_size-1] == nw_in);
     }
 
-    mpi::bcast(*myComm,woffsets_size);
+    //mpi::bcast(*myComm,woffsets_size);
+    myComm->comm.broadcast_value(woffsets_size);
     woffsets.resize(woffsets_size);
-    mpi::bcast(*myComm,woffsets.data(),woffsets_size);
+    //mpi::bcast(*myComm,woffsets.data(),woffsets_size);
+    myComm->comm.broadcast_n(woffsets.begin(), woffsets_size);
     nw_in = woffsets[woffsets_size-1];
   }
 
