@@ -448,6 +448,10 @@ ELSE(CMAKE_TOOLCHAIN_FILE)
     message("MPI libraries  = ${MPI_CXX_LIBRARIES}")
     message("MPI exec = ${MPIEXEC_EXECUTABLE}")
 
+    if (NOT MPI_LIBRARY)
+      set(MPI_LIBRARY "${MPI_CXX_LIBRARIES}")
+    endif()
+
 
     # Should use target properties instead of these global settings
 
