@@ -427,8 +427,35 @@ ELSE(CMAKE_TOOLCHAIN_FILE)
     IF (NOT MPI_FOUND)
         MESSAGE(FATAL_ERROR "MPI not found")
     ENDIF()
+
+    # Some versions of CMake leave leading spaces in the link flags
+    string(STRIP "${MPI_CXX_LINK_FLAGS}" MPI_CXX_LINK_FLAGS)
+
+    # MPI_CXX_INCLUDE_DIRS was introduced in CMake 3.9
+    if (MPI_CXX_FOUND AND NOT MPI_CXX_INCLUDE_DIRS)
+      set(MPI_CXX_INCLUDE_DIRS "${MPI_CXX_INCLUDE_PATH}")
+    endif()
+
+    # MPI_CXX_COMPILE_OPTIONS was introduced in CMake 3.9
+    if (MPI_CXX_FOUND AND NOT MPI_CXX_COMPILE_OPTIONS)
+      set(MPI_CXX_COMPILE_OPTIONS "${MPI_CXX_COMPILE_FLAGS}")
+    endif()
+
+    message("MPI include dirs = ${MPI_CXX_INCLUDE_DIRS}")
+    message("MPI compile options = ${MPI_CXX_COMPILE_OPTIONS}")
+    message("MPI compile definitions = ${MPI_CXX_COMPILE_DEFINITIONS}")
+    message("MPI link flags = ${MPI_CXX_LINK_FLAGS}")
+    message("MPI libraries  = ${MPI_CXX_LIBRARIES}")
+    message("MPI exec = ${MPIEXEC_EXECUTABLE}")
+
+
+    # Should use target properties instead of these global settings
+
+    set(CXX_COMPILER_FLAGS "${CXX_COMPILER_FLAGS} ${MPI_CXX_COMPILE_OPTIONS} ${MPI_CXX_COMPILE_DEFINITIONS}")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${MPI_CXX_LINK_FLAGS}")
     LINK_LIBRARIES(${MPI_CXX_LIBRARIES})
     INCLUDE_DIRECTORIES(${MPI_CXX_INCLUDE_DIRS})
+
     ## mpi compilers
     #GET_FILENAME_COMPONENT(BASE_CXX_COMPILER_NAME ${CMAKE_CXX_COMPILER} NAME)
     #if(${BASE_CXX_COMPILER_NAME} MATCHES "^mp")
