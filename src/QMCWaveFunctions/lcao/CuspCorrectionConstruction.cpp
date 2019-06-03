@@ -27,6 +27,10 @@ void applyCuspCorrection(const Matrix<CuspCorrectionParameters>& info,
 {
   typedef QMCTraits::RealType RealType;
 
+  NewTimer *cuspApplyTimer = TimerManager.createTimer("CuspCorrectionConstruction::applyCuspCorrection", timer_level_medium);
+
+  ScopedTimer cuspApplyTimerWrapper(cuspApplyTimer);
+
   LCAOrbitalSet phi = LCAOrbitalSet(lcwc.myBasisSet);
   phi.setOrbitalSetSize(lcwc.OrbitalSetSize);
   phi.BasisSetSize = lcwc.BasisSetSize;
@@ -188,6 +192,10 @@ void generateCuspInfo(int orbital_set_size,
 {
   typedef QMCTraits::RealType RealType;
 
+  NewTimer *cuspCreateTimer = TimerManager.createTimer("CuspCorrectionConstruction::createCuspParameters", timer_level_medium);
+  NewTimer *splitPhiEtaTimer = TimerManager.createTimer("CuspCorrectionConstruction::splitPhiEta", timer_level_fine);
+  NewTimer *computeTimer = TimerManager.createTimer("CuspCorrectionConstruction::computeCorrection", timer_level_fine);
+
   LCAOrbitalSet phi = LCAOrbitalSet(lcwc.myBasisSet);
   phi.setOrbitalSetSize(lcwc.OrbitalSetSize);
   phi.BasisSetSize = lcwc.BasisSetSize;
@@ -198,6 +206,7 @@ void generateCuspInfo(int orbital_set_size,
   eta.BasisSetSize = lcwc.BasisSetSize;
   eta.setIdentity(false);
 
+  ScopedTimer createCuspTimerWrapper(cuspCreateTimer);
 
   std::vector<bool> corrCenter(num_centers, "true");
 
@@ -216,9 +225,11 @@ void generateCuspInfo(int orbital_set_size,
     app_log() << "   Working on MO: " << mo_idx << std::endl;
     for (int center_idx = 0; center_idx < num_centers; center_idx++)
     {
+      splitPhiEtaTimer->start();
       *(eta.C) = *(lcwc.C);
       *(phi.C) = *(lcwc.C);
       splitPhiEta(center_idx, corrCenter, phi, eta);
+      splitPhiEtaTimer->stop();
 
       bool corrO = false;
       auto& cref(*(phi.C));
@@ -258,7 +269,9 @@ void generateCuspInfo(int orbital_set_size,
         RealType eta0 = etaMO.phi(0.0);
         ValueVector_t ELorig(npts);
         CuspCorrection cusp(info(center_idx, mo_idx));
+        computeTimer->start();
         minimizeForRc(cusp, phiMO, Z, rc, Rc_max, eta0, pos, ELcurr, ELideal);
+        computeTimer->stop();
         info(center_idx, mo_idx) = cusp.cparam;
       }
     }
