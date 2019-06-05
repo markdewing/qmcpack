@@ -223,16 +223,34 @@ void generateCuspInfo(int orbital_set_size,
   for (int mo_idx = start_mo; mo_idx < end_mo; mo_idx++)
   {
     app_log() << "   Working on MO: " << mo_idx << std::endl;
+    #pragma omp parallel shared(phi,targetPtcl, sourcePtcl)
+    {
+    ParticleSet localTargetPtcl(targetPtcl);
+    ParticleSet localSourcePtcl(sourcePtcl);
+
+    LCAOrbitalSet localPhi(phi);
+    localPhi.myBasisSet = phi.myBasisSet->makeClone();
+    localPhi.IsCloned = true;
+    localPhi.C = nullptr;
+    localPhi.setIdentity(false);
+
+    LCAOrbitalSet localEta(eta);
+    localEta.myBasisSet = eta.myBasisSet->makeClone();
+    localEta.IsCloned = true;
+    localEta.C = nullptr;
+    localEta.setIdentity(false);
+
+    #pragma omp for
     for (int center_idx = 0; center_idx < num_centers; center_idx++)
     {
       splitPhiEtaTimer->start();
-      *(eta.C) = *(lcwc.C);
-      *(phi.C) = *(lcwc.C);
-      splitPhiEta(center_idx, corrCenter, phi, eta);
+      *(localEta.C) = *(lcwc.C);
+      *(localPhi.C) = *(lcwc.C);
+      splitPhiEta(center_idx, corrCenter, localPhi, localEta);
       splitPhiEtaTimer->stop();
 
       bool corrO = false;
-      auto& cref(*(phi.C));
+      auto& cref(*(localPhi.C));
       for (int ip = 0; ip < cref.cols(); ip++)
       {
         if (std::abs(cref(mo_idx, ip)) > 0)
@@ -244,15 +262,15 @@ void generateCuspInfo(int orbital_set_size,
 
       if (corrO)
       {
-        OneMolecularOrbital etaMO(&targetPtcl, &sourcePtcl, &eta);
+        OneMolecularOrbital etaMO(&localTargetPtcl, &localSourcePtcl, &localEta);
         etaMO.changeOrbital(center_idx, mo_idx);
 
-        OneMolecularOrbital phiMO(&targetPtcl, &sourcePtcl, &phi);
+        OneMolecularOrbital phiMO(&localTargetPtcl, &localSourcePtcl, &localPhi);
         phiMO.changeOrbital(center_idx, mo_idx);
 
-        SpeciesSet& tspecies(sourcePtcl.getSpeciesSet());
+        SpeciesSet& tspecies(localSourcePtcl.getSpeciesSet());
         int iz     = tspecies.addAttribute("charge");
-        RealType Z = tspecies(iz, sourcePtcl.GroupID[center_idx]);
+        RealType Z = tspecies(iz, localSourcePtcl.GroupID[center_idx]);
 
         RealType Rc_max = 0.2;
         RealType rc     = 0.1;
@@ -274,6 +292,7 @@ void generateCuspInfo(int orbital_set_size,
         computeTimer->stop();
         info(center_idx, mo_idx) = cusp.cparam;
       }
+    }
     }
   }
 
