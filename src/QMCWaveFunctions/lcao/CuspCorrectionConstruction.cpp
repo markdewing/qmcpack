@@ -220,11 +220,11 @@ void generateCuspInfo(int orbital_set_size,
   int start_mo = offset[Comm.rank()];
   int end_mo   = offset[Comm.rank() + 1];
   app_log() << "  Number of molecular orbitals to compute correction on this rank: " << end_mo - start_mo << std::endl;
-  for (int mo_idx = start_mo; mo_idx < end_mo; mo_idx++)
+
+  
+  int total_size = (end_mo - start_mo) * num_centers;
+  #pragma omp parallel  shared(phi, targetPtcl, sourcePtcl)
   {
-    app_log() << "   Working on MO: " << mo_idx << std::endl;
-    #pragma omp parallel shared(phi,targetPtcl, sourcePtcl)
-    {
     ParticleSet localTargetPtcl(targetPtcl);
     ParticleSet localSourcePtcl(sourcePtcl);
 
@@ -240,9 +240,12 @@ void generateCuspInfo(int orbital_set_size,
     localEta.C = nullptr;
     localEta.setIdentity(false);
 
-    #pragma omp for
-    for (int center_idx = 0; center_idx < num_centers; center_idx++)
-    {
+    #pragma omp for schedule(dynamic)
+    for (int idx = 0; idx < total_size; idx++) {
+      int mo_idx = idx%num_centers + start_mo;
+      int center_idx = idx/num_centers;
+      app_log() << "   Working on MO: " << mo_idx << " Center: " << center_idx << std::endl;
+
       splitPhiEtaTimer->start();
       *(localEta.C) = *(lcwc.C);
       *(localPhi.C) = *(lcwc.C);
@@ -292,7 +295,6 @@ void generateCuspInfo(int orbital_set_size,
         computeTimer->stop();
         info(center_idx, mo_idx) = cusp.cparam;
       }
-    }
     }
   }
 
