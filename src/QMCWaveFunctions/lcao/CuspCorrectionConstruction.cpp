@@ -222,7 +222,8 @@ void generateCuspInfo(int orbital_set_size,
   app_log() << "  Number of molecular orbitals to compute correction on this rank: " << end_mo - start_mo << std::endl;
 
   
-  int total_size = (end_mo - start_mo) * num_centers;
+  int num_mo_this_node = end_mo - start_mo;
+  int total_size = num_mo_this_node * num_centers;
   #pragma omp parallel  shared(phi, targetPtcl, sourcePtcl)
   {
     ParticleSet localTargetPtcl(targetPtcl);
@@ -242,8 +243,8 @@ void generateCuspInfo(int orbital_set_size,
 
     #pragma omp for schedule(dynamic)
     for (int idx = 0; idx < total_size; idx++) {
-      int mo_idx = idx%num_centers + start_mo;
-      int center_idx = idx/num_centers;
+      int mo_idx = idx%num_mo_this_node + start_mo;
+      int center_idx = idx/num_mo_this_node;
       app_log() << "   Working on MO: " << mo_idx << " Center: " << center_idx << std::endl;
 
       splitPhiEtaTimer->start();
