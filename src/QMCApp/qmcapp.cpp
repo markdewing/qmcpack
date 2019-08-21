@@ -236,6 +236,7 @@ int main(int argc, char** argv)
     timingDoc.dump(qmc->getTitle() + ".info.xml");
   }
   TimerManager.print(qmcComm);
+  TimerManager.output_events();
 
   if (qmc)
     delete qmc;

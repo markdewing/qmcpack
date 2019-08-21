@@ -28,6 +28,7 @@
 #ifdef USE_VTUNE_TASKS
 #include <ittnotify.h>
 #endif
+#include <cuda_profiler_api.h>
 
 #define USE_STACK_TIMERS
 
@@ -128,6 +129,16 @@ public:
 // N = 2 gives 16 nesting levels
 typedef StackKeyParam<2> StackKey;
 
+struct EventRecord
+{
+  double timestamp;
+  timer_id_t timer_id;
+  char event_type;
+
+  EventRecord(double ts, timer_id_t id, char type) : timestamp(ts), timer_id(id), event_type(type) {}
+};
+
+
 class TimerManagerClass
 {
 protected:
@@ -139,6 +150,8 @@ protected:
   std::map<timer_id_t, std::string> timer_id_name;
   std::map<std::string, timer_id_t> timer_name_to_id;
 
+  std::vector<EventRecord> events;
+
 public:
 #ifdef USE_VTUNE_TASKS
   __itt_domain* task_domain;
@@ -149,6 +162,7 @@ public:
 #ifdef USE_VTUNE_TASKS
     task_domain = __itt_domain_create("QMCPACK");
 #endif
+    events.reserve(100000);
   }
   void addTimer(NewTimer* t);
   NewTimer* createTimer(const std::string& myname, timer_levels mytimer = timer_level_fine);
@@ -185,6 +199,13 @@ public:
   void print(Communicate* comm);
   void print_flat(Communicate* comm);
   void print_stack(Communicate* comm);
+
+  void put_event(double timestamp, timer_id_t timer_id, char event_type)
+  {
+    events.push_back(EventRecord(timestamp, timer_id, event_type));
+  }
+  void output_events();
+
 
   typedef std::map<std::string, int> nameList_t;
   typedef std::vector<double> timeList_t;
@@ -257,6 +278,9 @@ public:
       __itt_id parent_task = __itt_null;
       __itt_task_begin(manager->task_domain, __itt_null, parent_task, task_name);
 #endif
+      if (name == "DMCcuda") {
+        cudaProfilerStart();
+      }
 
       bool is_true_master(true);
       for(int level = omp_get_level(); level>0; level--)
@@ -286,6 +310,7 @@ public:
           manager->push_timer(this);
         }
         start_time = cpu_clock();
+        //manager->put_event(start_time, timer_id, 'B');
       }
 #else
       start_time = cpu_clock();
@@ -302,6 +327,9 @@ public:
 #ifdef USE_VTUNE_TASKS
       __itt_task_end(manager->task_domain);
 #endif
+      if (name == "DMCcuda") {
+        cudaProfilerStop();
+      }
 
       bool is_true_master(true);
       for(int level = omp_get_level(); level>0; level--)
@@ -309,7 +337,9 @@ public:
       if(is_true_master)
 #endif
       {
-        double elapsed = cpu_clock() - start_time;
+        double now = cpu_clock();
+        double elapsed = now - start_time;
+        //manager->put_event(now, timer_id, 'E');
         total_time += elapsed;
         num_calls++;
 
@@ -323,6 +353,7 @@ public:
           manager->pop_timer();
         }
 #endif
+      
       }
     }
   }

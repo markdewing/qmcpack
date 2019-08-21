@@ -30,6 +30,30 @@ TimerManagerClass TimerManager;
 
 bool timer_max_level_exceeded = false;
 
+void TimerManagerClass::output_events()
+{
+  FILE *f = fopen("events.json","w");
+  fprintf(f, "[\n");
+  int idx = 0;
+  for(auto &er : events) {
+    std::string &name = timer_id_name[er.timer_id];
+    fprintf(f, "{\"name\":\"%s\", \"cat\":\"%s\", \"ph\":\"%c\", \"ts\":\"%.2f\",\"pid\":\"1\", \"tid\":\"1\"}",name.c_str(), name.c_str(), er.event_type, er.timestamp*1e6);
+    if (idx == events.size()-1) { 
+      fprintf(f,"\n");
+    } else {
+      fprintf(f,",\n");
+    }
+    idx++;
+
+
+      
+  }
+  fprintf(f, "]\n");
+  fclose(f);
+}
+
+
+
 void TimerManagerClass::addTimer(NewTimer* t)
 {
 #pragma omp critical
