@@ -14,6 +14,7 @@
 #include "Concurrency/Info.hpp"
 #include "Utilities/RunTimeManager.h"
 #include "ParticleBase/RandomSeqGenerator.h"
+#include "Particle/MCSample.h"
 
 namespace qmcplusplus
 {
@@ -25,8 +26,9 @@ VMCBatched::VMCBatched(QMCDriverInput&& qmcdriver_input,
                        TrialWaveFunction& psi,
                        QMCHamiltonian& h,
                        WaveFunctionPool& ppool,
+                       SampleStack &samples,
                        Communicate* comm)
-    : QMCDriverNew(std::move(qmcdriver_input), pop, psi, h, ppool, "VMCBatched::", comm), vmcdriver_input_(input)
+    : QMCDriverNew(std::move(qmcdriver_input), pop, psi, h, ppool, "VMCBatched::", comm), vmcdriver_input_(input), samples_(samples)
 {
   QMCType = "VMCBatched";
   // qmc_driver_mode.set(QMC_UPDATE_MODE, 1);
@@ -51,8 +53,18 @@ VMCBatched::IndexType VMCBatched::calc_default_local_walkers(IndexType walkers_p
     app_warning() << "VMCBatched driver has adjusted walkers per rank to: " << local_walkers << '\n';
 
   if (vmcdriver_input_.get_samples() >= 0 || vmcdriver_input_.get_samples_per_thread() >= 0 ||
-      vmcdriver_input_.get_steps_between_samples() >= 0)
-    app_warning() << "VMCBatched currently ignores samples and samplesperthread\n";
+      vmcdriver_input_.get_steps_between_samples() >= 0) {
+    //app_warning() << "VMCBatched currently ignores samples and samplesperthread\n";
+    int nsteps = qmcdriver_input_.get_max_steps();
+    int nblocks = qmcdriver_input_.get_max_blocks();
+    steps_between_samples_ = vmcdriver_input_.get_steps_between_samples();
+    int nSamples = local_walkers * nsteps * nblocks / steps_between_samples_ ;
+    app_log() << " VMCBatched driver nsteps  " << nsteps << std::endl;
+    app_log() << " VMCBatched driver nblocks  " << nblocks << std::endl;
+    app_log() << " VMCBatched driver setting number of samples to " << nSamples << std::endl;
+    samples_.setMaxSamples(nSamples+1);
+  }
+
 
   if (local_walkers != walkers_per_rank)
     app_warning() << "VMCBatched changed the number of walkers to " << local_walkers << ". User input was "
@@ -325,6 +337,13 @@ bool VMCBatched::run()
       ScopedTimer local_timer(&(timers_.run_steps_timer));
       vmc_state.step = step;
       crowd_task(runVMCStep, vmc_state, timers_, std::ref(step_contexts_), std::ref(crowds_));
+
+      if (steps_between_samples_ && step % steps_between_samples_ == 0) {
+        auto& walkers = population_.get_walkers();
+        for (auto walker = walkers.begin(); walker != walkers.end();  ++walker) {
+          samples_.appendSample(MCSample(**walker));
+        }
+      }
     }
 
     RefVector<ScalarEstimatorBase> all_scalar_estimators;

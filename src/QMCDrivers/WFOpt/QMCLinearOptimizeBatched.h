@@ -13,17 +13,20 @@
 //////////////////////////////////////////////////////////////////////////////////////
 
 
-/** @file QMCLinearOptimize.h
+/** @file QMCLinearOptimizeBatched.h
  * @brief Definition of QMCDriver which performs VMC and optimization.
  */
-#ifndef QMCPLUSPLUS_QMCLINEAROPTIMIZATION_VMCSINGLE_H
-#define QMCPLUSPLUS_QMCLINEAROPTIMIZATION_VMCSINGLE_H
+#ifndef QMCPLUSPLUS_QMCLINEAROPTIMIZATION_BATCHED_H
+#define QMCPLUSPLUS_QMCLINEAROPTIMIZATION_BATCHED_H
 
 #include <memory>
 #include "QMCDrivers/QMCDriver.h"
+#include "QMCDrivers/QMCDriverNew.h"
 #include "Optimize/OptimizeBase.h"
 #include "QMCWaveFunctions/WaveFunctionPool.h"
 #include "Numerics/LinearFit.h"
+#include "QMCDrivers/QMCDriverInput.h"
+#include "QMCDrivers/VMC/VMCDriverInput.h"
 #ifdef HAVE_LMY_ENGINE
 #include "formic/utils/matrix.h"
 #include "formic/utils/lmyengine/engine.h"
@@ -45,19 +48,24 @@ class HamiltonianPool;
  * generated from VMC.
  */
 
-class QMCLinearOptimize : public QMCDriver
+class QMCLinearOptimizeBatched : public QMCDriver
 {
 public:
   ///Constructor.
-  QMCLinearOptimize(MCWalkerConfiguration& w,
+  QMCLinearOptimizeBatched(MCWalkerConfiguration& w,
                     TrialWaveFunction& psi,
                     QMCHamiltonian& h,
                     HamiltonianPool& hpool,
                     WaveFunctionPool& ppool,
+                    QMCDriverInput&& qmcdriver_input,
+                    VMCDriverInput&& vmc_input,
+                    MCPopulation& population,
+                    SampleStack& samples,
+
                     Communicate* comm);
 
   ///Destructor
-  virtual ~QMCLinearOptimize() = default;
+  virtual ~QMCLinearOptimizeBatched() = default;
 
   ///Run the Optimization algorithm.
   virtual bool run() = 0;
@@ -83,7 +91,8 @@ public:
   ///Dimension of matrix and number of parameters
   int N, numParams;
   ///vmc engine
-  std::unique_ptr<QMCDriver> vmcEngine;
+  //std::unique_ptr<QMCDriverNew> vmcEngine;
+  QMCDriverNew* vmcEngine;
   ///xml node to be dumped
   xmlNodePtr wfNode;
   ///xml node for optimizer
@@ -190,6 +199,11 @@ public:
   NewTimer& line_min_timer_;
   NewTimer& cost_function_timer_;
   Timer t1;
+
+  QMCDriverInput qmcdriver_input_;
+  VMCDriverInput vmc_input_;
+  MCPopulation& population_;
+  SampleStack& samples_;
 
 };
 } // namespace qmcplusplus

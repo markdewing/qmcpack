@@ -62,6 +62,7 @@ public:
              TrialWaveFunction& psi,
              QMCHamiltonian& h,
              WaveFunctionPool& ppool,
+             SampleStack& samples,
              Communicate* comm);
  
   bool run();
@@ -94,6 +95,10 @@ private:
   VMCBatched(const VMCBatched&) = delete;
   /// Copy operator (disabled).
   VMCBatched& operator=(const VMCBatched&) = delete;
+
+  SampleStack& samples_;
+
+  int steps_between_samples_;
 };
 
 extern std::ostream& operator<<(std::ostream& o_stream, const VMCBatched& vmc_batched);

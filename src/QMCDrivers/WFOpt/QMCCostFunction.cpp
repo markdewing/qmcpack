@@ -175,7 +175,7 @@ void QMCCostFunction::GradCost(std::vector<Return_t>& PGradient, const std::vect
 
 void QMCCostFunction::getConfigurations(const std::string& aroot)
 {
-  //makeClones(W,Psi,H);
+  makeClones(W,Psi,H);
   if (H_KE_Node.empty())
   {
     app_log() << "  QMCCostFunction is created with " << NumThreads << " threads." << std::endl;
