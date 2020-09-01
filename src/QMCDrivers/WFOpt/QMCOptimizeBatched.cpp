@@ -168,6 +168,11 @@ bool QMCOptimizeBatched::put(xmlNodePtr q)
   xmlNodePtr qsave = q;
   xmlNodePtr cur   = qsave->children;
   int pid          = OHMMS::Controller->rank();
+  int batch_size = 10;
+  ParameterSet param_set;
+  param_set.add(batch_size, "batch_size", "int");
+  param_set.put(q);
+
   while (cur != NULL)
   {
     std::string cname((const char*)(cur->name));
@@ -237,7 +242,7 @@ bool QMCOptimizeBatched::put(xmlNodePtr q)
     optSolver->put(optNode);
   bool success = true;
   //allways reset optTarget
-  optTarget = std::make_unique<QMCCostFunctionBatched>(W, Psi, H, samples_, myComm);
+  optTarget = std::make_unique<QMCCostFunctionBatched>(W, Psi, H, samples_, myComm, batch_size);
   optTarget->setStream(&app_log());
   success = optTarget->put(q);
 

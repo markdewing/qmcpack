@@ -35,7 +35,8 @@ public:
                          TrialWaveFunction& psi,
                          QMCHamiltonian& h,
                          SampleStack& samples,
-                         Communicate* comm);
+                         Communicate* comm,
+                         int batch_size);
 
   ///Destructor
   ~QMCCostFunctionBatched();
@@ -68,6 +69,8 @@ protected:
 
   SampleStack& samples_;
 
+
+  int batch_size_;
   std::vector<Return_rt> log_psi_fixed_;
   std::vector<Return_rt> log_psi_opt_;
 
@@ -75,6 +78,13 @@ protected:
   std::vector<ParticleSet*> p_ptr_list_;
   std::vector<QMCHamiltonian*> h_ptr_list_;
   std::vector<QMCHamiltonian*> h0_ptr_list_;
+
+  NewTimer& check_config_timer_;
+  NewTimer& corr_sampling_timer_;
+  NewTimer& build_list_timer_;
+  NewTimer& eval_delta_log_setup_timer_;
+  NewTimer& param_deriv_timer_;
+  NewTimer& eval_delta_log_timer_;
 
 
 #ifdef HAVE_LMY_ENGINE
