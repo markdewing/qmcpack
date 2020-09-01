@@ -226,6 +226,58 @@ FUNCTION(QMC_RUN_AND_CHECK BASE_NAME BASE_DIR PREFIX INPUT_FILE PROCS THREADS SH
     ENDIF()
 ENDFUNCTION()
 
+FUNCTION(QMC_RUN_AND_CHECK2 BASE_NAME BASE_DIR PREFIX INPUT_FILE PROCS THREADS SHOULD_SUCCEED)
+
+    SET( TEST_ADDED FALSE )
+    SET( TEST_LABELS "")
+    SET( FULL_NAME "${BASE_NAME}-${PROCS}-${THREADS}" )
+    MESSAGE_VERBOSE("Adding test ${FULL_NAME}")
+    RUN_QMC_APP(${FULL_NAME} ${BASE_DIR} ${PROCS} ${THREADS} TEST_ADDED TEST_LABELS ${INPUT_FILE})
+    IF ( TEST_ADDED )
+        SET_PROPERTY(TEST ${FULL_NAME} APPEND PROPERTY LABELS "QMCPACK")
+    ENDIF()
+
+
+    IF ( TEST_ADDED AND NOT SHOULD_SUCCEED)
+        SET_PROPERTY(TEST ${FULL_NAME} APPEND PROPERTY WILL_FAIL TRUE)
+        #MESSAGE("Test ${FULL_NAME} should fail")
+    ENDIF()
+
+       IF ( TEST_ADDED AND SHOULD_SUCCEED)
+        SET(IDX0 0)
+        FOREACH(V ${ARGN})
+            MATH(EXPR MOD_IDX0 "${IDX0}%3")
+            MESSAGE("IDX = ${MOD_IDX0}  V = ${V}")
+            IF(MOD_IDX0 EQUAL 0)
+              SET(FLAG ${V})
+            ENDIF()
+            IF(MOD_IDX0 EQUAL 1)
+              SET(VALUE_VAL ${V})
+            ENDIF()
+            IF(MOD_IDX0 EQUAL 2)
+                #MESSAGE("   CHECKLIST: ${V}")
+                SET(SCALAR_VALUES ${V})
+                
+
+                SET(VALUE_ERR ${V})
+
+                SET(SERIES 0)
+                SET(TEST_NAME "${FULL_NAME}-param-${FLAG}")
+                        MESSAGE("Adding scalar check ${TEST_NAME}")
+                        SET(CHECK_CMD ${CMAKE_SOURCE_DIR}/tests/scripts/check_scalars.py --ns 3 --series ${SERIES} -p ${PREFIX} -e 2 --name ${FLAG} --ref-value ${VALUE_VAL} --ref-error ${VALUE_ERR})
+                        #MESSAGE("check command = ${CHECK_CMD}")
+                        ADD_TEST( NAME ${TEST_NAME}
+                            COMMAND ${CHECK_CMD}
+                            WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/${FULL_NAME}"
+                        )
+                        SET_PROPERTY( TEST ${TEST_NAME} APPEND PROPERTY DEPENDS ${FULL_NAME} )
+                        SET_PROPERTY( TEST ${TEST_NAME} APPEND PROPERTY LABELS "QMCPACK-checking-results" )
+                        SET_PROPERTY( TEST ${TEST_NAME} APPEND PROPERTY LABELS ${TEST_LABELS} )
+            ENDIF()
+            MATH(EXPR IDX0 "${IDX0}+1")
+        ENDFOREACH()
+    ENDIF()
+ENDFUNCTION()
 
 
 function(SIMPLE_RUN_AND_CHECK base_name base_dir input_file procs threads check_script)
