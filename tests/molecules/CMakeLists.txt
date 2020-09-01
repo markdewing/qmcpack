@@ -3,7 +3,9 @@
 #
 # Molecules
 #
+MESSAGE("Adding molecule tests")
 
+SUBDIRS("He_param")
 SUBDIRS("Li2_STO_ae")
 SUBDIRS("C2_pp")
 SUBDIRS("LiH_dimer_ae_gms")
