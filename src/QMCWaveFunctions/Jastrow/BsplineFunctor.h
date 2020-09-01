@@ -449,6 +449,8 @@ struct BsplineFunctor : public OptimizableFunctorBase
         putContent(params, xmlCoefs);
         if (params.size() == NumParams)
           Parameters = params;
+        else if (params.size() == 0)
+          Parameters.resize(NumParams);
         else
         {
           app_log() << "    Changing number of Bspline parameters from " << params.size() << " to " << NumParams
