@@ -66,6 +66,11 @@ protected:
   Return_rt CSWeight;
   void resetPsi(bool final_reset = false);
   Return_rt correlatedSampling(bool needDerivs);
+
+  NewTimer& check_config_timer_;
+  NewTimer& corr_sampling_timer_;
+  NewTimer& fill_timer_;
+
 };
 } // namespace qmcplusplus
 #endif

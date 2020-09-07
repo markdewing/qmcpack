@@ -183,6 +183,8 @@ private:
   ///whether to do the third part of block lm
   bool block_third;
 
+  int batch_size_;
+
   //Variables for alternatives to linear method
 
   //name of the current optimization method, updated by processOptXML before run

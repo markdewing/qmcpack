@@ -26,7 +26,11 @@
 namespace qmcplusplus
 {
 QMCCostFunction::QMCCostFunction(MCWalkerConfiguration& w, TrialWaveFunction& psi, QMCHamiltonian& h, Communicate* comm)
-    : QMCCostFunctionBase(w, psi, h, comm)
+    : QMCCostFunctionBase(w, psi, h, comm),
+      check_config_timer_(*TimerManager.createTimer("QMCCostFunction::checkConfigurations",timer_level_medium)),
+      corr_sampling_timer_(*TimerManager.createTimer("QMCCostFunction::correlatedSampling",timer_level_medium)),
+      fill_timer_(*TimerManager.createTimer("QMCCostFunction::fill_overlap_ham_matrices",timer_level_medium))
+
 {
   CSWeight = 1.0;
   app_log() << " Using QMCCostFunction::QMCCostFunction" << std::endl;
@@ -239,6 +243,8 @@ void QMCCostFunction::getConfigurations(const std::string& aroot)
 /** evaluate everything before optimization */
 void QMCCostFunction::checkConfigurations()
 {
+  ScopedTimer tmp_timer(&check_config_timer_);
+
   RealType et_tot = 0.0;
   RealType e2_tot = 0.0;
 #pragma omp parallel reduction(+ : et_tot, e2_tot)
@@ -535,6 +541,8 @@ void QMCCostFunction::resetPsi(bool final_reset)
 
 QMCCostFunction::Return_rt QMCCostFunction::correlatedSampling(bool needGrad)
 {
+  ScopedTimer tmp_timer(&corr_sampling_timer_);
+
   for (int ip = 0; ip < NumThreads; ++ip)
   {
     //    synchronize the random number generator with the node
@@ -672,6 +680,8 @@ QMCCostFunction::Return_rt QMCCostFunction::correlatedSampling(bool needGrad)
 QMCCostFunction::Return_rt QMCCostFunction::fillOverlapHamiltonianMatrices(Matrix<Return_rt>& Left,
                                                                            Matrix<Return_rt>& Right)
 {
+  ScopedTimer tmp_timer(&fill_timer_);
+
   RealType b1, b2;
   if (GEVType == "H2")
   {

@@ -37,7 +37,8 @@ QMCCostFunctionBatched::QMCCostFunctionBatched(MCWalkerConfiguration& w,
       build_list_timer_(*TimerManager.createTimer("QMCCostFunctionBatched::checkConfig::build_list",timer_level_fine)),
       eval_delta_log_setup_timer_(*TimerManager.createTimer("QMCCostFunctionBatched::checkConfig::eval_delta_log",timer_level_fine)),
       eval_delta_log_timer_(*TimerManager.createTimer("QMCCostFunctionBatched::correlatedSampling::eval_delta_log",timer_level_fine)),
-      param_deriv_timer_(*TimerManager.createTimer("QMCCostFunctionBatched::param_deriv",timer_level_fine))
+      param_deriv_timer_(*TimerManager.createTimer("QMCCostFunctionBatched::param_deriv",timer_level_fine)),
+      fill_timer_(*TimerManager.createTimer("QMCCostFunctionBatched::fill_overlap_ham_matrices",timer_level_medium))
 {
   app_log() << " Using QMCCostFunctionBatched::QMCCostFunctionBatched" << std::endl;
 }
@@ -647,6 +648,7 @@ QMCCostFunctionBatched::Return_rt QMCCostFunctionBatched::correlatedSampling(boo
 QMCCostFunctionBatched::Return_rt QMCCostFunctionBatched::fillOverlapHamiltonianMatrices(Matrix<Return_rt>& Left,
                                                                                          Matrix<Return_rt>& Right)
 {
+  ScopedTimer tmp_timer(&fill_timer_);
   RealType b1, b2;
   if (GEVType == "H2")
   {

@@ -21,9 +21,8 @@
 #include "OhmmsData/AttributeSet.h"
 #include "Message/CommOperators.h"
 #include "QMCDrivers/WFOpt/QMCCostFunctionBase.h"
-#include "QMCDrivers/WFOpt/QMCCostFunction.h"
+#include "QMCDrivers/WFOpt/QMCCostFunctionBatched.h"
 #include "QMCDrivers/VMC/VMCBatched.h"
-#include "QMCDrivers/WFOpt/QMCCostFunction.h"
 #include "QMCHamiltonians/HamiltonianPool.h"
 #include "CPU/Blasf.h"
 #include "Numerics/MatrixOperators.h"
@@ -99,6 +98,7 @@ QMCFixedSampleLinearOptimizeBatched::QMCFixedSampleLinearOptimizeBatched(MCWalke
       block_second(false),
       block_third(false),
       MinMethod("OneShiftOnly"),
+      batch_size_(1),
       previous_optimizer_type_(OptimizerType::NONE),
       current_optimizer_type_(OptimizerType::NONE)
 
@@ -129,6 +129,7 @@ QMCFixedSampleLinearOptimizeBatched::QMCFixedSampleLinearOptimizeBatched(MCWalke
   m_param.add(num_shifts, "num_shifts", "int");
   m_param.add(cost_increase_tol, "cost_increase_tol", "double");
   m_param.add(target_shift_i, "target_shift_i", "double");
+  m_param.add(batch_size_, "batch_size", "int");
 
 
 #ifdef HAVE_LMY_ENGINE
@@ -573,7 +574,7 @@ bool QMCFixedSampleLinearOptimizeBatched::processOptXML(xmlNodePtr opt_xml, cons
 
   bool success = true;
   //allways reset optTarget
-  optTarget = std::make_unique<QMCCostFunction>(W, Psi, H, myComm);
+  optTarget = std::make_unique<QMCCostFunctionBatched>(W, Psi, H, samples_,  myComm, batch_size_);
   optTarget->setStream(&app_log());
   if (reportH5)
     optTarget->reportH5 = true;

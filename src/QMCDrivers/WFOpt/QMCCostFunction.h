@@ -61,6 +61,11 @@ protected:
 
   Return_rt correlatedSampling(bool needGrad = true);
 
+  NewTimer& check_config_timer_;
+  NewTimer& corr_sampling_timer_;
+  NewTimer& fill_timer_;
+
+
 #ifdef HAVE_LMY_ENGINE
   int total_samples();
   Return_rt LMYEngineCost_detail(cqmc::engine::LMYEngine<Return_t>* EngineObj);

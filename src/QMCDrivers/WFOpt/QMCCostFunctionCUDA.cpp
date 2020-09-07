@@ -29,7 +29,11 @@ QMCCostFunctionCUDA::QMCCostFunctionCUDA(MCWalkerConfiguration& w,
                                          TrialWaveFunction& psi,
                                          QMCHamiltonian& h,
                                          Communicate* comm)
-    : QMCCostFunctionBase(w, psi, h, comm)
+    : QMCCostFunctionBase(w, psi, h, comm),
+      check_config_timer_(*TimerManager.createTimer("QMCCostFunctionCUDA::checkConfigurations",timer_level_medium)),
+      corr_sampling_timer_(*TimerManager.createTimer("QMCCostFunctionCUDA::correlatedSampling",timer_level_medium)),
+      fill_timer_(*TimerManager.createTimer("QMCCostFunctionCUDA::fill_overlap_ham_matrices",timer_level_medium))
+
 {}
 
 
@@ -46,6 +50,7 @@ QMCCostFunctionCUDA::~QMCCostFunctionCUDA()
  */
 QMCCostFunctionCUDA::Return_rt QMCCostFunctionCUDA::correlatedSampling(bool needDerivs)
 {
+  ScopedTimer tmp_timer(&corr_sampling_timer_);
   Return_rt wgt_tot = 0.0;
   int nw            = W.getActiveWalkers();
   //#pragma omp parallel reduction(+:wgt_tot)
@@ -227,6 +232,8 @@ void QMCCostFunctionCUDA::getConfigurations(const std::string& aroot)
 /** evaluate everything before optimization */
 void QMCCostFunctionCUDA::checkConfigurations()
 {
+  ScopedTimer tmp_timer(&check_config_timer_);
+
   RealType et_tot = 0.0;
   RealType e2_tot = 0.0;
   int numWalkers  = W.getActiveWalkers();
@@ -499,6 +506,7 @@ void QMCCostFunctionCUDA::GradCost(std::vector<Return_rt>& PGradient,
 QMCCostFunctionCUDA::Return_rt QMCCostFunctionCUDA::fillOverlapHamiltonianMatrices(Matrix<Return_rt>& Left,
                                                                                    Matrix<Return_rt>& Right)
 {
+  ScopedTimer tmp_timer(&fill_timer_);
   RealType b1, b2;
   if (GEVType == "H2")
   {

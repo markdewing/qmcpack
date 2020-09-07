@@ -85,6 +85,7 @@ protected:
   NewTimer& eval_delta_log_setup_timer_;
   NewTimer& param_deriv_timer_;
   NewTimer& eval_delta_log_timer_;
+  NewTimer& fill_timer_;
 
 
 #ifdef HAVE_LMY_ENGINE
